@@ -144,6 +144,8 @@ function BorrowedCharacterPicker({characters,selected,onSelect}:{characters:Char
 function ActAssignmentPicker({act,slot,characters,selected,borrowed,opening,canSelect,onSelect}:{act:number;slot:number;characters:Character[];selected:string;borrowed:string;opening:Set<string>;canSelect:(name:string)=>boolean;onSelect:(name:string)=>void}){
   const [open,setOpen]=useState(false);
   const selectedCharacter=characters.find(character=>character.name===selected);
+  const availableCharacters=characters.filter(character=>canSelect(character.name));
+  const unavailableCharacters=characters.filter(character=>!canSelect(character.name));
   return <div className="act-picker">
     <button className="act-picker-trigger" type="button" aria-label={`Act ${act}, slot ${slot+1}`} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>setOpen(value=>!value)}>
       {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span className="act-picker-name">{selectedCharacter.name}</span><ElementBadge element={selectedCharacter.element}/><small>{selectedCharacter.name===borrowed?'Borrowed':opening.has(selectedCharacter.name)?'Opening':''}</small></>:<span>+ Slot {slot+1}</span>}
@@ -151,9 +153,12 @@ function ActAssignmentPicker({act,slot,characters,selected,borrowed,opening,canS
     </button>
     {open&&<div className="act-picker-menu" role="listbox" aria-label={`Act ${act}, slot ${slot+1} characters`}>
       <button type="button" role="option" aria-selected={!selected} className="act-picker-option clear-act-option" onClick={()=>{onSelect('');setOpen(false);}}>Clear slot</button>
-      {characters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} disabled={!canSelect(character.name)} onClick={()=>{onSelect(character.name);setOpen(false);}}>
+      {availableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} onClick={()=>{onSelect(character.name);setOpen(false);}}>
         <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/><small>{character.name===borrowed?'Borrowed':opening.has(character.name)?'Opening':''}</small>
       </button>)}
+      {unavailableCharacters.length>0&&<><div className="act-picker-group-label">Unavailable</div>{unavailableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} disabled onClick={()=>{onSelect(character.name);setOpen(false);}}>
+        <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/><small>{character.name===borrowed?'Borrowed':opening.has(character.name)?'Opening':''}</small>
+      </button>)}</>}
     </div>}
     {selected&&<button className="act-clear-button" type="button" aria-label={`Clear Act ${act}, slot ${slot+1}`} title="Clear slot" onClick={()=>onSelect('')}>×</button>}
   </div>;
@@ -299,6 +304,9 @@ const [bossData,setBossData]=useState<TheaterBossData>(theaterBosses);
 const [plan,setPlan]=useState<Plan>(()=>stored('itp-plan-v1',{roster:[],acts:{},borrowed:''}));
 const [dropTarget,setDropTarget]=useState('');
 const [search,setSearch]=useState('');const [filter,setFilter]=useState('All');const [ownedOnly,setOwnedOnly]=useState(false);
+const [chosenSearch,setChosenSearch]=useState('');
+const [chosenElements,setChosenElements]=useState<Element[]>([]);
+const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
 useEffect(()=>localStorage.setItem('itp-ownership-v1',JSON.stringify(ownership)),[ownership]);
 useEffect(()=>localStorage.setItem('itp-setup-v1',JSON.stringify(setup)),[setup]);
 useEffect(()=>localStorage.setItem('itp-plan-v1',JSON.stringify(plan)),[plan]);
@@ -405,6 +413,13 @@ const toggleElement=(element:Element)=>updateCustomSetup(current=>{
 const filtered=CHARACTERS.filter(c=>c.name.toLowerCase().includes(search.toLowerCase())&&(filter==='All'||c.element===filter)&&(!ownedOnly||ownership[c.name]?.owned));
 const count=CHARACTERS.filter(c=>ownership[c.name]?.owned).length;
 const chosenCharacters=CHARACTERS.filter(character=>chosen.includes(character.name));
+const filteredPlannerCharacters=plannerCharacters.filter(character=>
+  character.name.toLocaleLowerCase().includes(chosenSearch.toLocaleLowerCase())
+  &&(chosenElements.length===0||chosenElements.includes(character.element))
+  &&(chosenRarities.length===0||chosenRarities.includes(character.rarity))
+);
+const toggleChosenElement=(element:Element)=>setChosenElements(current=>current.includes(element)?current.filter(value=>value!==element):[...current,element]);
+const toggleChosenRarity=(rarity:4|5)=>setChosenRarities(current=>current.includes(rarity)?current.filter(value=>value!==rarity):[...current,rarity]);
 const renderPlannerCharacter=(character:Character)=>{
   const name=character.name;
   const isChosen=chosen.includes(name);
@@ -511,10 +526,21 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
   <div className="planner-layout">
     <section className="chosen-section">
       <div className="sectionhead"><div><h3>Chosen ({chosen.length}/{requirement.cap})</h3><p>{chosenForRequirement}/{requirement.minimum} count toward the minimum; borrowed characters use a cast slot. Click available character cards to add or remove them.</p></div></div>
+      <div className="chosen-filters">
+        <input aria-label="Search chosen characters" placeholder="Search characters…" value={chosenSearch} onChange={event=>setChosenSearch(event.target.value)}/>
+        <div className="chosen-element-filters" role="group" aria-label="Filter by element">
+          {ELEMENTS.map(element=><button type="button" key={element} className={`chosen-filter-icon ${chosenElements.includes(element)?'selected':''}`} aria-label={`${chosenElements.includes(element)?'Remove':'Filter by'} ${element}`} aria-pressed={chosenElements.includes(element)} title={element} onClick={()=>toggleChosenElement(element)}><img src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt=""/></button>)}
+        </div>
+        <div className="chosen-rarity-filters" role="group" aria-label="Filter by rarity">
+          {([4,5] as const).map(rarity=><button type="button" key={rarity} className={chosenRarities.includes(rarity)?'selected':''} aria-pressed={chosenRarities.includes(rarity)} onClick={()=>toggleChosenRarity(rarity)}>{rarity}★</button>)}
+        </div>
+      </div>
       <h4 className="chosen-group-title">Opening Characters ({plannerCharacters.filter(character=>openingNames.has(character.name)).length}/6)</h4>
-      <div className="characters chosen-grid opening-grid">{plannerCharacters.filter(character=>openingNames.has(character.name)).map(renderPlannerCharacter)}</div>
+      <div className="characters chosen-grid opening-grid">{filteredPlannerCharacters.filter(character=>openingNames.has(character.name)).map(renderPlannerCharacter)}</div>
+      <h4 className="chosen-group-title">Special Guest Stars ({plannerCharacters.filter(character=>selectedGuests.includes(character.name)).length}/4)</h4>
+      <div className="characters chosen-grid guest-grid">{filteredPlannerCharacters.filter(character=>selectedGuests.includes(character.name)&&!openingNames.has(character.name)).map(renderPlannerCharacter)}</div>
       <div className="chosen-divider" role="separator" aria-label="Other available characters"><span/></div>
-      <div className="characters chosen-grid">{plannerCharacters.filter(character=>!openingNames.has(character.name)).map(renderPlannerCharacter)}</div>
+      <div className="characters chosen-grid">{filteredPlannerCharacters.filter(character=>!openingNames.has(character.name)&&!selectedGuests.includes(character.name)).map(renderPlannerCharacter)}</div>
     </section>
     <section className="assignment-only">
       <h3>Act Assignments</h3>
