@@ -510,7 +510,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
     </section>
     <section className="assignment-only">
       <h3>Act Assignments</h3>
-      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Each character can be assigned to at most two acts. Lunar Arcanum Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10. See the <a href="https://alioth.wiki/en/gi/theater" target="_blank" rel="noreferrer">Alioth Theater guide</a>.</p>
+      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Each character can be assigned to at most two acts. Lunar Arcanum Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10.</p>
       <div className="act-group"><h4>Acts</h4><div className="acts">{setup.difficulty==='Lunar'
         ? <>{renderAct(1,'Act 1')}{renderAct(2,'Act 2')}{renderAct(3,'Act 3')}{renderAct(11,'Lunar Act 1')}{renderAct(4,'Act 4')}{renderAct(5,'Act 5')}{renderAct(6,'Act 6')}{renderAct(12,'Lunar Act 2')}{Array.from({length:4},(_,index)=>renderAct(index+7,`Act ${index+7}`))}</>
         : Array.from({length:requirement.acts},(_,index)=>renderAct(index+1,`Act ${index+1}`))}</div></div>
