@@ -11,28 +11,37 @@
     "29": {
       "boss1": [
         {
-          "name": "Experimental Field Generator",
-          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a9/Prototype_Cal._Breguet_Icon.png/revision/latest?cb=20230927021140"
+          "name": "Jadeplume Terrorshroom",
+          "type": "Boss",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Jadeplume_Terrorshroom_Icon.png/revision/latest?cb=20220824024707"
         }
       ],
       "boss2": [
         {
-          "name": "Automated Supercomputing Field Generator",
-          "type": "Local Legend",
-          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a5/Arithmetic_Enhancer_Mek_Icon.png/revision/latest?cb=20230816022723"
+          "name": "Lord of the Hidden Depths: Whisperer of Nightmares",
+          "type": "Boss",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/5a/Lord_of_the_Hidden_Depths_Whisperer_of_Nightmares_Icon.png/revision/latest?cb=20260114092748"
         }
       ],
       "boss3": [
         {
-          "name": "Radiant Moongecko",
-          "type": "Boss",
-          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/20/Radiant_Moongecko_Icon.png/revision/latest?cb=20260225052747"
+          "name": "Churldric",
+          "type": "Local Legend",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/21/Churldric_Icon.png/revision/latest?cb=20260507130634"
         }
       ],
       "boss4": [
         {
-          "name": "Gluttonous Yumkasaur Mountain King",
-          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c2/Kongamato_Icon.png/revision/latest?cb=20240828020122"
+          "name": "Radiant Moonfly",
+          "type": "Boss",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f3/Radiant_Moonfly_Icon.png/revision/latest?cb=20250910024517"
+        }
+      ],
+      "lunar2": [
+        {
+          "name": "Potapo's Solidarity",
+          "type": "Local Legend",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/ca/Biting-Cold_Wayob_Manifestation_Icon.png/revision/latest?cb=20241120023156"
         }
       ]
     }
