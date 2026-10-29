@@ -14,6 +14,7 @@ type BossOverrideSlot = 'boss1'|'boss2'|'boss3'|'boss4'|'lunar2';
 type TheaterSeason = {id:string;season:number;startsAt:string;endsAt:string;elements:Element[];openingCharacters:string[];specialGuests:string[];bossStages:TheaterBossStage[];charactersMissingFromRoster:string[];sourceUrl:string};
 type TheaterLineupData = {source:string;current:TheaterSeason|null;next:TheaterSeason|null;bossCatalog:BossCatalogEntry[];nextUnavailableReason:string|null;generatedAt:string|null};
 type TheaterBossData = {seasons:Record<string,Partial<Record<BossOverrideSlot,TheaterBoss[]>>>};
+const isTraveler=(name:string)=>name.endsWith(' Traveler');
 function stored<T>(key:string,fallback:T):T {try {const v=localStorage.getItem(key);return v?JSON.parse(v) as T:fallback;}catch{return fallback;}}
 function parseSeason(value:unknown):TheaterSeason|null {
   if(value===null)return null;
@@ -157,12 +158,12 @@ function ActAssignmentPicker({act,slot,characters,selected,borrowed,opening,canS
     {selected&&<button className="act-clear-button" type="button" aria-label={`Clear Act ${act}, slot ${slot+1}`} title="Clear slot" onClick={()=>onSelect('')}>×</button>}
   </div>;
 }
-function CharacterSelectionGrid({characters,selected,limit,disabled,onToggle}:{characters:Character[];selected:string[];limit:number;disabled:boolean;onToggle:(name:string)=>void}){
+function CharacterSelectionGrid({characters,selected,limit,disabled,unavailableNames=[],onToggle}:{characters:Character[];selected:string[];limit:number;disabled:boolean;unavailableNames?:string[];onToggle:(name:string)=>void}){
   const [query,setQuery]=useState('');
   const filtered=characters.filter(c=>c.name.toLowerCase().includes(query.toLowerCase()));
   return <><input className="selection-search" aria-label="Search characters" placeholder="Search characters…" value={query} onChange={e=>setQuery(e.target.value)} disabled={disabled}/><div className="characters selection-grid">{filtered.map(c=>{
     const checked=selected.includes(c.name);
-    const unavailable=disabled||(!checked&&selected.length>=limit);
+    const unavailable=disabled||(!checked&&(selected.length>=limit||unavailableNames.includes(c.name)));
     return <div className={'character '+(checked?'owned':'')} key={c.name} role="checkbox" aria-checked={checked} tabIndex={unavailable?-1:0} aria-label={c.name} aria-disabled={unavailable} onClick={()=>{if(!unavailable)onToggle(c.name);}} onKeyDown={e=>{if(!unavailable&&(e.key==='Enter'||e.key===' ')){e.preventDefault();onToggle(c.name);}}}><div className="character-top"><CharacterIcon name={c.name}/><ElementBadge element={c.element}/><strong>{c.name}</strong></div></div>;
   })}{filtered.length===0&&<p className="selection-empty">No characters match your search.</p>}</div></>;
 }
@@ -312,8 +313,10 @@ const selectedElements=setup.elements.filter((element):element is Element=>ELEME
 const hasThreeElements=selectedElements.length===3;
 const openingOptions=hasThreeElements?CHARACTERS.filter(c=>selectedElements.includes(c.element)):[];
 const guestOptions=hasThreeElements?CHARACTERS.filter(c=>!selectedElements.includes(c.element)):[];
-const selectedOpening=setup.opening.filter(name=>openingOptions.some(c=>c.name===name));
-const selectedGuests=setup.guests.filter(name=>guestOptions.some(c=>c.name===name));
+const selectedTraveler=[...setup.opening,...setup.guests].find(isTraveler);
+const selectedOpening=setup.opening.filter(name=>openingOptions.some(c=>c.name===name)&&(!isTraveler(name)||name===selectedTraveler));
+const selectedGuests=setup.guests.filter(name=>guestOptions.some(c=>c.name===name)&&(!isTraveler(name)||name===selectedTraveler));
+const unavailableTravelers=selectedTraveler?CHARACTERS.filter(character=>isTraveler(character.name)&&character.name!==selectedTraveler).map(character=>character.name):[];
 const requirement=difficulties[setup.difficulty]??difficulties.Hard;
 const eligibleOwned=CHARACTERS.filter(c=>ownership[c.name]?.owned&&(ownership[c.name]?.level??90)>=requirement.minimumLevel&&(selectedElements.includes(c.element)||selectedGuests.includes(c.name)));
 const eligibleNames=new Set([...eligibleOwned.map(c=>c.name),...selectedOpening]);
@@ -321,11 +324,13 @@ const eligibleCount=eligibleNames.size;
 const canContinueToPlanner=hasThreeElements&&eligibleCount>=requirement.minimum;
 const available=CHARACTERS.filter(c=>selectedElements.includes(c.element)||selectedGuests.includes(c.name)||selectedOpening.includes(c.name));
 const availableNames=new Set(available.map(c=>c.name));
-const borrowedOptions=available.filter(character=>character.name!=='Aloy'&&!character.name.endsWith(' Traveler'));
+const borrowedOptions=available.filter(character=>character.name!=='Aloy'&&!isTraveler(character.name));
 const rosterCandidates=CHARACTERS.filter(c=>selectedOpening.includes(c.name)||(availableNames.has(c.name)&&ownership[c.name]?.owned&&(ownership[c.name]?.level??90)>=requirement.minimumLevel));
 const rosterCandidateNames=new Set(rosterCandidates.map(c=>c.name));
 const borrowedCharacter=typeof plan.borrowed==='string'&&borrowedOptions.some(character=>character.name===plan.borrowed)?plan.borrowed:'';
-const chosen=[...new Set([...selectedOpening,...plan.roster.filter(name=>rosterCandidateNames.has(name)&&name!==borrowedCharacter),...(borrowedCharacter?[borrowedCharacter]:[])])];
+const selectedRosterTravelers=plan.roster.filter(name=>rosterCandidateNames.has(name)&&isTraveler(name));
+const plannerTraveler=selectedTraveler??selectedRosterTravelers[0];
+const chosen=[...new Set([...selectedOpening,...plan.roster.filter(name=>rosterCandidateNames.has(name)&&name!==borrowedCharacter&&(!isTraveler(name)||name===plannerTraveler)),...(borrowedCharacter?[borrowedCharacter]:[])])];
 const plannerCharacters=CHARACTERS.filter(character=>rosterCandidateNames.has(character.name)||character.name===borrowedCharacter);
 const chosenForRequirement=chosen.filter(name=>name!==borrowedCharacter).length;
 const openingNames=new Set(selectedOpening);
@@ -340,6 +345,7 @@ const toggleRoster=(name:string)=>setPlan(current=>{
     roster:roster.filter(value=>value!==name),
     acts:Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(value=>value===name?'':value)])),
   };
+  if(isTraveler(name)&&(selectedTraveler??roster.find(isTraveler)))return current;
   const currentBorrowed=typeof current.borrowed==='string'&&availableNames.has(current.borrowed)?current.borrowed:'';
   const count=new Set([...selectedOpening,...roster,...(currentBorrowed?[currentBorrowed]:[])]).size;
   return count>=requirement.cap?current:{...current,roster:[...roster,name]};
@@ -360,6 +366,7 @@ const dropCharacterIntoAct=(name:string,act:number,slot:number)=>setPlan(current
   const currentBorrowed=typeof current.borrowed==='string'&&borrowedOptions.some(character=>character.name===current.borrowed)?current.borrowed:'';
   const selected=new Set([...selectedOpening,...roster,...(currentBorrowed?[currentBorrowed]:[])]);
   if(!selected.has(name)){
+    if(isTraveler(name)&&(selectedTraveler??roster.find(isTraveler)))return current;
     if(!rosterCandidateNames.has(name)||selected.size>=requirement.cap)return current;
     roster.push(name);
   }
@@ -405,9 +412,10 @@ const renderPlannerCharacter=(character:Character)=>{
   const forced=openingNames.has(name);
   const canChoose=rosterCandidateNames.has(name)||borrowed;
   const full=!isChosen&&chosen.length>=requirement.cap;
+  const travelerConflict=isTraveler(name)&&((plannerTraveler!==undefined&&name!==plannerTraveler)||chosen.some(chosenName=>isTraveler(chosenName)&&chosenName!==name));
   const usedActs=Object.values(plan.acts).filter(names=>names.includes(name)).length;
   const remainingUses=Math.max(0,2-usedActs);
-  const disabled=!canChoose||full;
+  const disabled=!canChoose||full||travelerConflict;
   return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' borrowed':forced?' opening character':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top"><CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Borrowed':forced?'Opening · Required':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
 };
 const renderAct=(act:number,label:string)=>{
@@ -437,7 +445,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
 {step===1&&<section><div className="sectionhead"><div><h2>Your Characters</h2><p>{count} owned · {CHARACTERS.length} in starter database</p></div><div className="actions"><button onClick={()=>setOwnership(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:true,level:ownership[c.name]?.level??90}])))}>Own All</button><button onClick={()=>setOwnership(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:false,level:ownership[c.name]?.level??90}])))}>Clear All</button></div></div><div className="toolbar"><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search characters…"/><select value={filter} onChange={e=>setFilter(e.target.value)}><option>All</option>{ELEMENTS.map(e=><option key={e}>{e}</option>)}</select><label><input type="checkbox" checked={ownedOnly} onChange={e=>setOwnedOnly(e.target.checked)}/> Owned only</label></div><div className="characters">{filtered.map(c=><div className={'character '+(ownership[c.name]?.owned?'owned':'')} key={c.name} role="group" tabIndex={0} aria-label={`${c.name}. Click card to toggle owned.`} onClick={e=>{if(!(e.target as HTMLElement).closest('label'))toggleOwn(c.name);}} onKeyDown={e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleOwn(c.name);}}}><div className="character-top"><CharacterIcon name={c.name}/><ElementBadge element={c.element}/><strong>{c.name}</strong></div><label className="level-control"><span>Level</span><select aria-label={`${c.name} level`} value={ownership[c.name]?.level??90} onChange={e=>setCharacterLevel(c.name,Number(e.target.value))}>{LEVEL_OPTIONS.map(level=><option key={level} value={level}>{level}</option>)}</select></label></div>)}</div><div className="bottom"><button className="primary" onClick={()=>setStep(2)}>Continue to Challenge Setup →</button></div></section>}
 {step===2&&<section>
   <h2>Challenge Setup</h2>
-  <p>Configure the current rotation. You can edit these settings at any time.</p>
+  <p>Configure the current rotation. You can edit these settings at any time. Only one elemental Traveler version can be used per Theater run.</p>
   <div className="lineup-source">
     <label htmlFor="theater-season">Season lineup</label>
     <select id="theater-season" value={selectedSeason?.season??''} onChange={event=>{
@@ -482,12 +490,12 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
     <div>
       <h3>Opening Characters ({selectedOpening.length}/6)</h3>
       {!hasThreeElements&&<p className="selection-help">Select all three featured elements before choosing characters.</p>}
-      <CharacterSelectionGrid characters={openingOptions} selected={selectedOpening} limit={6} disabled={!hasThreeElements} onToggle={name=>updateCustomSetup(current=>({...current,opening:toggleArray(current.opening,name,6)}))}/>
+      <CharacterSelectionGrid characters={openingOptions} selected={selectedOpening} limit={6} disabled={!hasThreeElements} unavailableNames={unavailableTravelers} onToggle={name=>updateCustomSetup(current=>({...current,opening:toggleArray(current.opening,name,6)}))}/>
     </div>
     <div>
       <h3>Special Guest Stars ({selectedGuests.length}/4)</h3>
       {!hasThreeElements&&<p className="selection-help">Select all three featured elements before choosing characters.</p>}
-      <CharacterSelectionGrid characters={guestOptions} selected={selectedGuests} limit={4} disabled={!hasThreeElements} onToggle={name=>updateCustomSetup(current=>({...current,guests:toggleArray(current.guests,name,4)}))}/>
+      <CharacterSelectionGrid characters={guestOptions} selected={selectedGuests} limit={4} disabled={!hasThreeElements} unavailableNames={unavailableTravelers} onToggle={name=>updateCustomSetup(current=>({...current,guests:toggleArray(current.guests,name,4)}))}/>
     </div>
   </div>
   {import.meta.env.DEV&&<BossOverrideEditor data={bossData} seasons={availableSeasons} bossCatalog={theaterLineups.bossCatalog} onChange={setBossData}/>}
