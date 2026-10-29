@@ -1,0 +1,70 @@
+name: Update Theater lineups
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+    - cron: '0 * 28-31,1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: theater-lineup-refresh
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check whether this scheduled run is due
+        id: due
+        shell: bash
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [[ "$EVENT_NAME" != "schedule" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          day=$(date -u +%d)
+          tomorrow=$(date -u -d tomorrow +%d)
+          is_boundary_day=false
+          if [[ "$day" == "01" || "$tomorrow" == "01" ]]; then
+            is_boundary_day=true
+          fi
+
+          if [[ "$SCHEDULE" == "17 6 * * *" && "$is_boundary_day" == "true" ]]; then
+            echo "Skipping the daily refresh because the hourly boundary refresh is scheduled."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          elif [[ "$SCHEDULE" == "0 * 28-31,1 * *" && "$is_boundary_day" != "true" ]]; then
+            echo "Skipping hourly refresh outside the first or last day of the month."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Check out repository
+        if: steps.due.outputs.run == 'true'
+        uses: actions/checkout@v4
+      - name: Set up Node
+        if: steps.due.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate current and upcoming lineups
+        if: steps.due.outputs.run == 'true'
+        run: npm run update:theater-lineups
+      - name: Commit changed lineups
+        if: steps.due.outputs.run == 'true'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/data/theater-lineups.json
+          if git diff --cached --quiet; then
+            echo "No lineup changes to commit."
+          else
+            git commit -m "Update Theater season lineups"
+            git push
+          fi

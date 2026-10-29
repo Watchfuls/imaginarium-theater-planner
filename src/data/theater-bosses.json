@@ -1,0 +1,40 @@
+{
+  "seasons": {
+    "28": {
+      "boss3": [
+        {
+          "name": "Chimeric Winged Lion",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/fa/Chimeric_Winged_Lion_Icon.png/revision/latest?cb=20260810043855"
+        }
+      ]
+    },
+    "29": {
+      "boss1": [
+        {
+          "name": "Experimental Field Generator",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a9/Prototype_Cal._Breguet_Icon.png/revision/latest?cb=20230927021140"
+        }
+      ],
+      "boss2": [
+        {
+          "name": "Automated Supercomputing Field Generator",
+          "type": "Local Legend",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a5/Arithmetic_Enhancer_Mek_Icon.png/revision/latest?cb=20230816022723"
+        }
+      ],
+      "boss3": [
+        {
+          "name": "Radiant Moongecko",
+          "type": "Boss",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/20/Radiant_Moongecko_Icon.png/revision/latest?cb=20260225052747"
+        }
+      ],
+      "boss4": [
+        {
+          "name": "Gluttonous Yumkasaur Mountain King",
+          "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c2/Kongamato_Icon.png/revision/latest?cb=20240828020122"
+        }
+      ]
+    }
+  }
+}

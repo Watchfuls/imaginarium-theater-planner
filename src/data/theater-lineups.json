@@ -1,0 +1,543 @@
+{
+  "source": "Fandom MediaWiki Action API (community-maintained season templates)",
+  "generatedAt": "2026-10-22T10:08:54Z",
+  "current": {
+    "id": "2026-10-01",
+    "season": 28,
+    "startsAt": "2026-10-01T04:00:00.000Z",
+    "endsAt": "2026-11-01T03:59:59.000Z",
+    "elements": [
+      "Hydro",
+      "Cryo",
+      "Anemo"
+    ],
+    "openingCharacters": [
+      "Neuvillette",
+      "Barbara",
+      "Citlali",
+      "Kaeya",
+      "Wanderer",
+      "Prune"
+    ],
+    "specialGuests": [
+      "Ineffa",
+      "Yae Miko",
+      "Thoma",
+      "Chiori"
+    ],
+    "bossStages": [
+      {
+        "act": 3,
+        "bosses": [
+          {
+            "name": "Perpetual Mechanical Array",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b3/Perpetual_Mechanical_Array_Icon.png/revision/latest?cb=20210721055430"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "bosses": [
+          {
+            "name": "Battle-Hardened Chimeric Volkodlak Archer",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/40/Furiosa_Icon.png/revision/latest?cb=20260815170455"
+          }
+        ]
+      },
+      {
+        "act": 8,
+        "bosses": [
+          {
+            "name": "Secret Source Automaton: Overseer Device",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d9/Secret_Source_Automaton_Overseer_Device_Icon.png/revision/latest?cb=20250507034833"
+          }
+        ]
+      },
+      {
+        "act": 10,
+        "bosses": [
+          {
+            "name": "Secret Source Automaton: Overseer Device",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d9/Secret_Source_Automaton_Overseer_Device_Icon.png/revision/latest?cb=20250507034833"
+          }
+        ]
+      }
+    ],
+    "sourceUrl": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater%2FSeasons%2F2026-10-01"
+  },
+  "next": {
+    "id": "2026-11-01",
+    "season": 29,
+    "startsAt": "2026-11-01T04:00:00.000Z",
+    "endsAt": "2026-12-01T03:59:59.000Z",
+    "elements": [
+      "Hydro",
+      "Electro",
+      "Geo"
+    ],
+    "openingCharacters": [
+      "Yelan",
+      "Aino",
+      "Flins",
+      "Fischl",
+      "Zhongli",
+      "Kachina"
+    ],
+    "specialGuests": [
+      "Qiqi",
+      "Odette",
+      "Vesna",
+      "Jahoda"
+    ],
+    "bossStages": [],
+    "sourceUrl": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater%2FSeasons%2F2026-11-01"
+  },
+  "bossCatalog": [
+    {
+      "name": "Aeonblight Drake",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7e/Aeonblight_Drake_Icon.png/revision/latest?cb=20220928021456"
+    },
+    {
+      "name": "Algorithm of Semi-Intransient Matrix of Overseer Network",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/3b/Algorithm_of_Semi-Intransient_Matrix_of_Overseer_Network_Icon.png/revision/latest?cb=20220928021458"
+    },
+    {
+      "name": "Anemo Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e6/Anemo_Hypostasis_Icon.png/revision/latest?cb=20201122050141"
+    },
+    {
+      "name": "Atlatl's Blessing",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/77/Rock-Cavernous_Wayob_Manifestation_Icon.png/revision/latest?cb=20240828020124"
+    },
+    {
+      "name": "Automated Supercomputing Field Generator",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a5/Arithmetic_Enhancer_Mek_Icon.png/revision/latest?cb=20230816022723"
+    },
+    {
+      "name": "Balachko",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b5/Fatui_Pyro_Agent_Icon.png/revision/latest?cb=20201120070039"
+    },
+    {
+      "name": "Bandersnatch",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/40/Bandersnatch_Icon.png/revision/latest?cb=20260815170528"
+    },
+    {
+      "name": "Bronzelock",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Ruin_Drake_Icon.png/revision/latest?cb=20220824024709"
+    },
+    {
+      "name": "Chimalli's Shade",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/cb/Flow-Inverted_Wayob_Manifestation_Icon.png/revision/latest?cb=20240828020059"
+    },
+    {
+      "name": "Chimeric Winged Lion",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/fa/Chimeric_Winged_Lion_Icon.png/revision/latest?cb=20260810043855"
+    },
+    {
+      "name": "Churin",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/17/Churin_Icon.png/revision/latest?cb=20260815170317"
+    },
+    {
+      "name": "Churldric",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/21/Churldric_Icon.png/revision/latest?cb=20260507130634"
+    },
+    {
+      "name": "Cihuacoatl of Chimeric Bone",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/08/Yumkasaurus_Warrior_Flowing_Skyfire_Icon.png/revision/latest?cb=20240828020042"
+    },
+    {
+      "name": "Cineas",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/ea/Primordial_Bathysmal_Vishap_Icon.png/revision/latest?cb=20220105071837"
+    },
+    {
+      "name": "Cocijo",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/79/Cocijo_Icon.png/revision/latest?cb=20240903003905"
+    },
+    {
+      "name": "Coral Defenders",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/04/Bathysmal_Vishap_Herd_Icon.png/revision/latest?cb=20220105071633"
+    },
+    {
+      "name": "Crab Tsar",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/74/Battle-Scarred_Rock_Crab_Icon.png/revision/latest?cb=20250910024449"
+    },
+    {
+      "name": "Cryo Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/ac/Cryo_Hypostasis_Icon.png/revision/latest?cb=20210503233308"
+    },
+    {
+      "name": "Cryo Regisvine",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e2/Cryo_Regisvine_Icon.png/revision/latest?cb=20201120070151"
+    },
+    {
+      "name": "Deianeira of Snezhevna",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c6/Wind_Operative_Icon.png/revision/latest?cb=20230927021133"
+    },
+    {
+      "name": "Dendro Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/9c/Dendro_Hypostasis_Icon.png/revision/latest?cb=20221102024609"
+    },
+    {
+      "name": "Electro Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/8/82/Electro_Hypostasis_Icon.png/revision/latest?cb=20201122050132"
+    },
+    {
+      "name": "Electro Regisvine",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2f/Electro_Regisvine_Icon.png/revision/latest?cb=20220824024648"
+    },
+    {
+      "name": "Emperor of Fire and Iron",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f5/Emperor_of_Fire_and_Iron_Icon.png/revision/latest?cb=20230816022743"
+    },
+    {
+      "name": "Frostnight Herra",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2d/Frostnight_Herra_Icon.png/revision/latest?cb=20251022053217"
+    },
+    {
+      "name": "Furiosa",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/40/Furiosa_Icon.png/revision/latest?cb=20260815170455"
+    },
+    {
+      "name": "Geo Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/4f/Geo_Hypostasis_Icon.png/revision/latest?cb=20201122050106"
+    },
+    {
+      "name": "Golden Wolflord",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b5/Golden_Wolflord_Icon.png/revision/latest?cb=20211125062713"
+    },
+    {
+      "name": "Guardian Blade of Drifting Snow",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/02/Guardian_Blade_of_Drifting_Snow_Icon.png/revision/latest?cb=20261014144513"
+    },
+    {
+      "name": "He Never Dies",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/4b/He_Never_Dies_Icon.png/revision/latest?cb=20240830035935"
+    },
+    {
+      "name": "Hexadecatonic Mandragora",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a1/Hexadecatonic_Mandragora_Icon.png/revision/latest?cb=20260117120516"
+    },
+    {
+      "name": "Hiljetta",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d5/Hiljetta_%28Local_Legend%29_Icon.png/revision/latest?cb=20260117120408"
+    },
+    {
+      "name": "Holawaqa Ngoubou",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/10/Holawaqa_Ngoubou_Icon.png/revision/latest?cb=20240828020111"
+    },
+    {
+      "name": "Hydro Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/8/86/Hydro_Hypostasis_Icon.png/revision/latest?cb=20210901044825"
+    },
+    {
+      "name": "Hydro Tulpa",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/9a/Hydro_Tulpa_Icon.png/revision/latest?cb=20231108024359"
+    },
+    {
+      "name": "Icewind Suite",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6c/Icewind_Suite_Icon.png/revision/latest?cb=20230816022754"
+    },
+    {
+      "name": "Ichcahuipilli's Aegis",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/75/Foliar-Swift_Wayob_Manifestation_Icon.png/revision/latest?cb=20240828020103"
+    },
+    {
+      "name": "Immortal Construct",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1c/Immortal_Construct_Icon.png/revision/latest?cb=20260812174315"
+    },
+    {
+      "name": "Infinitesimal",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/8/8c/Eroding_Avatar_of_Lava_Icon.png/revision/latest?cb=20240828020051"
+    },
+    {
+      "name": "Iniquitous Baptist",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d8/Iniquitous_Baptist_Icon.png/revision/latest?cb=20230412020927"
+    },
+    {
+      "name": "Ironbeard",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/40/Qucusaurus_Warrior_Heartstar_Hammer_Icon.png/revision/latest?cb=20241120023203"
+    },
+    {
+      "name": "Jadeplume Terrorshroom",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Jadeplume_Terrorshroom_Icon.png/revision/latest?cb=20220824024707"
+    },
+    {
+      "name": "Knuckle Duckle",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/03/Knuckle_Duckle_Icon.png/revision/latest?cb=20250910024502"
+    },
+    {
+      "name": "Kongamato",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c2/Kongamato_Icon.png/revision/latest?cb=20240828020122"
+    },
+    {
+      "name": "Lava Dragon Statue",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a3/Lava_Dragon_Statue_Icon.png/revision/latest?cb=20250326014644"
+    },
+    {
+      "name": "Liam",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/91/Liam_Icon.png/revision/latest?cb=20260214054408"
+    },
+    {
+      "name": "Lord of the Hidden Depths: Whisperer of Nightmares",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/5a/Lord_of_the_Hidden_Depths_Whisperer_of_Nightmares_Icon.png/revision/latest?cb=20260114092748"
+    },
+    {
+      "name": "Maguu Kenki",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/41/Maguu_Kenki_Icon.png/revision/latest?cb=20210614030505"
+    },
+    {
+      "name": "Maha Vasudevayaputra",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7b/Battle-Hardened_Grounded_Geoshroom_Icon.png/revision/latest?cb=20260411134952"
+    },
+    {
+      "name": "Millennial Pearl Seahorse",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/07/Millennial_Pearl_Seahorse_Icon.png/revision/latest?cb=20230927021138"
+    },
+    {
+      "name": "Mushteshir",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/4a/Mushteshir_Icon.png/revision/latest?cb=20260704072424"
+    },
+    {
+      "name": "Ninianne of the Lake",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1a/Tainted_Water-Splitting_Phantasm_Icon.png/revision/latest?cb=20230816022811"
+    },
+    {
+      "name": "Perpetual Mechanical Array",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b3/Perpetual_Mechanical_Array_Icon.png/revision/latest?cb=20210721055430"
+    },
+    {
+      "name": "Potapo's Solidarity",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/ca/Biting-Cold_Wayob_Manifestation_Icon.png/revision/latest?cb=20241120023156"
+    },
+    {
+      "name": "Primo Geovishap",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/44/Primo_Geovishap_Icon.png/revision/latest?cb=20210503220458"
+    },
+    {
+      "name": "Prism Slime",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/aa/Prism_Slime_Icon.png/revision/latest?cb=20260704072106"
+    },
+    {
+      "name": "Prototype Cal. Breguet",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a9/Prototype_Cal._Breguet_Icon.png/revision/latest?cb=20230927021140"
+    },
+    {
+      "name": "Pyro Hypostasis",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/94/Pyro_Hypostasis_Icon.png/revision/latest?cb=20210721055437"
+    },
+    {
+      "name": "Pyro Regisvine",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/94/Pyro_Regisvine_Icon.png/revision/latest?cb=20230412030523"
+    },
+    {
+      "name": "Radiant Moonfly",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f3/Radiant_Moonfly_Icon.png/revision/latest?cb=20250910024517"
+    },
+    {
+      "name": "Radiant Moongecko",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/20/Radiant_Moongecko_Icon.png/revision/latest?cb=20260225052747"
+    },
+    {
+      "name": "Raskolnikov",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/74/Battle-Hardened_Fireblade_Shock_Trooper_Icon.png/revision/latest?cb=20251006230759"
+    },
+    {
+      "name": "Reji",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a4/Tatankasaurus_Warrior_Spiritlight_Chaser_Icon.png/revision/latest?cb=20250326014653"
+    },
+    {
+      "name": "Rhodeia of Loch",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6a/Oceanid_Icon.png/revision/latest?cb=20201120070220"
+    },
+    {
+      "name": "Rilai",
+      "type": "Local Legend",
+      "iconUrl": null
+    },
+    {
+      "name": "Rocky Avildsen",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/34/Rocky_Avildsen_Icon.png/revision/latest?cb=20231212191752"
+    },
+    {
+      "name": "Ruin Serpent",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d4/Ruin_Serpent_Icon.png/revision/latest?cb=20220330115700"
+    },
+    {
+      "name": "Sappho Amidst the Waves",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/71/Koholasaurus_Warrior_Waveshuttler_Icon.png/revision/latest?cb=20240828020120"
+    },
+    {
+      "name": "Secret Source Automaton: Configuration Device",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f7/Secret_Source_Automaton_Configuration_Device_Icon.png/revision/latest?cb=20241009013840"
+    },
+    {
+      "name": "Secret Source Automaton: Overseer Device",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d9/Secret_Source_Automaton_Overseer_Device_Icon.png/revision/latest?cb=20250507034833"
+    },
+    {
+      "name": "Setekh Wenut",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/0d/Setekh_Wenut_Icon.png/revision/latest?cb=20230118020552"
+    },
+    {
+      "name": "Sigurd",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f0/Sigurd_%28Local_Legend%29_Icon.png/revision/latest?cb=20250910024448"
+    },
+    {
+      "name": "Solitary Suanni",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/de/Solitary_Suanni_Icon.png/revision/latest?cb=20240131020652"
+    },
+    {
+      "name": "Spirit of the Fallen Dawnstar",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Iktomisaurus_Icon.png/revision/latest?cb=20241120023158"
+    },
+    {
+      "name": "Statue of Marble and Brass",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/bc/Statue_of_Marble_and_Brass_Icon.png/revision/latest?cb=20240424020346"
+    },
+    {
+      "name": "Super-Heavy Landrover: Mechanized Fortress",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/23/Super-Heavy_Landrover_Mechanized_Fortress_Icon.png/revision/latest?cb=20251203041232"
+    },
+    {
+      "name": "Tenebrous Papilla",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6c/Tenebrous_Papilla_Icon.png/revision/latest?cb=20241120023210"
+    },
+    {
+      "name": "The Homesick Lone Wolf",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/49/The_Homesick_Lone_Wolf_Icon.png/revision/latest?cb=20260117120508"
+    },
+    {
+      "name": "The Last Survivor of Tenochtzitoc",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a1/Battle-Hardened_Pipilpan_Idol_Icon.png/revision/latest?cb=20250808051851"
+    },
+    {
+      "name": "The Open-Eyed",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/ca/The_Open-Eyed_Icon.png/revision/latest?cb=20260408043917"
+    },
+    {
+      "name": "The Peak",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/8/89/The_Peak_Icon.png/revision/latest?cb=20250721173811"
+    },
+    {
+      "name": "Thunder Manifestation",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2a/Thunder_Manifestation_Icon.png/revision/latest?cb=20210901042652"
+    },
+    {
+      "name": "Tlatzacuilotl",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7b/Tepetlisaurus_Warrior_Rockbreaker_Blade_Icon.png/revision/latest?cb=20240828020138"
+    },
+    {
+      "name": "Tupayo's Aid",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/46/Burning-Aflame_Wayob_Manifestation_Icon.png/revision/latest?cb=20241120023156"
+    },
+    {
+      "name": "Tupu's Lushness",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/69/Thundering_Wayob_Manifestation_Icon.png/revision/latest?cb=20250326014655"
+    },
+    {
+      "name": "Vivianne of the Lake",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/bc/Tainted_Water-Spouting_Phantasm_Icon.png/revision/latest?cb=20230816022813"
+    },
+    {
+      "name": "Wavebinder",
+      "type": "Boss",
+      "iconUrl": null
+    },
+    {
+      "name": "Wayward Hermetic Spiritspeaker",
+      "type": "Boss",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/91/Wayward_Hermetic_Spiritspeaker_Icon.png/revision/latest?cb=20250101020419"
+    },
+    {
+      "name": "Yseut",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/dd/Frost_Operative_Icon.png/revision/latest?cb=20230927021137"
+    }
+  ],
+  "nextUnavailableReason": null
+}
