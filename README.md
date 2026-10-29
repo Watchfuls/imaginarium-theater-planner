@@ -53,7 +53,7 @@ Commit the JSON change and rebuild/deploy the site for the override to appear fo
 ## Notes
 
 - Character icons are copied from the sibling `genshin-shared/icons` directory into the build output.
-- Ownership, challenge setup, and planner selections are saved to browser `localStorage`.
+- Ownership, challenge setup, and planner selections are saved to browser `localStorage`. Traveler versions share one level setting in **Your Characters**.
 - Challenge Setup previews the selected season's four boss slots, including manual overrides, and blocks planner navigation until the account eligibility estimate meets the selected difficulty's minimum.
 - In the planner, drag an eligible character directly to an act slot to add them to the selected cast and assign them in one step.
 - In Lunar difficulty, the ten normal acts remain in Visionary order; optional Arcanum Challenge 1 is placed after Act 3 and Challenge 2 after Act 6, matching their unlock points before Act 10.
