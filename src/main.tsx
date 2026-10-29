@@ -50,9 +50,46 @@ function parseBossData(value:unknown):TheaterBossData {
 const theaterLineups=parseLineupData(rawLineupData);
 const theaterBosses=parseBossData(rawBossData);
 const availableSeasons=[theaterLineups.current,theaterLineups.next].filter((season):season is TheaterSeason=>season!==null);
-const LEVEL_OPTIONS=[20,40,50,60,70,80,90] as const;
+const LEVEL_OPTIONS=[10,20,30,40,50,60,70,80,90] as const;
 const travelerNames=CHARACTERS.filter(character=>isTraveler(character.name)).map(character=>character.name);
 const difficulties:Record<string,{acts:number;lunarActs?:number;minimum:number;cap:number;minimumLevel:number}> = {'Easy':{acts:3,minimum:8,cap:10,minimumLevel:60},'Normal':{acts:6,minimum:12,cap:14,minimumLevel:60},'Hard':{acts:8,minimum:16,cap:20,minimumLevel:70},'Visionary':{acts:10,minimum:22,cap:26,minimumLevel:70},'Lunar':{acts:10,lunarActs:2,minimum:28,cap:32,minimumLevel:70}};
+function parseGoodOwnership(value:unknown):{characters:Map<string,number>;unknownKeys:string[]} {
+  if(!value||typeof value!=='object'||Array.isArray(value))throw new Error('The file must contain a GOOD JSON object.');
+  const data=value as Record<string,unknown>;
+  if(data.format!=='GOOD'||!Array.isArray(data.characters))throw new Error('Expected a GOOD export with a characters array.');
+  const keyToNames=new Map<string,string[]>();
+  const addKey=(key:string,name:string)=>{
+    const normalized=key.replace(/[^a-z0-9]/gi,'').toLocaleLowerCase();
+    keyToNames.set(normalized,[...(keyToNames.get(normalized)??[]),name]);
+  };
+  for(const character of CHARACTERS)addKey(character.name,character.name);
+  for(const [key,name] of Object.entries({
+    AratakiItto:'Itto',
+    KaedeharaKazuha:'Kazuha',
+    KamisatoAyaka:'Ayaka',
+    KamisatoAyato:'Ayato',
+    KujouSara:'Sara',
+    SangonomiyaKokomi:'Kokomi',
+    ShikanoinHeizou:'Heizou',
+    YumemizukiMizuki:'Mizuki'
+  }))addKey(key,name);
+  for(const element of ELEMENTS)addKey(`Traveler${element}`,`${element} Traveler`);
+  keyToNames.set('traveler',travelerNames);
+
+  const characters=new Map<string,number>();
+  const unknownKeys:string[]=[];
+  for(const entry of data.characters){
+    if(!entry||typeof entry!=='object'||Array.isArray(entry))throw new Error('A character entry is invalid.');
+    const character=entry as Record<string,unknown>;
+    if(typeof character.key!=='string'||typeof character.level!=='number'||!Number.isInteger(character.level)||character.level<1||character.level>90)throw new Error('Every character must have a key and a level from 1 to 90.');
+    const names=keyToNames.get(character.key.replace(/[^a-z0-9]/gi,'').toLocaleLowerCase());
+    if(!names){unknownKeys.push(character.key);continue;}
+    const level=Math.max(10,Math.floor(character.level/10)*10);
+    for(const name of names)characters.set(name,Math.max(characters.get(name)??0,level));
+  }
+  if(characters.size===0)throw new Error('No characters in the file match this planner roster.');
+  return {characters,unknownKeys};
+}
 function getDefaultBossesForSlot(season:TheaterSeason,slot:BossOverrideSlot):TheaterBoss[]{
   const act=slot==='boss1'?3:slot==='boss2'?6:slot==='boss3'?8:slot==='boss4'?10:12;
   const stage=season.bossStages.find(candidate=>candidate.act===act)
@@ -310,6 +347,8 @@ const [dropTarget,setDropTarget]=useState('');
 const [search,setSearch]=useState('');const [ownedOnly,setOwnedOnly]=useState(false);
 const [ownedElements,setOwnedElements]=useState<Element[]>([]);
 const [ownedRarities,setOwnedRarities]=useState<(4|5)[]>([]);
+const [importMessage,setImportMessage]=useState('');
+const importFileInput=useRef<HTMLInputElement>(null);
 const [chosenSearch,setChosenSearch]=useState('');
 const [chosenElements,setChosenElements]=useState<Element[]>([]);
 const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
@@ -438,6 +477,28 @@ const toggleChosenElement=(element:Element)=>setChosenElements(current=>current.
 const toggleChosenRarity=(rarity:4|5)=>setChosenRarities(current=>current.includes(rarity)?current.filter(value=>value!==rarity):[...current,rarity]);
 const toggleOwnedElement=(element:Element)=>setOwnedElements(current=>current.includes(element)?current.filter(value=>value!==element):[...current,element]);
 const toggleOwnedRarity=(rarity:4|5)=>setOwnedRarities(current=>current.includes(rarity)?current.filter(value=>value!==rarity):[...current,rarity]);
+const importOwnership=async(file:File)=>{
+  try{
+    const result=parseGoodOwnership(JSON.parse(await file.text()));
+    if(!window.confirm(`Import ${result.characters.size} recognized characters and replace your current ownership list? Characters not in the file will be marked unowned.`))return;
+    setOwnership(current=>{
+      const updated=Object.fromEntries(CHARACTERS.map(character=>[character.name,{
+        owned:result.characters.has(character.name),
+        level:result.characters.get(character.name)??current[character.name]?.level??90
+      }])) as Ownership;
+      const travelerLevel=travelerNames.map(name=>result.characters.get(name)).find((level):level is number=>level!==undefined)
+        ??current[travelerNames[0]]?.level??90;
+      for(const name of travelerNames)updated[name]={owned:result.characters.has(name),level:travelerLevel};
+      return updated;
+    });
+    const unknownMessage=result.unknownKeys.length?` ${result.unknownKeys.length} unrecognized character key(s) were skipped.`:'';
+    setImportMessage(`Imported ${result.characters.size} characters. Levels were rounded down to the nearest 10.${unknownMessage}`);
+  }catch(error){
+    setImportMessage(`Import failed: ${error instanceof Error?error.message:'Unable to read this file.'}`);
+  }finally{
+    if(importFileInput.current)importFileInput.current.value='';
+  }
+};
 const renderPlannerCharacter=(character:Character)=>{
   const name=character.name;
   const isChosen=chosen.includes(name);
@@ -475,7 +536,26 @@ const renderAct=(act:number,label:string)=>{
 };
 return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL</p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><span className="version">v0.1 · Local save</span></header>
 <nav>{['Your Characters','Challenge Setup','Theater Planner'].map((n,i)=><button key={n} className={step===i+1?'active':''} disabled={i===2&&!canContinueToPlanner} title={i===2&&!canContinueToPlanner?'Meet the eligibility minimum in Challenge Setup first.':undefined} onClick={()=>{if(i!==2||canContinueToPlanner)setStep(i+1);}}><span className="stepnum">{i+1}</span>{n}</button>)}</nav>
-{step===1&&<section><div className="sectionhead"><div><h2>Your Characters</h2><p>{count} owned · {CHARACTERS.length} in starter database</p></div><div className="actions"><button onClick={()=>setOwnership(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:true,level:ownership[c.name]?.level??90}])))}>Own All</button><button onClick={()=>setOwnership(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:false,level:ownership[c.name]?.level??90}])))}>Clear All</button></div></div><div className="toolbar"><input aria-label="Search your characters" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search characters…"/><div className="chosen-element-filters" role="group" aria-label="Filter by element">{ELEMENTS.map(element=><button type="button" key={element} className={`chosen-filter-icon ${ownedElements.includes(element)?'selected':''}`} aria-label={`${ownedElements.includes(element)?'Remove':'Filter by'} ${element}`} aria-pressed={ownedElements.includes(element)} title={element} onClick={()=>toggleOwnedElement(element)}><img src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt=""/></button>)}</div><div className="chosen-rarity-filters" role="group" aria-label="Filter by rarity">{([4,5] as const).map(rarity=><button type="button" key={rarity} className={ownedRarities.includes(rarity)?'selected':''} aria-pressed={ownedRarities.includes(rarity)} onClick={()=>toggleOwnedRarity(rarity)}>{rarity}★</button>)}</div><label><input type="checkbox" checked={ownedOnly} onChange={e=>setOwnedOnly(e.target.checked)}/> Owned only</label></div><div className="characters">{filtered.map(c=><div className={'character '+(ownership[c.name]?.owned?'owned':'')} key={c.name} role="group" tabIndex={0} aria-label={`${c.name}. Click card to toggle owned.`} onClick={e=>{if(!(e.target as HTMLElement).closest('label'))toggleOwn(c.name);}} onKeyDown={e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleOwn(c.name);}}}><div className="character-top"><CharacterIcon name={c.name}/><ElementBadge element={c.element}/><strong>{c.name}</strong></div><label className="level-control"><span>Level</span><select aria-label={`${c.name} level`} value={ownership[c.name]?.level??90} onChange={e=>setCharacterLevel(c.name,Number(e.target.value))}>{LEVEL_OPTIONS.map(level=><option key={level} value={level}>{level}</option>)}</select></label></div>)}</div><div className="bottom"><button className="primary" onClick={()=>setStep(2)}>Continue to Challenge Setup →</button></div></section>}
+{step===1&&<section>
+  <div className="sectionhead">
+    <div><h2>Your Characters</h2><p>{count} owned · {CHARACTERS.length} in starter database</p></div>
+    <div className="actions">
+      <button type="button" onClick={()=>importFileInput.current?.click()}>Import GOOD JSON</button>
+      <input ref={importFileInput} type="file" accept=".json,application/json" hidden aria-label="Import a GOOD character export" onChange={event=>{const file=event.target.files?.[0];if(file)void importOwnership(file);}}/>
+      <button onClick={()=>setOwnership(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:true,level:ownership[c.name]?.level??90}])))}>Own All</button>
+      <button onClick={()=>setOwnership(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:false,level:ownership[c.name]?.level??90}])))}>Clear All</button>
+    </div>
+  </div>
+  {importMessage&&<p role="status">{importMessage}</p>}
+  <div className="toolbar">
+    <input aria-label="Search your characters" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search characters…"/>
+    <div className="chosen-element-filters" role="group" aria-label="Filter by element">{ELEMENTS.map(element=><button type="button" key={element} className={`chosen-filter-icon ${ownedElements.includes(element)?'selected':''}`} aria-label={`${ownedElements.includes(element)?'Remove':'Filter by'} ${element}`} aria-pressed={ownedElements.includes(element)} title={element} onClick={()=>toggleOwnedElement(element)}><img src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt=""/></button>)}</div>
+    <div className="chosen-rarity-filters" role="group" aria-label="Filter by rarity">{([4,5] as const).map(rarity=><button type="button" key={rarity} className={ownedRarities.includes(rarity)?'selected':''} aria-pressed={ownedRarities.includes(rarity)} onClick={()=>toggleOwnedRarity(rarity)}>{rarity}★</button>)}</div>
+    <label><input type="checkbox" checked={ownedOnly} onChange={e=>setOwnedOnly(e.target.checked)}/> Owned only</label>
+  </div>
+  <div className="characters">{filtered.map(c=><div className={'character '+(ownership[c.name]?.owned?'owned':'')} key={c.name} role="group" tabIndex={0} aria-label={`${c.name}. Click card to toggle owned.`} onClick={e=>{if(!(e.target as HTMLElement).closest('label'))toggleOwn(c.name);}} onKeyDown={e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleOwn(c.name);}}}><div className="character-top"><CharacterIcon name={c.name}/><ElementBadge element={c.element}/><strong>{c.name}</strong></div><label className="level-control"><span>Level</span><select aria-label={`${c.name} level`} value={ownership[c.name]?.level??90} onChange={e=>setCharacterLevel(c.name,Number(e.target.value))}>{LEVEL_OPTIONS.map(level=><option key={level} value={level}>{level}</option>)}</select></label></div>)}</div>
+  <div className="bottom"><button className="primary" onClick={()=>setStep(2)}>Continue to Challenge Setup →</button></div>
+</section>}
 {step===2&&<section>
   <h2>Challenge Setup</h2>
   <p>Configure the current rotation. You can edit these settings at any time. Only one elemental Traveler version can be used per Theater run.</p>
