@@ -25,3 +25,10 @@ Deploy the generated `dist/` folder to a static host such as GitHub Pages. Vite 
 - The character database in `src/characters.ts` is an editable **starter roster**, not a guaranteed complete or up-to-date game database.
 - Difficulty thresholds are provisional. Verify official rules before treating the eligibility estimate as authoritative.
 - Act assignments currently do not enforce Vigor, duplicate restrictions, or other game-specific rules.
+
+## Character portraits
+
+The collection uses community-hosted character icons from `genshin.jmp.blue` (genshin.dev).
+An internet connection is required. If a character is missing from that API or its slug
+differs, the card displays a letter fallback. Adjust `ICON_SLUGS` in `src/main.tsx`
+to correct a name. For a fully offline site, replace these URLs with locally hosted images.

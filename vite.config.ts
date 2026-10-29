@@ -1,2 +1,7 @@
 import { defineConfig } from 'vite';
-export default defineConfig({base:'./'});
+import { resolve } from 'node:path';
+
+export default defineConfig({
+  base: './',
+  publicDir: resolve(__dirname, '../genshin-shared'),
+});
