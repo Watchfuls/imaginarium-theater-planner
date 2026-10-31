@@ -654,7 +654,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
       <select value={setup.difficulty} onChange={event=>setSetup(current=>({...current,difficulty:event.target.value}))}>{Object.keys(difficulties).map(difficulty=><option key={difficulty}>{difficulty}</option>)}</select>
       <p>{requirement.acts} acts{requirement.lunarActs?` + ${requirement.lunarActs} Lunar acts`:''} · at least {requirement.minimum}, up to {requirement.cap} characters · Level {requirement.minimumLevel}+</p>
       <h3>Three featured elements</h3>
-      <div className="chips">{ELEMENTS.map(element=><button className={selectedElements.includes(element)?'selected':''} key={element} onClick={()=>toggleElement(element)}>{element}</button>)}</div>
+      <div className="chips featured-elements">{ELEMENTS.map(element=><button type="button" className={selectedElements.includes(element)?'selected':''} key={element} aria-pressed={selectedElements.includes(element)} onClick={()=>toggleElement(element)}><img src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt="" aria-hidden="true"/><span>{element}</span></button>)}</div>
       <p>{selectedElements.length}/3 selected</p>
     </div>
     <div className="eligibility">

@@ -175,6 +175,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:560px){.chosen-filters{grid-template-columns:1fr}.chosen-element-filters,.chosen-rarity-filters{flex-wrap:wrap}}
 .character .level-control{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;font-size:13px}
 .character .level-control select{min-width:0;width:100%;padding:7px 9px;background:#20283a;color:#e9ecf6;border:1px solid #39435a;border-radius:8px}
+.featured-elements button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:76px;padding:8px 11px;font-size:12px}
+.featured-elements button img{width:26px;height:26px;object-fit:contain}
 .characters:not(.selection-grid):not(.chosen-grid)>.character{gap:5px}
 .characters:not(.selection-grid):not(.chosen-grid)>.character .character-top strong{min-height:24px}
 .characters:not(.selection-grid):not(.chosen-grid){grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
