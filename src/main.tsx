@@ -160,21 +160,30 @@ function CharacterIcon({name}:{name:string}){
 function ElementBadge({element}:{element:Element}){
   return <span className={`element ${element}`}>{element}<img className="element-icon" src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt="" aria-hidden="true"/></span>;
 }
-function BorrowedCharacterPicker({characters,selected,onSelect}:{characters:Character[];selected:string;onSelect:(name:string)=>void}){
-  const [open,setOpen]=useState(false);
+function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpenChange}:{characters:Character[];selected:string;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void}){
+  const container=useRef<HTMLDivElement>(null);
   const [query,setQuery]=useState('');
+  useEffect(()=>{if(!open)setQuery('');},[open]);
+  useEffect(()=>{
+    if(!open)return;
+    const closeOnOutsideClick=(event:PointerEvent)=>{
+      if(event.target instanceof Node&&!container.current?.contains(event.target))onOpenChange(false);
+    };
+    document.addEventListener('pointerdown',closeOnOutsideClick);
+    return ()=>document.removeEventListener('pointerdown',closeOnOutsideClick);
+  },[open,onOpenChange]);
   const selectedCharacter=characters.find(character=>character.name===selected);
   const filtered=characters.filter(character=>character.name.toLowerCase().includes(query.toLowerCase()));
-  return <div className="borrowed-picker">
-    <button className="borrowed-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} onClick={()=>setOpen(value=>!value)}>
+  return <div className="borrowed-picker" ref={container}>
+    <button className="borrowed-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} onClick={()=>onOpenChange(!open)}>
       {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span>{selectedCharacter.name}</span><ElementBadge element={selectedCharacter.element}/></>:<span>No borrowed character</span>}
       <span className="borrowed-chevron" aria-hidden="true">▾</span>
     </button>
     {open&&<div className="borrowed-menu">
       <input className="borrowed-search" aria-label="Search borrowed characters" placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
       <div className="borrowed-options" role="listbox" aria-label="Borrowed character options">
-        <button type="button" role="option" aria-selected={!selected} className="borrowed-option" onClick={()=>{onSelect('');setOpen(false);setQuery('');}}>No borrowed character</button>
-        {filtered.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="borrowed-option" key={character.name} onClick={()=>{onSelect(character.name);setOpen(false);setQuery('');}}>
+        <button type="button" role="option" aria-selected={!selected} className="borrowed-option" onClick={()=>{onSelect('');onOpenChange(false);}}>No borrowed character</button>
+        {filtered.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="borrowed-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
           <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/>
         </button>)}
         {filtered.length===0&&<p className="selection-empty">No characters match your search.</p>}
@@ -182,24 +191,46 @@ function BorrowedCharacterPicker({characters,selected,onSelect}:{characters:Char
     </div>}
   </div>;
 }
-function ActAssignmentPicker({act,slot,characters,selected,borrowed,opening,canSelect,onSelect}:{act:number;slot:number;characters:Character[];selected:string;borrowed:string;opening:Set<string>;canSelect:(name:string)=>boolean;onSelect:(name:string)=>void}){
-  const [open,setOpen]=useState(false);
+function ActAssignmentPicker({act,slot,characters,chosenNames,selected,borrowed,opening,canSelect,isExhausted,onSelect,open,onOpenChange}:{act:number;slot:number;characters:Character[];chosenNames:Set<string>;selected:string;borrowed:string;opening:Set<string>;canSelect:(name:string)=>boolean;isExhausted:(name:string)=>boolean;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void}){
+  const container=useRef<HTMLDivElement>(null);
+  const [query,setQuery]=useState('');
+  useEffect(()=>{if(!open)setQuery('');},[open]);
+  useEffect(()=>{
+    if(!open)return;
+    const closeOnOutsideClick=(event:PointerEvent)=>{
+      if(event.target instanceof Node&&!container.current?.contains(event.target))onOpenChange(false);
+    };
+    document.addEventListener('pointerdown',closeOnOutsideClick);
+    return ()=>document.removeEventListener('pointerdown',closeOnOutsideClick);
+  },[open,onOpenChange]);
   const selectedCharacter=characters.find(character=>character.name===selected);
-  const availableCharacters=characters.filter(character=>canSelect(character.name));
-  const unavailableCharacters=characters.filter(character=>!canSelect(character.name));
-  return <div className="act-picker">
-    <button className="act-picker-trigger" type="button" aria-label={`Act ${act}, slot ${slot+1}`} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>setOpen(value=>!value)}>
+  const matchingCharacters=characters.filter(character=>
+    (Boolean(query)||chosenNames.has(character.name))
+    &&character.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+  );
+  const availableCharacters=matchingCharacters.filter(character=>canSelect(character.name));
+  const unavailableCharacters=matchingCharacters.filter(character=>!canSelect(character.name)&&!isExhausted(character.name));
+  const exhaustedCharacters=matchingCharacters.filter(character=>!canSelect(character.name)&&isExhausted(character.name));
+  return <div className="act-picker" ref={container}>
+    <button className="act-picker-trigger" type="button" aria-label={`Act ${act}, slot ${slot+1}`} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>onOpenChange(!open)}>
       {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span className="act-picker-name">{selectedCharacter.name}</span><ElementBadge element={selectedCharacter.element}/><small>{selectedCharacter.name===borrowed?'Borrowed':opening.has(selectedCharacter.name)?'Opening':''}</small></>:<span>+ Slot {slot+1}</span>}
       <span className="borrowed-chevron" aria-hidden="true">▾</span>
     </button>
-    {open&&<div className="act-picker-menu" role="listbox" aria-label={`Act ${act}, slot ${slot+1} characters`}>
-      <button type="button" role="option" aria-selected={!selected} className="act-picker-option clear-act-option" onClick={()=>{onSelect('');setOpen(false);}}>Clear slot</button>
-      {availableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} onClick={()=>{onSelect(character.name);setOpen(false);}}>
+    {open&&<div className="act-picker-menu">
+      <input className="act-picker-search" type="search" aria-label={`Search characters for Act ${act}, slot ${slot+1}`} placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
+      <div className="act-picker-options" role="listbox" aria-label={`Act ${act}, slot ${slot+1} characters`}>
+      <button type="button" role="option" aria-selected={!selected} className="act-picker-option clear-act-option" onClick={()=>{onSelect('');onOpenChange(false);}}>Clear slot</button>
+      {availableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
         <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/><small>{character.name===borrowed?'Borrowed':opening.has(character.name)?'Opening':''}</small>
       </button>)}
-      {unavailableCharacters.length>0&&<><div className="act-picker-group-label">Unavailable</div>{unavailableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} disabled onClick={()=>{onSelect(character.name);setOpen(false);}}>
+      {exhaustedCharacters.length>0&&<><div className="act-picker-group-label">Exhausted</div>{exhaustedCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} disabled onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
         <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/><small>{character.name===borrowed?'Borrowed':opening.has(character.name)?'Opening':''}</small>
       </button>)}</>}
+      {unavailableCharacters.length>0&&<><div className="act-picker-group-label">Unavailable</div>{unavailableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} disabled onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
+        <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/><small>{character.name===borrowed?'Borrowed':opening.has(character.name)?'Opening':''}</small>
+      </button>)}</>}
+      {matchingCharacters.length===0&&<p className="selection-empty">No characters match your search.</p>}
+      </div>
     </div>}
     {selected&&<button className="act-clear-button" type="button" aria-label={`Clear Act ${act}, slot ${slot+1}`} title="Clear slot" onClick={()=>onSelect('')}>×</button>}
   </div>;
@@ -344,6 +375,9 @@ const [setup,setSetup]=useState<Setup>(()=>stored('itp-setup-v1',defaultSetup())
 const [bossData,setBossData]=useState<TheaterBossData>(theaterBosses);
 const [plan,setPlan]=useState<Plan>(()=>stored('itp-plan-v1',{roster:[],acts:{},borrowed:''}));
 const [dropTarget,setDropTarget]=useState('');
+const [assignmentNotice,setAssignmentNotice]=useState<{message:string;id:number}|null>(null);
+const assignmentNoticeId=useRef(0);
+const [openCharacterPicker,setOpenCharacterPicker]=useState('');
 const [search,setSearch]=useState('');const [ownedOnly,setOwnedOnly]=useState(false);
 const [ownedElements,setOwnedElements]=useState<Element[]>([]);
 const [ownedRarities,setOwnedRarities]=useState<(4|5)[]>([]);
@@ -355,6 +389,11 @@ const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
 useEffect(()=>localStorage.setItem('itp-ownership-v1',JSON.stringify(ownership)),[ownership]);
 useEffect(()=>localStorage.setItem('itp-setup-v1',JSON.stringify(setup)),[setup]);
 useEffect(()=>localStorage.setItem('itp-plan-v1',JSON.stringify(plan)),[plan]);
+useEffect(()=>{
+  if(!assignmentNotice)return;
+  const timeout=window.setTimeout(()=>setAssignmentNotice(current=>current?.id===assignmentNotice.id?null:current),10000);
+  return ()=>window.clearTimeout(timeout);
+},[assignmentNotice]);
 useEffect(()=>{
   if(setup.seasonId===undefined)return;
   const season=availableSeasons.find(candidate=>candidate.season===setup.seasonId)??theaterLineups.current;
@@ -409,30 +448,50 @@ const toggleRoster=(name:string)=>setPlan(current=>{
   return count>=requirement.cap?current:{...current,roster:[...roster,name]};
 });
 const canAssignToAct=(name:string,act:number,slot:number,assignments=plan.acts)=>{
-  if(!chosen.includes(name)||(assignments[act]??[]).some((value,index)=>value===name&&index!==slot))return false;
+  const alreadyChosen=chosen.includes(name);
+  const canJoinRoster=rosterCandidateNames.has(name)
+    &&chosen.length<requirement.cap
+    &&(!isTraveler(name)||!plannerTraveler||name===plannerTraveler)
+    &&(!isTraveler(name)||!chosen.some(chosenName=>isTraveler(chosenName)&&chosenName!==name));
+  if(!alreadyChosen&&!canJoinRoster)return false;
   const otherActs=Object.entries(assignments).filter(([assignedAct,names])=>Number(assignedAct)!==act&&names.includes(name)).length;
   return otherActs<2;
 };
 const assignToAct=(act:number,slot:number,name:string)=>setPlan(current=>{
   if(name&&!canAssignToAct(name,act,slot,current.acts))return current;
   const assignments=[...(current.acts[act]??[])];
+  if(name)assignments.forEach((value,index)=>{if(index!==slot&&value===name)assignments[index]='';});
   assignments[slot]=name;
   return {...current,acts:{...current.acts,[act]:assignments}};
+});
+const setBorrowedCharacter=(name:string)=>setPlan(current=>{
+  const acts=current.borrowed&&current.borrowed!==name
+    ?Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(value=>value===current.borrowed?'':value)]))
+    :current.acts;
+  return {...current,borrowed:name,roster:current.roster.filter(value=>value!==name),acts};
 });
 const dropCharacterIntoAct=(name:string,act:number,slot:number)=>setPlan(current=>{
   const roster=current.roster.filter(value=>rosterCandidateNames.has(value)&&value!==(current.borrowed??''));
   const currentBorrowed=typeof current.borrowed==='string'&&borrowedOptions.some(character=>character.name===current.borrowed)?current.borrowed:'';
   const selected=new Set([...selectedOpening,...roster,...(currentBorrowed?[currentBorrowed]:[])]);
+  const actNames=current.acts[act]??[];
+  const existingSlot=actNames.indexOf(name);
+  if(existingSlot>=0){
+    if(existingSlot===slot)return current;
+    const assignments=[...actNames];
+    assignments[existingSlot]=assignments[slot]??'';
+    assignments[slot]=name;
+    return {...current,acts:{...current.acts,[act]:assignments}};
+  }
   if(!selected.has(name)){
     if(isTraveler(name)&&(selectedTraveler??roster.find(isTraveler)))return current;
     if(!rosterCandidateNames.has(name)||selected.size>=requirement.cap)return current;
     roster.push(name);
   }
-  const actNames=current.acts[act]??[];
-  if(actNames.some((value,index)=>value===name&&index!==slot))return current;
   const otherActs=Object.entries(current.acts).filter(([assignedAct,names])=>Number(assignedAct)!==act&&names.includes(name)).length;
-  if(otherActs>=2)return current;
+  if(otherActs>=2&&!actNames.includes(name))return current;
   const assignments=[...actNames];
+  assignments.forEach((value,index)=>{if(index!==slot&&value===name)assignments[index]='';});
   assignments[slot]=name;
   return {...current,roster,acts:{...current.acts,[act]:assignments}};
 });
@@ -509,15 +568,16 @@ const renderPlannerCharacter=(character:Character)=>{
   const travelerConflict=isTraveler(name)&&((plannerTraveler!==undefined&&name!==plannerTraveler)||chosen.some(chosenName=>isTraveler(chosenName)&&chosenName!==name));
   const usedActs=Object.values(plan.acts).filter(names=>names.includes(name)).length;
   const remainingUses=Math.max(0,2-usedActs);
+  const exhausted=usedActs>=2;
   const disabled=!canChoose||full||travelerConflict;
-  return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' borrowed':forced?' opening character':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top"><CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Borrowed':forced?'Opening · Required':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
+  return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' borrowed':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top"><CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Borrowed':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
 };
 const renderAct=(act:number,label:string)=>{
   const overrideSlot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(setup.difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12&&setup.difficulty==='Lunar'?'lunar2':undefined;
   const bossStage=selectedSeason?.bossStages.find(stage=>stage.act===act);
   const bosses=selectedSeason&&overrideSlot?getBossesForSlot(selectedSeason,bossData,overrideSlot):bossStage?.bosses??[];
   const objective=bosses.length?'Boss':stageObjectives[setup.difficulty]?.[act];
-  return <div className="act" key={act}><div className="act-heading"><strong>{label}</strong>{objective&&<span className={`act-objective ${objective==='Monolith Defense'?'monolith-objective':objective==='Defeat Bounties'?'bounty-objective':'boss-objective'}`}>{objective}</span>}{bosses.length>0&&<span className="act-bosses">{bosses.map(boss=><span className="act-boss" key={boss.name}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></span>)}</span>}</div><div className="slots">{Array.from({length:4},(_,slot)=>{
+  return <div className="act" key={act}><div className="act-heading"><strong>{label}</strong>{objective&&<span className="act-objective">{objective}</span>}{bosses.length>0&&<span className="act-bosses">{bosses.map(boss=><span className="act-boss" key={boss.name}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></span>)}</span>}</div><div className="slots">{Array.from({length:4},(_,slot)=>{
     const current=plan.acts[act]?.[slot]??'';
     const target=`${act}-${slot}`;
     return <div key={slot} className={`act-slot ${dropTarget===target?'drop-target':''}`} onContextMenu={event=>{event.preventDefault();assignToAct(act,slot,'');}} onDragOver={event=>{event.preventDefault();event.dataTransfer.dropEffect=event.dataTransfer.types.includes('application/x-itp-act-slot')?'move':'copy';setDropTarget(target);}} onDragLeave={()=>setDropTarget(value=>value===target?'':value)} onDrop={event=>{
@@ -528,10 +588,15 @@ const renderAct=(act:number,label:string)=>{
         if(Number.isInteger(sourceAct)&&Number.isInteger(sourceSlot))swapActSlots(sourceAct,sourceSlot,act,slot);
       }else{
         const name=event.dataTransfer.getData('text/plain');
-        if(name)dropCharacterIntoAct(name,act,slot);
+        if(name){
+          const alreadyInAct=(plan.acts[act]??[]).includes(name);
+          const assignedActs=Object.values(plan.acts).filter(names=>names.includes(name)).length;
+          if(assignedActs>=2&&!alreadyInAct)setAssignmentNotice({message:`${name} is exhausted: already assigned to two acts.`,id:++assignmentNoticeId.current});
+          else{setAssignmentNotice(null);dropCharacterIntoAct(name,act,slot);}
+        }else setAssignmentNotice(null);
       }
       setDropTarget('');
-    }}><ActAssignmentPicker act={act} slot={slot} characters={chosenCharacters} selected={chosen.includes(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} canSelect={name=>canAssignToAct(name,act,slot)} onSelect={name=>assignToAct(act,slot,name)}/></div>;
+    }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} selected={chosen.includes(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(plan.acts).filter(names=>names.includes(name)).length>=2} onSelect={name=>name?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,'')} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
   })}</div></div>;
 };
 return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL</p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><span className="version">v0.1 · Local save</span></header>
@@ -619,7 +684,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
   <p>Select your cast, then assign up to four characters to each act. Changes are saved locally.</p>
   <div className="borrowed-control">
     <div><h3>Borrowed Character</h3><p>Choose any character allowed by this rotation. Borrowed characters count toward the cast cap, but not the minimum requirement.</p></div>
-    <BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} onSelect={name=>setPlan(p=>({...p,borrowed:name,roster:p.roster.filter(value=>value!==name)}))}/>
+    <BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} onSelect={setBorrowedCharacter} open={openCharacterPicker==='borrowed'} onOpenChange={open=>setOpenCharacterPicker(open?'borrowed':'')}/>
   </div>
   <div className="planner-layout">
     <section className="chosen-section">
@@ -650,6 +715,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
   </div>
   <div className="bottom"><button onClick={()=>setStep(2)}>← Challenge Setup</button><button onClick={()=>setPlan({roster:[],acts:{},borrowed:''})}>Reset Plan</button></div>
 </section>}
+{assignmentNotice&&<div key={assignmentNotice.id} className="assignment-notice" role="status">{assignmentNotice.message}</div>}
 <footer>Unofficial fan-made planning tool. All settings are saved in this browser.</footer></main>
 }
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
