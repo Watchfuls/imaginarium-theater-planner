@@ -1,6 +1,9 @@
 import React, {useEffect,useMemo,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {CHARACTERS,ELEMENTS,type Character,type Element} from './characters';
+import {countEligibleCharacters} from './eligibility';
+import {canBorrowCharacter} from './borrowing';
+import {teamPasteError,swapTeams} from './teamClipboard';
 import rawLineupData from './data/theater-lineups.json';
 import rawBossData from './data/theater-bosses.json';
 import './style.css';
@@ -8,6 +11,7 @@ type Ownership = Record<string,{owned:boolean;level:number}>;
 type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number};
 type Plan = {roster:string[];acts:Record<number,string[]>;borrowed?:string};
 type TheaterBoss = {name:string;iconUrl:string|null};
+const enemyWikiUrl=(name:string)=>`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ','_'))}`;
 type BossCatalogEntry = TheaterBoss & {type:'Boss'|'Local Legend'};
 type TheaterBossStage = {act:number;bosses:TheaterBoss[]};
 type BossOverrideSlot = 'boss1'|'boss2'|'boss3'|'boss4'|'lunar2';
@@ -160,7 +164,7 @@ function CharacterIcon({name}:{name:string}){
 function ElementBadge({element}:{element:Element}){
   return <span className={`element ${element}`}>{element}<img className="element-icon" src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt="" aria-hidden="true"/></span>;
 }
-function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpenChange}:{characters:Character[];selected:string;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void}){
+function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpenChange,canSelect}:{characters:Character[];selected:string;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void;canSelect:(name:string)=>boolean}){
   const container=useRef<HTMLDivElement>(null);
   const [query,setQuery]=useState('');
   useEffect(()=>{if(!open)setQuery('');},[open]);
@@ -183,7 +187,7 @@ function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpenChange
       <input className="borrowed-search" aria-label="Search borrowed characters" placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
       <div className="borrowed-options" role="listbox" aria-label="Borrowed character options">
         <button type="button" role="option" aria-selected={!selected} className="borrowed-option" onClick={()=>{onSelect('');onOpenChange(false);}}>No borrowed character</button>
-        {filtered.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="borrowed-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
+        {filtered.map(character=><button type="button" role="option" aria-selected={character.name===selected} disabled={!canSelect(character.name)} className="borrowed-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
           <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/>
         </button>)}
         {filtered.length===0&&<p className="selection-empty">No characters match your search.</p>}
@@ -211,13 +215,25 @@ function ActAssignmentPicker({act,slot,characters,chosenNames,selected,borrowed,
   const availableCharacters=matchingCharacters.filter(character=>canSelect(character.name));
   const unavailableCharacters=matchingCharacters.filter(character=>!canSelect(character.name)&&!isExhausted(character.name));
   const exhaustedCharacters=matchingCharacters.filter(character=>!canSelect(character.name)&&isExhausted(character.name));
-  return <div className="act-picker" ref={container}>
+  return <div className="act-picker" ref={container} onKeyDown={event=>{
+    const trigger=container.current?.querySelector<HTMLButtonElement>('.act-picker-trigger');
+    if(event.key==='Escape'&&open){event.preventDefault();event.stopPropagation();onOpenChange(false);trigger?.focus();return;}
+    if(event.key!=='ArrowDown'&&event.key!=='ArrowUp')return;
+    event.preventDefault();
+    if(!open){onOpenChange(true);return;}
+    const options=Array.from(container.current?.querySelectorAll<HTMLButtonElement>('.act-picker-option:not(:disabled):not(.clear-act-option)')??[]);
+    if(!options.length)return;
+    const index=options.indexOf(document.activeElement as HTMLButtonElement);
+    const next=index<0?(event.key==='ArrowDown'?0:options.length-1):(index+(event.key==='ArrowDown'?1:-1)+options.length)%options.length;
+    options[next].focus();
+    options[next].scrollIntoView({block:'nearest'});
+  }}>
     <button className="act-picker-trigger" type="button" aria-label={`Act ${act}, slot ${slot+1}`} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>onOpenChange(!open)}>
       {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span className="act-picker-name">{selectedCharacter.name}</span><ElementBadge element={selectedCharacter.element}/><small>{selectedCharacter.name===borrowed?'Borrowed':opening.has(selectedCharacter.name)?'Opening':''}</small></>:<span>+ Slot {slot+1}</span>}
       <span className="borrowed-chevron" aria-hidden="true">▾</span>
     </button>
     {open&&<div className="act-picker-menu">
-      <input className="act-picker-search" type="search" aria-label={`Search characters for Act ${act}, slot ${slot+1}`} placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
+      <input autoFocus className="act-picker-search" type="search" aria-label={`Search characters for Act ${act}, slot ${slot+1}`} placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
       <div className="act-picker-options" role="listbox" aria-label={`Act ${act}, slot ${slot+1} characters`}>
       <button type="button" role="option" aria-selected={!selected} className="act-picker-option clear-act-option" onClick={()=>{onSelect('');onOpenChange(false);}}>Clear slot</button>
       {availableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
@@ -376,6 +392,8 @@ const [bossData,setBossData]=useState<TheaterBossData>(theaterBosses);
 const [plan,setPlan]=useState<Plan>(()=>stored('itp-plan-v1',{roster:[],acts:{},borrowed:''}));
 const [dropTarget,setDropTarget]=useState('');
 const [assignmentNotice,setAssignmentNotice]=useState<{message:string;id:number}|null>(null);
+const [copiedTeam,setCopiedTeam]=useState<{act:number;team:string[]}|null>(null);
+const [teamDropTarget,setTeamDropTarget]=useState<number|null>(null);
 const assignmentNoticeId=useRef(0);
 const [openCharacterPicker,setOpenCharacterPicker]=useState('');
 const [search,setSearch]=useState('');const [ownedOnly,setOwnedOnly]=useState(false);
@@ -389,6 +407,21 @@ const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
 useEffect(()=>localStorage.setItem('itp-ownership-v1',JSON.stringify(ownership)),[ownership]);
 useEffect(()=>localStorage.setItem('itp-setup-v1',JSON.stringify(setup)),[setup]);
 useEffect(()=>localStorage.setItem('itp-plan-v1',JSON.stringify(plan)),[plan]);
+useEffect(()=>{
+  if(!copiedTeam)return;
+  const cancelOnInteraction=(event:Event)=>{
+    if(!(event.target instanceof Element)||!event.target.closest('.act-team-tools'))setCopiedTeam(null);
+  };
+  const cancelOnEscape=(event:KeyboardEvent)=>{if(event.key==='Escape')setCopiedTeam(null);};
+  document.addEventListener('pointerdown',cancelOnInteraction,true);
+  document.addEventListener('focusin',cancelOnInteraction,true);
+  document.addEventListener('keydown',cancelOnEscape,true);
+  return ()=>{
+    document.removeEventListener('pointerdown',cancelOnInteraction,true);
+    document.removeEventListener('focusin',cancelOnInteraction,true);
+    document.removeEventListener('keydown',cancelOnEscape,true);
+  };
+},[copiedTeam]);
 useEffect(()=>{
   if(!assignmentNotice)return;
   const timeout=window.setTimeout(()=>setAssignmentNotice(current=>current?.id===assignmentNotice.id?null:current),10000);
@@ -411,8 +444,7 @@ const selectedGuests=setup.guests.filter(name=>guestOptions.some(c=>c.name===nam
 const unavailableTravelers=selectedTraveler?CHARACTERS.filter(character=>isTraveler(character.name)&&character.name!==selectedTraveler).map(character=>character.name):[];
 const requirement=difficulties[setup.difficulty]??difficulties.Hard;
 const eligibleOwned=CHARACTERS.filter(c=>ownership[c.name]?.owned&&(ownership[c.name]?.level??90)>=requirement.minimumLevel&&(selectedElements.includes(c.element)||selectedGuests.includes(c.name)));
-const eligibleNames=new Set([...eligibleOwned.map(c=>c.name),...selectedOpening]);
-const eligibleCount=eligibleNames.size;
+const eligibleCount=countEligibleCharacters([...eligibleOwned.map(c=>c.name),...selectedOpening],selectedTraveler);
 const canContinueToPlanner=hasThreeElements&&eligibleCount>=requirement.minimum;
 const available=CHARACTERS.filter(c=>selectedElements.includes(c.element)||selectedGuests.includes(c.name)||selectedOpening.includes(c.name));
 const availableNames=new Set(available.map(c=>c.name));
@@ -425,6 +457,12 @@ const plannerTraveler=selectedTraveler??selectedRosterTravelers[0];
 const chosen=[...new Set([...selectedOpening,...plan.roster.filter(name=>rosterCandidateNames.has(name)&&name!==borrowedCharacter&&(!isTraveler(name)||name===plannerTraveler)),...(borrowedCharacter?[borrowedCharacter]:[])])];
 const plannerCharacters=CHARACTERS.filter(character=>rosterCandidateNames.has(character.name)||character.name===borrowedCharacter);
 const chosenForRequirement=chosen.filter(name=>name!==borrowedCharacter).length;
+const castStatus=chosenForRequirement<requirement.minimum?'below-minimum':chosen.length<requirement.cap?'minimum-met':'full-cast';
+const castMessage=chosenForRequirement<requirement.minimum
+  ?`Select ${requirement.minimum-chosenForRequirement} more non-borrowed characters to meet the ${setup.difficulty} entry minimum.`
+  :chosen.length<requirement.cap
+    ?`Entry minimum met. You can select ${requirement.cap-chosen.length} more characters for additional blessing benefits.`
+    :'Full cast selected for the maximum roster-size blessing benefits.';
 const openingNames=new Set(selectedOpening);
 const toggleOwn=(name:string)=>setOwnership(o=>({...o,[name]:{owned:!o[name]?.owned,level:o[name]?.level??90}}));
 const setCharacterLevel=(name:string,level:number)=>setOwnership(current=>{
@@ -465,6 +503,10 @@ const assignToAct=(act:number,slot:number,name:string)=>setPlan(current=>{
   return {...current,acts:{...current.acts,[act]:assignments}};
 });
 const setBorrowedCharacter=(name:string)=>setPlan(current=>{
+  if(name&&!borrowedOptions.some(character=>character.name===name))return current;
+  const traveler=selectedTraveler??current.roster.find(value=>rosterCandidateNames.has(value)&&isTraveler(value));
+  const currentChosen=[...selectedOpening,...current.roster.filter(value=>rosterCandidateNames.has(value)&&(!isTraveler(value)||value===traveler))];
+  if(!canBorrowCharacter(currentChosen,current.borrowed??'',name,requirement.cap))return current;
   const acts=current.borrowed&&current.borrowed!==name
     ?Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(value=>value===current.borrowed?'':value)]))
     :current.acts;
@@ -573,11 +615,43 @@ const renderPlannerCharacter=(character:Character)=>{
   return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' borrowed':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top"><CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Borrowed':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
 };
 const renderAct=(act:number,label:string)=>{
+  const copyActive=copiedTeam?.act===act;
+  const hasTeam=(plan.acts[act]??[]).some(name=>chosen.includes(name));
+  const copyTeam=()=>{
+    if(copyActive){setCopiedTeam(null);return;}
+    const team=Array.from({length:4},(_,slot)=>{const name=plan.acts[act]?.[slot]??'';return chosen.includes(name)?name:'';});
+    if(team.some(Boolean))setCopiedTeam({act,team});
+  };
+  const pasteTeam=()=>{
+    if(!copiedTeam)return;
+    const error=teamPasteError(copiedTeam.team,act,plan.acts,chosen);
+    if(error){setCopiedTeam(null);setAssignmentNotice({message:error,id:++assignmentNoticeId.current});return;}
+    setAssignmentNotice(null);
+    setPlan(current=>teamPasteError(copiedTeam.team,act,current.acts,chosen)?current:{...current,acts:{...current.acts,[act]:[...copiedTeam.team]}});
+    setCopiedTeam(null);
+  };
   const overrideSlot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(setup.difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12&&setup.difficulty==='Lunar'?'lunar2':undefined;
   const bossStage=selectedSeason?.bossStages.find(stage=>stage.act===act);
   const bosses=selectedSeason&&overrideSlot?getBossesForSlot(selectedSeason,bossData,overrideSlot):bossStage?.bosses??[];
   const objective=bosses.length?'Boss':stageObjectives[setup.difficulty]?.[act];
-  return <div className="act" key={act}><div className="act-heading"><strong>{label}</strong>{objective&&<span className="act-objective">{objective}</span>}{bosses.length>0&&<span className="act-bosses">{bosses.map(boss=><span className="act-boss" key={boss.name}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></span>)}</span>}</div><div className="slots">{Array.from({length:4},(_,slot)=>{
+  return <div className={`act ${teamDropTarget===act?'team-drop-target':''}`} key={act} onDragOverCapture={event=>{
+    if(!event.dataTransfer.types.includes('application/x-itp-team'))return;
+    event.preventDefault();event.stopPropagation();event.dataTransfer.dropEffect='move';setTeamDropTarget(act);
+  }} onDragLeave={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setTeamDropTarget(value=>value===act?null:value);}} onDropCapture={event=>{
+    if(!event.dataTransfer.types.includes('application/x-itp-team'))return;
+    event.preventDefault();event.stopPropagation();
+    const raw=event.dataTransfer.getData('application/x-itp-team');
+    const source=Number(raw);
+    const activeActs=new Set(Array.from({length:requirement.acts},(_,index)=>index+1));
+    if(setup.difficulty==='Lunar'){activeActs.add(11);activeActs.add(12);}
+    if(raw&&Number.isInteger(source)&&activeActs.has(source))setPlan(current=>({...current,acts:swapTeams(current.acts,source,act)}));
+    setTeamDropTarget(null);setCopiedTeam(null);
+  }}><div className="act-heading"><div className="act-heading-content"><strong>{label}</strong>{objective&&<span className="act-objective">{objective}</span>}{bosses.length>0&&<span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</span>}</div><div className="act-team-tools">
+    <button type="button" className={`team-icon paste-team ${copiedTeam?'':'clipboard-empty'}`} disabled={!copiedTeam} aria-label={`Paste copied team into ${label}`} title={`Paste copied team into ${label} (replaces this team)`} onClick={pasteTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M8 13h8M8 17h6"/></svg></button>
+    <button type="button" className={`team-icon copy-team ${copyActive?'copied':''} ${hasTeam?'':'clipboard-empty'}`} aria-pressed={copyActive} disabled={!hasTeam} aria-label={copyActive?`Clear copied team from ${label}`:`Copy team from ${label}`} title={copyActive?'Team copied — click again to clear':`Copy team from ${label}`} onClick={copyTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg></button>
+    <button type="button" className={`team-icon clear-team ${hasTeam?'':'clipboard-empty'}`} disabled={!hasTeam} aria-label={`Clear whole team from ${label}`} title="Clear whole team" onClick={()=>{setPlan(current=>({...current,acts:{...current.acts,[act]:[]}}));setCopiedTeam(null);setAssignmentNotice(null);}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+    <button type="button" className={`team-icon drag-team ${hasTeam?'':'clipboard-empty'}`} disabled={!hasTeam} draggable={hasTeam} aria-label={`Drag team from ${label}`} title="Drag to move the whole team; drop on another team to swap" onDragStart={event=>{event.dataTransfer.setData('application/x-itp-team',String(act));event.dataTransfer.effectAllowed='move';setCopiedTeam(null);setOpenCharacterPicker('');}} onDragEnd={()=>setTeamDropTarget(null)}><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
+  </div></div><div className="slots">{Array.from({length:4},(_,slot)=>{
     const current=plan.acts[act]?.[slot]??'';
     const target=`${act}-${slot}`;
     return <div key={slot} className={`act-slot ${dropTarget===target?'drop-target':''}`} onContextMenu={event=>{event.preventDefault();assignToAct(act,slot,'');}} onDragOver={event=>{event.preventDefault();event.dataTransfer.dropEffect=event.dataTransfer.types.includes('application/x-itp-act-slot')?'move':'copy';setDropTarget(target);}} onDragLeave={()=>setDropTarget(value=>value===target?'':value)} onDrop={event=>{
@@ -599,7 +673,7 @@ const renderAct=(act:number,label:string)=>{
     }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} selected={chosen.includes(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(plan.acts).filter(names=>names.includes(name)).length>=2} onSelect={name=>name?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,'')} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
   })}</div></div>;
 };
-return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL</p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><span className="version">v0.1 · Local save</span></header>
+return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL</p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><div className="header-right"><div className="related-sites" role="navigation" aria-label="More Genshin tools"><a href="https://watchfuls.github.io/GenshinGraph/">Character Graph</a><span aria-hidden="true">·</span><a href="https://watchfuls.github.io/genshinpuzzle/">Dummy Guesser</a></div><span className="version">v0.1 · Local save</span></div></header>
 <nav>{['Your Characters','Challenge Setup','Theater Planner'].map((n,i)=><button key={n} className={step===i+1?'active':''} disabled={i===2&&!canContinueToPlanner} title={i===2&&!canContinueToPlanner?'Meet the eligibility minimum in Challenge Setup first.':undefined} onClick={()=>{if(i!==2||canContinueToPlanner)setStep(i+1);}}><span className="stepnum">{i+1}</span>{n}</button>)}</nav>
 {step===1&&<section>
   <div className="sectionhead">
@@ -645,8 +719,13 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
     <div><h3>Boss preview</h3><p>Bosses for Season {selectedSeason.season}. Boss 4 is used for Act 8 in Hard and Act 10 in Visionary/Lunar.</p></div>
     <div className="boss-preview-grid">{(['boss1','boss2','boss3','boss4'] as const).map((slot,index)=>{
       const bosses=getBossesForSlot(selectedSeason,bossData,slot);
-      return <div className="boss-preview-card" key={slot}><strong>Boss {index+1}</strong>{bosses.length?bosses.map((boss,bossIndex)=><div className="boss-preview-entry" key={`${boss.name}-${bossIndex}`}>{boss.iconUrl?<img src={boss.iconUrl} alt="" loading="lazy"/>:<span className="boss-preview-icon-fallback" aria-hidden="true">?</span>}<span>{boss.name}</span></div>):<p>No boss listed.</p>}</div>;
+      return <div className="boss-preview-card" key={slot}><strong>Boss {index+1}</strong>{bosses.length?bosses.map((boss,bossIndex)=><a className="boss-preview-entry" key={`${boss.name}-${bossIndex}`} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl?<img src={boss.iconUrl} alt="" loading="lazy"/>:<span className="boss-preview-icon-fallback" aria-hidden="true">?</span>}<span>{boss.name}</span></a>):<p>No boss listed.</p>}</div>;
     })}</div>
+    {setup.difficulty==='Lunar'&&<div className="boss-preview-grid lunar-enemy-preview">{[11,12].map((act,index)=>{
+      const bosses=act===12?getBossesForSlot(selectedSeason,bossData,'lunar2'):selectedSeason.bossStages.find(stage=>stage.act===act)?.bosses??[];
+      if(!bosses.length)return null;
+      return <div className="boss-preview-card" key={act}><strong>Lunar Act {index+1}</strong>{bosses.map((boss,bossIndex)=><a className="boss-preview-entry" key={`${boss.name}-${bossIndex}`} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl?<img src={boss.iconUrl} alt="" loading="lazy"/>:<span className="boss-preview-icon-fallback" aria-hidden="true">?</span>}<span>{boss.name}</span></a>)}</div>;
+    })}</div>}
   </div>}
   <div className="settings">
     <div>
@@ -684,11 +763,12 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
   <p>Select your cast, then assign up to four characters to each act. Changes are saved locally.</p>
   <div className="borrowed-control">
     <div><h3>Borrowed Character</h3><p>Choose any character allowed by this rotation. Borrowed characters count toward the cast cap, but not the minimum requirement.</p></div>
-    <BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} onSelect={setBorrowedCharacter} open={openCharacterPicker==='borrowed'} onOpenChange={open=>setOpenCharacterPicker(open?'borrowed':'')}/>
+    <BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} canSelect={name=>canBorrowCharacter(chosen,borrowedCharacter,name,requirement.cap)} onSelect={setBorrowedCharacter} open={openCharacterPicker==='borrowed'} onOpenChange={open=>setOpenCharacterPicker(open?'borrowed':'')}/>
+    {chosen.length>=requirement.cap&&!borrowedCharacter&&<p role="status">Your cast is full. Remove a character to borrow someone new, or borrow a character already in your cast.</p>}
   </div>
   <div className="planner-layout">
     <section className="chosen-section">
-      <div className="sectionhead"><div><h3>Chosen ({chosen.length}/{requirement.cap})</h3><p>{chosenForRequirement}/{requirement.minimum} count toward the minimum; borrowed characters use a cast slot. Click available character cards to add or remove them.</p></div></div>
+      <div className="sectionhead"><div><h3 className={`cast-count ${castStatus}`}>Chosen ({chosen.length}/{requirement.cap})</h3><div className={`cast-status ${castStatus}`} role="status"><strong>{chosenForRequirement}/{requirement.minimum} toward entry minimum</strong><p>{castMessage}</p></div><p>Borrowed characters use a cast slot but do not count toward the entry minimum. Assigning every act does not replace this requirement.</p></div></div>
       <div className="chosen-filters">
         <input aria-label="Search chosen characters" placeholder="Search characters…" value={chosenSearch} onChange={event=>setChosenSearch(event.target.value)}/>
         <div className="chosen-element-filters" role="group" aria-label="Filter by element">
@@ -713,7 +793,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
         : Array.from({length:requirement.acts},(_,index)=>renderAct(index+1,`Act ${index+1}`))}</div></div>
     </section>
   </div>
-  <div className="bottom"><button onClick={()=>setStep(2)}>← Challenge Setup</button><button onClick={()=>setPlan({roster:[],acts:{},borrowed:''})}>Reset Plan</button></div>
+  <div className="bottom"><button onClick={()=>setStep(2)}>← Challenge Setup</button><button onClick={()=>{setPlan({roster:[],acts:{},borrowed:''});setCopiedTeam(null);}}>Reset Plan</button></div>
 </section>}
 {assignmentNotice&&<div key={assignmentNotice.id} className="assignment-notice" role="status">{assignmentNotice.message}</div>}
 <footer>Unofficial fan-made planning tool. All settings are saved in this browser.</footer></main>

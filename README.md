@@ -57,6 +57,11 @@ Commit the JSON change and rebuild/deploy the site for the override to appear fo
 - Use **Import GOOD JSON** in **Your Characters** to load a GOOD character export, such as [Irminsul](https://github.com/konkers/irminsul). The import replaces the current ownership list after confirmation, rounds levels down to the nearest 10, and ignores character keys not in the starter roster.
 - Challenge Setup previews the selected season's four boss slots, including manual overrides, and blocks planner navigation until the account eligibility estimate meets the selected difficulty's minimum.
 - In the planner, drag an eligible character directly to an act slot to add them to the selected cast and assign them in one step.
+- Act slot dropdowns support Up/Down arrow navigation through selectable characters and Enter to select. Escape closes the dropdown; exhausted and unavailable characters are skipped.
+- Populated acts have copy and team-drag icons in fixed header positions. Copy highlights the source and reveals paste; a successful paste clears the clipboard. Escape, clicking outside the team controls, or focusing another control cancels copying. Pasting replaces the destination team and is blocked if any character would exceed two uses.
+- Drag the team handle onto an empty act to move all four slots, or onto another team to swap all four slots. Swapping preserves each character's total number of uses, including characters shared by both teams.
+- Enemy names and icons in the boss preview and act headings link to their Fandom pages. Lunar difficulty also previews listed Lunar Act enemies, including manual Lunar Act 2 overrides.
+- The planner's chosen-character count is red below the non-borrowed entry minimum, amber once that minimum is met, and green at the cast cap. Text explains the entry requirement and the benefit of selecting additional characters for blessings.
 - In Lunar difficulty, the ten normal acts remain in Visionary order; optional Arcanum Challenge 1 is placed after Act 3 and Challenge 2 after Act 6, matching their unlock points before Act 10.
 - The character database in `src/characters.ts` is an editable **starter roster**, not a guaranteed complete or up-to-date game database.
 - Difficulty thresholds are provisional. Verify official rules before treating the eligibility estimate as authoritative.
