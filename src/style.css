@@ -82,7 +82,19 @@ button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:900px){.boss-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.bottom,.continue-control{align-items:stretch;flex-direction:column}.continue-control .selection-help{text-align:left}}
 
-.borrowed-control{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:22px 0;padding:16px 18px;border:1px solid #30384d;background:#1b2233;border-radius:12px}
+.borrowed-control{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;padding:16px 18px;border:1px solid #30384d;background:#1b2233;border-radius:12px}
+.borrowed-control>div:first-child{flex:1 1 240px}
+.planner-character-controls{display:grid;grid-template-columns:minmax(0,1fr) 240px;align-items:stretch;gap:18px;min-width:0;margin:22px 0}
+.traveler-control{display:flex;align-items:center;padding:16px 18px;border:1px solid #30384d;background:#1b2233;border-radius:12px}
+.traveler-control .traveler-element-control{width:100%}
+.traveler-select-wrap{position:relative;display:block}
+.traveler-select-icon{position:absolute;top:50%;left:12px;width:24px;height:24px;transform:translateY(-50%);pointer-events:none}
+.traveler-select-wrap select{padding-left:46px}
+.borrowed-field,.traveler-element-control{display:flex;min-width:0;flex-direction:column;gap:6px;font-size:13px}
+.borrowed-field{flex:0 1 360px}
+.borrowed-field .borrowed-picker{width:100%;flex:auto}
+.traveler-element-control select{width:100%;min-width:0;min-height:60px}
+.traveler-element-control small{color:#a2abc2;font-size:12px}
 .borrowed-control h3{margin:0 0 5px}
 .borrowed-control p{margin:0;font-size:13px}
 .borrowed-picker{position:relative;width:min(360px,100%);flex:0 0 min(360px,100%)}
@@ -105,15 +117,17 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .borrowed-option:first-child{min-height:42px}
 .roster-count{font-size:13px;margin:0 0 10px}
 .chosen-section{position:sticky;top:16px;align-self:start;margin-top:0;min-width:0;max-height:calc(100vh - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#59647c #151b2a}
-.chosen-section::-webkit-scrollbar{width:10px}
-.chosen-section::-webkit-scrollbar-track{background:#151b2a;border-radius:8px}
-.chosen-section::-webkit-scrollbar-thumb{background:#59647c;border:2px solid #151b2a;border-radius:8px}
-.chosen-section::-webkit-scrollbar-thumb:hover{background:#8066bd}
+.chosen-section::-webkit-scrollbar,.unallocated-list::-webkit-scrollbar{width:10px}
+.chosen-section::-webkit-scrollbar-track,.unallocated-list::-webkit-scrollbar-track{background:#151b2a;border-radius:8px}
+.chosen-section::-webkit-scrollbar-thumb,.unallocated-list::-webkit-scrollbar-thumb{background:#59647c;border:2px solid #151b2a;border-radius:8px}
+.chosen-section::-webkit-scrollbar-thumb:hover,.unallocated-list::-webkit-scrollbar-thumb:hover{background:#8066bd}
 .chosen-section .sectionhead{align-items:flex-start}
 .chosen-section .sectionhead h3{margin:0 0 6px}
 .chosen-grid{margin-top:14px;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:7px}
 .chosen-card{cursor:pointer!important;align-content:start}
-.chosen-card{padding:8px;gap:5px}
+.chosen-card{position:relative;padding:8px;gap:5px}
+.chosen-card.owned{border-color:#a3e635;box-shadow:inset 0 -3px 0 #a3e635}
+.chosen-number{position:absolute;top:0;right:0;display:flex;align-items:center;justify-content:center;min-width:25px;height:23px;padding:0 5px;border-radius:0 9px 0 7px;background:#bef264;color:#203309;font-size:12px;font-weight:800;line-height:1;pointer-events:none}
 .chosen-card .character-top{gap:4px}
 .chosen-card .character-icon{width:56px;height:56px;border-radius:9px}
 .chosen-card .character-top strong{min-height:28px;font-size:12px;line-height:1.15}
@@ -133,7 +147,16 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .vigor-hearts{display:inline-flex;gap:4px;font-size:15px;line-height:1}
 .heart-remaining{color:#f18aab}
 .heart-used{color:#596174}
-.planner-layout{display:grid;grid-template-columns:minmax(400px,1.15fr) minmax(0,1.85fr);align-items:start;gap:18px;margin-top:22px}
+.planner-layout{display:grid;grid-template-columns:minmax(340px,1fr) minmax(0,1.6fr) 230px;align-items:start;gap:18px;margin-top:22px}
+.unallocated-panel{position:sticky;top:18px;min-width:0;max-height:calc(100dvh - 36px);display:flex;flex-direction:column;padding:14px;border:1px solid #39435a;border-radius:12px;background:#151b2a;box-shadow:0 8px 24px #0003}
+.unallocated-panel h3{margin:0;font-size:14px}
+.unallocated-panel h3 span{color:#bef264}
+.unallocated-panel>p{margin:8px 0 12px;font-size:12px;line-height:1.4}
+.unallocated-list{display:flex;flex-direction:column;gap:7px;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px;scrollbar-width:thin;scrollbar-color:#59647c #151b2a}
+.unallocated-character{flex:none}
+.unallocated-character:focus-visible{outline:2px solid #bef264;outline-offset:1px}
+.unallocated-empty{margin:0;padding:12px 0;font-size:12px}
+@media(max-width:1200px){.planner-layout{grid-template-columns:minmax(340px,1fr) minmax(0,1.6fr)}.unallocated-panel{grid-column:1/-1;grid-row:1;position:static;max-height:320px}}
 .planner-layout>section{min-width:0}
 .assignment-only h3{margin:0 0 12px}
 .act-group h4{margin:18px 0 9px;color:#cbb9f3;font-size:13px}
@@ -209,7 +232,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .chosen-element-filters button img{width:20px;height:20px;object-fit:contain}
 .chosen-element-filters button.selected,.chosen-rarity-filters button.selected{background:#6750a4;border-color:#a78be5;color:white}
 @media(max-width:900px){.planner-layout{grid-template-columns:minmax(0,1fr)}.chosen-section{position:static;max-height:none;overflow:visible}}
-@media(max-width:700px){.borrowed-control{align-items:stretch;flex-direction:column}.borrowed-picker{width:100%;flex-basis:auto}}
+@media(max-width:700px){.borrowed-control{align-items:stretch;flex-direction:column}.borrowed-picker,.borrowed-control>div:first-child,.borrowed-field,.traveler-element-control{width:100%;flex-basis:auto}}
+@media(max-width:560px){.planner-character-controls{grid-template-columns:minmax(0,1fr)}}
 .character .level-control{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;font-size:13px}
 .character .level-control select{min-width:0;width:100%;padding:7px 9px;background:#20283a;color:#e9ecf6;border:1px solid #39435a;border-radius:8px}
 .featured-elements button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:76px;padding:8px 11px;font-size:12px}

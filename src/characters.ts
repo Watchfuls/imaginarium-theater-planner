@@ -20,11 +20,12 @@ Geo:'Albedo,Chiori,Gorou,Geo Traveler,Illuga,Itto,Kachina,Linnea,Navia,Ningguang
 };
 export const CHARACTERS: Character[] = ELEMENTS.flatMap(element=>roster[element].split(',').map(name=>({name,element,rarity:fourStarCharacters.has(name)?4 as const:5 as const,releaseDate:releaseDates[name as keyof typeof releaseDates]}))).sort((a,b)=>a.name.localeCompare(b.name));
 
-export function sortCharacters(characters:Character[],order:CharacterSortOrder,lineupOrder:readonly string[]=[]):Character[] {
+export function sortCharacters(characters:Character[],order:CharacterSortOrder,lineupOrder:readonly string[]=[],levelOf:(character:Character)=>number=()=>90):Character[] {
   return [...characters].sort((a,b)=>{
     if(order==='name')return a.name.localeCompare(b.name);
     if(lineupOrder.length)return (lineupOrder.indexOf(a.name)<0?Infinity:lineupOrder.indexOf(a.name))-(lineupOrder.indexOf(b.name)<0?Infinity:lineupOrder.indexOf(b.name))||a.name.localeCompare(b.name);
     return b.rarity-a.rarity
+      ||levelOf(b)-levelOf(a)
       ||GAME_ELEMENT_ORDER.indexOf(a.element)-GAME_ELEMENT_ORDER.indexOf(b.element)
       ||(b.releaseDate??'').localeCompare(a.releaseDate??'')
       ||a.name.localeCompare(b.name);
