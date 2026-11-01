@@ -2,70 +2,6 @@
   "source": "Fandom MediaWiki Action API (community-maintained season templates)",
   "generatedAt": "2026-10-22T10:08:54Z",
   "current": {
-    "id": "2026-10-01",
-    "season": 28,
-    "startsAt": "2026-10-01T04:00:00.000Z",
-    "endsAt": "2026-11-01T03:59:59.000Z",
-    "elements": [
-      "Hydro",
-      "Cryo",
-      "Anemo"
-    ],
-    "openingCharacters": [
-      "Neuvillette",
-      "Barbara",
-      "Citlali",
-      "Kaeya",
-      "Wanderer",
-      "Prune"
-    ],
-    "specialGuests": [
-      "Ineffa",
-      "Yae Miko",
-      "Thoma",
-      "Chiori"
-    ],
-    "bossStages": [
-      {
-        "act": 3,
-        "bosses": [
-          {
-            "name": "Perpetual Mechanical Array",
-            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b3/Perpetual_Mechanical_Array_Icon.png/revision/latest?cb=20210721055430"
-          }
-        ]
-      },
-      {
-        "act": 6,
-        "bosses": [
-          {
-            "name": "Battle-Hardened Chimeric Volkodlak Archer",
-            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/40/Furiosa_Icon.png/revision/latest?cb=20260815170455"
-          }
-        ]
-      },
-      {
-        "act": 8,
-        "bosses": [
-          {
-            "name": "Secret Source Automaton: Overseer Device",
-            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d9/Secret_Source_Automaton_Overseer_Device_Icon.png/revision/latest?cb=20250507034833"
-          }
-        ]
-      },
-      {
-        "act": 10,
-        "bosses": [
-          {
-            "name": "Secret Source Automaton: Overseer Device",
-            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d9/Secret_Source_Automaton_Overseer_Device_Icon.png/revision/latest?cb=20250507034833"
-          }
-        ]
-      }
-    ],
-    "sourceUrl": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater%2FSeasons%2F2026-10-01"
-  },
-  "next": {
     "id": "2026-11-01",
     "season": 29,
     "startsAt": "2026-11-01T04:00:00.000Z",
@@ -84,14 +20,15 @@
       "Kachina"
     ],
     "specialGuests": [
-      "Vesna",
-      "Odette",
       "Qiqi",
+      "Odette",
+      "Vesna",
       "Jahoda"
     ],
     "bossStages": [],
     "sourceUrl": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater%2FSeasons%2F2026-11-01"
   },
+  "next": null,
   "bossCatalog": [
     {
       "name": "Aeonblight Drake",
