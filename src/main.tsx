@@ -1,6 +1,6 @@
 import React, {useEffect,useMemo,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {CHARACTERS,ELEMENTS,type Character,type Element} from './characters';
+import {CHARACTERS,ELEMENTS,sortCharacters,type Character,type CharacterSortOrder,type Element} from './characters';
 import {countEligibleCharacters} from './eligibility';
 import {canBorrowCharacter} from './borrowing';
 import {teamPasteError,swapTeams} from './teamClipboard';
@@ -404,6 +404,8 @@ const importFileInput=useRef<HTMLInputElement>(null);
 const [chosenSearch,setChosenSearch]=useState('');
 const [chosenElements,setChosenElements]=useState<Element[]>([]);
 const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
+const [plannerCharacterOrder,setPlannerCharacterOrder]=useState<CharacterSortOrder>(()=>localStorage.getItem('itp-planner-sort-v1')==='game'?'game':'name');
+useEffect(()=>localStorage.setItem('itp-planner-sort-v1',plannerCharacterOrder),[plannerCharacterOrder]);
 useEffect(()=>localStorage.setItem('itp-ownership-v1',JSON.stringify(ownership)),[ownership]);
 useEffect(()=>localStorage.setItem('itp-setup-v1',JSON.stringify(setup)),[setup]);
 useEffect(()=>localStorage.setItem('itp-plan-v1',JSON.stringify(plan)),[plan]);
@@ -569,11 +571,11 @@ const filtered=CHARACTERS.filter(c=>
 );
 const count=CHARACTERS.filter(c=>ownership[c.name]?.owned).length;
 const chosenCharacters=CHARACTERS.filter(character=>chosen.includes(character.name));
-const filteredPlannerCharacters=plannerCharacters.filter(character=>
+const filteredPlannerCharacters=sortCharacters(plannerCharacters.filter(character=>
   character.name.toLocaleLowerCase().includes(chosenSearch.toLocaleLowerCase())
   &&(chosenElements.length===0||chosenElements.includes(character.element))
   &&(chosenRarities.length===0||chosenRarities.includes(character.rarity))
-);
+),plannerCharacterOrder);
 const toggleChosenElement=(element:Element)=>setChosenElements(current=>current.includes(element)?current.filter(value=>value!==element):[...current,element]);
 const toggleChosenRarity=(rarity:4|5)=>setChosenRarities(current=>current.includes(rarity)?current.filter(value=>value!==rarity):[...current,rarity]);
 const toggleOwnedElement=(element:Element)=>setOwnedElements(current=>current.includes(element)?current.filter(value=>value!==element):[...current,element]);
@@ -771,6 +773,7 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
       <div className="sectionhead"><div><h3 className={`cast-count ${castStatus}`}>Chosen ({chosen.length}/{requirement.cap})</h3><div className={`cast-status ${castStatus}`} role="status"><strong>{chosenForRequirement}/{requirement.minimum} toward entry minimum</strong><p>{castMessage}</p></div><p>Borrowed characters use a cast slot but do not count toward the entry minimum. Assigning every act does not replace this requirement.</p></div></div>
       <div className="chosen-filters">
         <input aria-label="Search chosen characters" placeholder="Search characters…" value={chosenSearch} onChange={event=>setChosenSearch(event.target.value)}/>
+        <label className="chosen-sort-control">Sort <select aria-label="Sort planner characters" value={plannerCharacterOrder} onChange={event=>setPlannerCharacterOrder(event.target.value as CharacterSortOrder)}><option value="name">Name</option><option value="game">In-game order</option></select></label>
         <div className="chosen-element-filters" role="group" aria-label="Filter by element">
           {ELEMENTS.map(element=><button type="button" key={element} className={`chosen-filter-icon ${chosenElements.includes(element)?'selected':''}`} aria-label={`${chosenElements.includes(element)?'Remove':'Filter by'} ${element}`} aria-pressed={chosenElements.includes(element)} title={element} onClick={()=>toggleChosenElement(element)}><img src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt=""/></button>)}
         </div>
@@ -779,9 +782,9 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
         </div>
       </div>
       <h4 className="chosen-group-title">Opening Characters ({plannerCharacters.filter(character=>openingNames.has(character.name)).length}/6)</h4>
-      <div className="characters chosen-grid opening-grid">{filteredPlannerCharacters.filter(character=>openingNames.has(character.name)).map(renderPlannerCharacter)}</div>
+      <div className="characters chosen-grid opening-grid">{sortCharacters(filteredPlannerCharacters.filter(character=>openingNames.has(character.name)),plannerCharacterOrder,selectedOpening).map(renderPlannerCharacter)}</div>
       <h4 className="chosen-group-title">Special Guest Stars ({plannerCharacters.filter(character=>selectedGuests.includes(character.name)).length}/4)</h4>
-      <div className="characters chosen-grid guest-grid">{filteredPlannerCharacters.filter(character=>selectedGuests.includes(character.name)&&!openingNames.has(character.name)).map(renderPlannerCharacter)}</div>
+      <div className="characters chosen-grid guest-grid">{sortCharacters(filteredPlannerCharacters.filter(character=>selectedGuests.includes(character.name)&&!openingNames.has(character.name)),plannerCharacterOrder,selectedGuests).map(renderPlannerCharacter)}</div>
       <div className="chosen-divider" role="separator" aria-label="Other available characters"><span/></div>
       <div className="characters chosen-grid">{filteredPlannerCharacters.filter(character=>!openingNames.has(character.name)&&!selectedGuests.includes(character.name)).map(renderPlannerCharacter)}</div>
     </section>
