@@ -7,11 +7,11 @@ import {teamPasteError,swapTeams} from './teamClipboard';
 import rawLineupData from './data/theater-lineups.json';
 import rawBossData from './data/theater-bosses.json';
 import {currentSeason,seasonStatus} from './seasonTiming';
-import {changeTravelerElement} from './travelerSelection';
+import {changeTravelerElement, type TravelerElement} from './travelerSelection';
 import './style.css';
 type Ownership = Record<string,{owned:boolean;level:number}>;
 type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number};
-type Plan = {roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:Element};
+type Plan = {roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
 type TheaterBoss = {name:string;iconUrl:string|null};
 const enemyWikiUrl=(name:string)=>`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ','_'))}`;
 type BossCatalogEntry = TheaterBoss & {type:'Boss'|'Local Legend'};
@@ -462,9 +462,9 @@ const availableNames=new Set(available.map(c=>c.name));
 const borrowedOptions=available.filter(character=>character.name!=='Aloy'&&!isTraveler(character.name));
 const allowedTravelerNames=selectedElements.map(element=>`${element} Traveler`);
 const preferredTraveler=selectedElements.includes(plan.travelerElement as Element)?`${plan.travelerElement} Traveler`:undefined;
-const plannerTraveler=selectedTraveler??preferredTraveler??plan.roster.find(name=>allowedTravelerNames.includes(name))
-  ??available.find(character=>allowedTravelerNames.includes(character.name)&&ownership[character.name]?.owned)?.name??allowedTravelerNames[0]??'Anemo Traveler';
-const plannerTravelerElement=CHARACTERS.find(character=>character.name===plannerTraveler)!.element;
+const plannerTraveler=selectedTraveler??(plan.travelerElement==='None'?undefined:preferredTraveler??plan.roster.find(name=>allowedTravelerNames.includes(name))
+  ??available.find(character=>allowedTravelerNames.includes(character.name)&&ownership[character.name]?.owned)?.name??allowedTravelerNames[0]??'Anemo Traveler');
+const plannerTravelerElement=CHARACTERS.find(character=>character.name===plannerTraveler)?.element??'None';
 const travelerOwnership=travelerNames.map(name=>ownership[name]).find(entry=>entry?.owned);
 const rosterCandidates=CHARACTERS.filter(c=>{
   const owned=isTraveler(c.name)?travelerOwnership:ownership[c.name];
@@ -482,9 +482,9 @@ const castMessage=chosenForRequirement<requirement.minimum
     ?`Entry minimum met. You can select ${requirement.cap-chosen.length} more characters for additional blessing benefits.`
     :'Full cast selected for the maximum roster-size blessing benefits.';
 const openingNames=new Set(selectedOpening);
-const setTravelerElement=(element:Element)=>{
+const setTravelerElement=(element:TravelerElement)=>{
   const name=`${element} Traveler`;
-  if(!selectedElements.includes(element)||selectedTraveler||name===plannerTraveler)return;
+  if((element!=='None'&&!selectedElements.includes(element))||selectedTraveler||name===plannerTraveler)return;
   setPlan(current=>changeTravelerElement(current,element,selectedElements));
 };
 const toggleOwn=(name:string)=>setOwnership(o=>({...o,[name]:{owned:!o[name]?.owned,level:o[name]?.level??90}}));
@@ -594,7 +594,7 @@ const count=CHARACTERS.filter(c=>ownership[c.name]?.owned).length;
 const chosenCharacters=CHARACTERS.filter(character=>chosen.includes(character.name));
 const plannerCharacterLevel=(character:Character)=>character.name===borrowedCharacter?90:(isTraveler(character.name)?travelerOwnership?.level:ownership[character.name]?.level)??90;
 const unallocatedCharacters=sortCharacters(chosenCharacters.filter(character=>
-  !Object.values(plan.acts).some(names=>names.includes(character.name))
+  Object.values(plan.acts).filter(names=>names.includes(character.name)).length<2
 ),plannerCharacterOrder,[],plannerCharacterLevel);
 const filteredPlannerCharacters=sortCharacters(plannerCharacters.filter(character=>
   character.name.toLocaleLowerCase().includes(chosenSearch.toLocaleLowerCase())
@@ -798,9 +798,10 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
   <div className="traveler-control">
     <label className="traveler-element-control"><span>Traveler element</span>
       <span className="traveler-select-wrap">
-      <img className="traveler-select-icon" src={`${import.meta.env.BASE_URL}icons/elements/${plannerTravelerElement}_Icon.png`} alt="" aria-hidden="true"/>
-      <select value={plannerTravelerElement} disabled={!!selectedTraveler} title={selectedTraveler?'Set by your opening or guest lineup.':'Changes your Traveler element while keeping cast selection and act assignments.'} onChange={event=>setTravelerElement(event.target.value as Element)}>
+      {plannerTravelerElement!=='None'&&<img className="traveler-select-icon" src={`${import.meta.env.BASE_URL}icons/elements/${plannerTravelerElement}_Icon.png`} alt="" aria-hidden="true"/>}
+      <select value={plannerTravelerElement} disabled={!!selectedTraveler} title={selectedTraveler?'Set by your opening or guest lineup.':'Choose an element, or None to hide Traveler and remove their cast selection and act assignments.'} onChange={event=>setTravelerElement(event.target.value as TravelerElement)}>
         {selectedElements.map(element=><option key={element} value={element}>{element}</option>)}
+        <option value="None">None</option>
       </select>
       </span>
     </label>
@@ -835,10 +836,12 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
     </section>
     <aside className="unallocated-panel" aria-labelledby="unallocated-heading">
       <h3 id="unallocated-heading">Unallocated <span>({unallocatedCharacters.length})</span></h3>
-      <p>Chosen characters with no act assignments. Drag into an act, or click to fill the first empty slot.</p>
+      <p>Chosen characters with stamina remaining. Drag into an act, or click to fill the first empty slot.</p>
       <div className="unallocated-list">
-        {unallocatedCharacters.map(character=><button type="button" className="act-picker-trigger unallocated-character" key={character.name}
-          aria-label={`Assign ${character.name} to the first empty act slot`}
+        {unallocatedCharacters.map(character=>{
+          const remainingStamina=Math.max(0,2-Object.values(plan.acts).filter(names=>names.includes(character.name)).length);
+          return <button type="button" className="act-picker-trigger unallocated-character" key={character.name}
+          aria-label={`Assign ${character.name} to the first empty act slot, ${remainingStamina} of 2 stamina remaining`}
           draggable onDragStart={event=>{event.dataTransfer.setData('text/plain',character.name);event.dataTransfer.effectAllowed='copy';}}
           onDragEnd={()=>setDropTarget('')}
           onClick={()=>{
@@ -853,9 +856,9 @@ return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLA
             }
             setAssignmentNotice({message:'All act slots are filled. Drag a character onto a slot to replace its assignment.',id:++assignmentNoticeId.current});
           }}>
-          <CharacterIcon name={character.name}/><span className="act-picker-name">{character.name}</span><ElementBadge element={character.element}/>
-        </button>)}
-        {unallocatedCharacters.length===0&&<p className="unallocated-empty">{chosen.length?'Every chosen character has an act assignment.':'Select characters to build your cast.'}</p>}
+          <CharacterIcon name={character.name}/><span className="act-picker-name">{character.name}</span><span className="vigor-hearts" role="img" aria-label={`${remainingStamina} of 2 stamina remaining`} title={`${remainingStamina} of 2 stamina remaining`}>{[0,1].map(index=><span key={index} className={index<remainingStamina?'heart-remaining':'heart-used'}>♥</span>)}</span>
+        </button>;})}
+        {unallocatedCharacters.length===0&&<p className="unallocated-empty">{chosen.length?'Every chosen character has used all their stamina.':'Select characters to build your cast.'}</p>}
       </div>
     </aside>
   </div>

@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {changeTravelerElement} from './travelerSelection.ts';
 
+test('None removes Traveler from the cast and clears their act slots',()=>{
+  const plan={roster:['Fischl','Geo Traveler','Yelan'],acts:{1:['Geo Traveler','Fischl','','']},borrowed:'Zhongli'};
+  const before=structuredClone(plan);
+  const updated=changeTravelerElement(plan,'None',['Geo']);
+  assert.deepEqual(updated,{roster:['Fischl','Yelan'],acts:{1:['','Fischl','','']},borrowed:'Zhongli',travelerElement:'None'});
+  assert.deepEqual(plan,before);
+  const restored=changeTravelerElement(updated,'Geo',['Geo']);
+  assert.equal(restored.travelerElement,'Geo');
+  assert.deepEqual(restored.roster,['Fischl','Yelan']);
+});
+
 test('switching Traveler retains cast position, assignments, and borrowed character without mutating the saved plan',()=>{
   const plan={roster:['Fischl','Geo Traveler','Yelan'],acts:{1:['Geo Traveler','Fischl','',''],2:['Yelan','','Geo Traveler','']},borrowed:'Zhongli'};
   const before=structuredClone(plan);
