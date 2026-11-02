@@ -12,6 +12,7 @@ export default defineConfig({
     name: 'copy-shared-icons',
     apply: 'build',
     writeBundle() {
+      cpSync(resolve(__dirname, 'src/assets/site-preview.png'),resolve(__dirname, 'dist/site-preview.png'));
       cpSync(
         resolve(__dirname, '../genshin-shared/icons'),
         resolve(__dirname, 'dist/icons'),

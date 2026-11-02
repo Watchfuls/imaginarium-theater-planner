@@ -114,6 +114,10 @@ season. Reading the exports does not require modifying or importing PSD files.
 
 ### Visitor presentation
 
+Write elemental gauge amounts consistently as `20U of Geo gauge` (amount before
+element), so the site renders one colored amount-and-element badge. Do not split
+the element and amount across a sentence, such as `Geo ward has 20U of gauge`.
+
 Tie enemy-specific Key Recommendations and notable characters to the exact
 enemy variant, not an act number. Apply them to every encounter containing that
 enemy across applicable acts and difficulties, including planner previews.

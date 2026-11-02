@@ -44,7 +44,12 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
             if(merged.recommendedElements===undefined&&match.recommendedElements)merged={...merged,recommendedElements:match.recommendedElements};
             if(merged.notableCharacters===undefined&&match.notableCharacters)merged={...merged,notableCharacters:match.notableCharacters};
             if(season==='29'&&act==='12'&&merged.notableCharacters){
-              merged={...merged,notableCharacters:merged.notableCharacters.map(character=>character.reason==="Healing helps fill the Protection Spirit's HP bar and strengthen its attack."?{...character,reason:''}:character)};
+              merged={...merged,notableCharacters:merged.notableCharacters.filter(character=>!(['Neuvillette','Clorinde'].includes(character.name)&&character.reason==='Self-healing.'))};
+              merged={...merged,notableCharacters:merged.notableCharacters?.map(character=>character.reason==="Healing helps fill the Protection Spirit's HP bar and strengthen its attack."?{...character,reason:''}:character)};
+              const originalHealers=['Sigewinne','Sangonomiya Kokomi','Barbara'];
+              if(merged.notableCharacters?.length===originalHealers.length&&merged.notableCharacters.every(character=>originalHealers.includes(character.name)&&!character.reason.trim())){
+                merged={...merged,notableCharacters:match.notableCharacters};
+              }
             }
             // Older Fluid Avatar drafts had no mechanics. Restore the newly
             // curated explanation without replacing any authored mechanics.

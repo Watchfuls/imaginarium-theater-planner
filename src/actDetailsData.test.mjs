@@ -5,6 +5,18 @@ import {mergeActDetailsDraft} from './actDetailsData.ts';
 import published from './data/theater-act-details.json' with {type:'json'};
 import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
 
+test('the original Protection Spirit healer list upgrades without losing personal notes',()=>{
+  const draft=structuredClone(published);
+  const encounter=draft.seasons[29].Lunar[12].encounters[0];
+  encounter.notableCharacters=['Sigewinne','Sangonomiya Kokomi','Barbara'].map(name=>({name,reason:''}));
+  encounter.notes='Keep my healer rotation';
+  const merged=mergeActDetailsDraft(published,draft).seasons[29].Lunar[12].encounters[0];
+  assert.deepEqual(merged.notableCharacters,published.seasons[29].Lunar[12].encounters[0].notableCharacters);
+  assert.equal(merged.notes,'Keep my healer rotation');
+  encounter.notableCharacters[0].reason='My own Sigewinne note';
+  assert.equal(mergeActDetailsDraft(published,draft).seasons[29].Lunar[12].encounters[0].notableCharacters[0].reason,'My own Sigewinne note');
+});
+
 test('Monolith recommendations stay shared when loading older per-choice drafts',()=>{
   const draft=structuredClone(published);
   const act=draft.seasons[29].Hard[4];

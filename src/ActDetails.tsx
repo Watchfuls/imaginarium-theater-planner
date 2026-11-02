@@ -1,3 +1,4 @@
+import {ElementalText} from './ElementalText';
 import {bossPortrait} from './bossPortraits';
 import {DifficultySelect} from './DifficultySelect';
 import React, {useEffect, useState} from 'react';
@@ -39,7 +40,18 @@ function EnemyWaveText({value}:{value:string}){
   }
   return <>{parts}</>;
 }
-function NotableCharacters({characters}:{characters:{name:string;reason:string;ability?:{name:string;icon:string}}[]}){return <aside className={`act-notable-characters${characters.every(character=>!character.reason.trim()&&!character.ability)?' is-compact':''}`}><strong>Notable Characters</strong>{characters.map(character=><div className="act-notable-character" key={character.name}><a href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(character.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={character.name}><img src={`${import.meta.env.BASE_URL}icons/characters/${(character.name==='Itto'?'Arataki_Itto':character.name.replaceAll(' ','_'))}_Icon.webp`} alt={character.name} width="56" height="56" loading="lazy"/></a><div><strong>{character.name}</strong><p>{character.ability&&<img className="act-ability-icon" src={abilityIcons[`./assets/abilities/${character.ability.icon}`]} alt={character.ability.name} title={character.ability.name} width="28" height="28" loading="lazy"/>}{character.reason}</p></div></div>)}</aside>;}
+function NotableCharacters({characters}:{characters:{name:string;reason:string;ability?:{name:string;icon:string}}[]}){
+  const plain=characters.filter(character=>!character.reason.trim()&&!character.ability);
+  const annotated=characters.filter(character=>character.reason.trim()||character.ability);
+  const characterCard=(character:typeof characters[number])=><div className="act-notable-character" key={character.name}>
+    <a href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(character.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={character.name}><img src={`${import.meta.env.BASE_URL}icons/characters/${(character.name==='Itto'?'Arataki_Itto':character.name.replaceAll(' ','_'))}_Icon.webp`} alt={character.name} width="56" height="56" loading="lazy"/></a>
+    <div><strong>{character.name}</strong>{(character.reason||character.ability)&&<p>{character.ability&&<img className="act-ability-icon" src={abilityIcons[`./assets/abilities/${character.ability.icon}`]} alt={character.ability.name} title={character.ability.name} width="28" height="28" loading="lazy"/>}<ElementalText text={character.reason}/></p>}</div>
+  </div>;
+  return <aside className="act-notable-characters"><strong>Notable Characters</strong>
+    {plain.length>0&&<div className="act-notable-grid">{plain.map(characterCard)}</div>}
+    {annotated.map(characterCard)}
+  </aside>;
+}
 
 function MechanicStateTerm({text,enemyIds}:{text:string;enemyIds:string[]}){
   const id=React.useId();
@@ -48,7 +60,7 @@ function MechanicStateTerm({text,enemyIds}:{text:string;enemyIds:string[]}){
 
 function MechanicsDetails({value,enemyIds}:{value:string;enemyIds:string[]}){
   const text=playerDetailText(value)||'None';
-  const explain=(value:string)=>value.split(/\b(paraly[sz](?:ed|es|e|ing)|paralysis|stunned|stuns?|exhaust(?:ed|ion)|weaken(?:ed|s)?|disabled|disabling|Grief-Stricken|interrupt(?:ed|s|ion)?)\b/gi).map((part,index)=>index%2?<MechanicStateTerm key={index} text={part} enemyIds={enemyIds}/>:part);
+  const explain=(value:string)=><ElementalText text={value} values renderState={text=><MechanicStateTerm text={text} enemyIds={enemyIds}/>}/>;
   return <div className="act-detail-field"><strong>Mechanics</strong><div className="act-mechanics-sections">{text.split('\n').filter(Boolean).map((line,index)=>{
     const section=line.match(/^([^:]{1,60}):\s*(.+)$/);
     return <div className="act-mechanics-subsection" key={index}>{section?<><h5>{explain(section[1])}</h5><p>{explain(section[2])}</p></>:<p>{explain(line)}</p>}</div>;
@@ -133,7 +145,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
   }
   const field=(label:string,value:string,onChange:(value:string)=>void)=>editing
     ? <label className="act-detail-field">{label}<textarea value={value} onChange={event=>onChange(event.target.value)} rows={3}/></label>
-    : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value}/>:value}</p></div>:null;
+    : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value}/>:label==='Challenge'?value:<ElementalText text={value}/>}</p></div>:null;
   const actOrder=difficulty==='Lunar'?[1,2,3,11,4,5,6,12,7,8,9,10]:Array.from({length:modes[difficulty]},(_,index)=>index+1);
   return <section className="act-details">
     <div className="sectionhead"><div><h2>Act Details</h2><p>Enemy choices, resistances, clear requirements, and notes for the currently released theater.</p></div>

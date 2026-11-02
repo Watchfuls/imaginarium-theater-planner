@@ -331,7 +331,7 @@
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
               "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
-              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
+              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
               "stageEffects": ""
             }
           ],
@@ -675,7 +675,7 @@
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
               "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
-              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
+              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
               "stageEffects": ""
             }
           ],
@@ -855,7 +855,7 @@
               "resistances": "",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 35s.",
               "notes": "",
-              "mechanics": "Maximum HP Bar: The gray section filling from the right shows how much maximum HP has been removed. The Hunter is only defeated when its maximum HP reaches zero.\nGrief-Stricken: Depleting ordinary HP triggers this state for 10s instead of defeating it. Damage during this window reduces maximum HP.\nAscendant Gleam: Bring at least two Moonsign characters to enable Ascendant Gleam. An ability enhanced by Moonsign: Ascendant Gleam can trigger Grief-Stricken early (early-window duration unconfirmed). Damage reduces maximum HP more effectively at Ascendant Gleam, so reserve your strongest damage for these windows.\nRecovery: After a normal HP-depletion window, it can recover to its remaining maximum HP. During an early Gleam-triggered window it keeps attacking, so keep dodging instead of treating that window as a guaranteed stun.",
+              "mechanics": "Maximum HP Bar: The gray section filling from the right shows how much maximum HP has been removed. The Hunter is only defeated when its maximum HP reaches zero.\nGrief-Stricken: Its body turns gray, making this state visually recognizable. Depleting ordinary HP triggers this state for 10s instead of defeating it. Damage during this window reduces maximum HP.\nAscendant Gleam: Bring at least two Moonsign characters to enable Ascendant Gleam. An ability enhanced by Moonsign: Ascendant Gleam can trigger Grief-Stricken early. During Grief-Stricken, 65% of damage taken reduces its maximum HP; Ascendant Gleam increases this to 90%. Reserve your strongest damage for these windows.\nRecovery: After a normal HP-depletion window, it can recover to its remaining maximum HP. During an early Gleam-triggered window it can still attack.",
               "stageEffects": "Survival Pressure drains party HP after a delay.",
               "keyRecommendations": [
                 {
@@ -1146,7 +1146,7 @@
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
               "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
-              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
+              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
               "stageEffects": ""
             }
           ],
@@ -1326,7 +1326,7 @@
               "resistances": "",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 35s.",
               "notes": "",
-              "mechanics": "Maximum HP Bar: The gray section filling from the right shows how much maximum HP has been removed. The Hunter is only defeated when its maximum HP reaches zero.\nGrief-Stricken: Depleting ordinary HP triggers this state for 10s instead of defeating it. Damage during this window reduces maximum HP.\nAscendant Gleam: Bring at least two Moonsign characters to enable Ascendant Gleam. An ability enhanced by Moonsign: Ascendant Gleam can trigger Grief-Stricken early (early-window duration unconfirmed). Damage reduces maximum HP more effectively at Ascendant Gleam, so reserve your strongest damage for these windows.\nRecovery: After a normal HP-depletion window, it can recover to its remaining maximum HP. During an early Gleam-triggered window it keeps attacking, so keep dodging instead of treating that window as a guaranteed stun.",
+              "mechanics": "Maximum HP Bar: The gray section filling from the right shows how much maximum HP has been removed. The Hunter is only defeated when its maximum HP reaches zero.\nGrief-Stricken: Its body turns gray, making this state visually recognizable. Depleting ordinary HP triggers this state for 10s instead of defeating it. Damage during this window reduces maximum HP.\nAscendant Gleam: Bring at least two Moonsign characters to enable Ascendant Gleam. An ability enhanced by Moonsign: Ascendant Gleam can trigger Grief-Stricken early. During Grief-Stricken, 65% of damage taken reduces its maximum HP; Ascendant Gleam increases this to 90%. Reserve your strongest damage for these windows.\nRecovery: After a normal HP-depletion window, it can recover to its remaining maximum HP. During an early Gleam-triggered window it can still attack.",
               "stageEffects": "Survival Pressure drains party HP after a delay.",
               "keyRecommendations": [
                 {
@@ -1402,7 +1402,7 @@
               "resistances": "Battle-Hardened Samachurl: Cooking: all damage types 120%. Satisfied: all damage types 120%. Paralyzed: all damage types -50%.",
               "requirements": "Clear: defeat all opponents within 1m 50s.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
-              "mechanics": "Cooking Progress Meter: The meter fills while the bonfire beneath the pot is lit. The fire has 1U of Pyro gauge. Hydro, Electro, Cryo, Anemo, or Geo can extinguish it and stop the meter from filling; this does not destroy the pot.\nDelicious Hot Pot: The pot has 30U of Geo gauge. Use Geo or other blunt attacks to destroy it before cooking finishes.\nReignition: Fire circles appear at random positions roughly every 3s and relight the fire if they hit the pot. One extinguish is usually enough: a circle is unlikely to hit the pot, and a late relight usually leaves too little time to finish cooking. Retry if an unlucky relight lets the meter fill.\nPot Destroyed: Breaking the pot deals True Physical damage equal to 10% of the boss's Max HP plus the damage dealt to the pot, capped at 20% of the boss's Max HP. It also paralyzes the boss and opens its weakened damage window. The paralysis duration is unconfirmed.\nFailed Pot Break: If the pot survives the 16s deadline with unfinished soup, the boss becomes Enraged for 30s, doubling its ATK. If cooking finishes, it becomes Satisfied for 30s and recovers 20% of its Max HP. Extinguishing the fire alone does not complete the mechanic.",
+              "mechanics": "Cooking Progress Meter: The meter fills while the bonfire beneath the pot is lit. The fire has 1U of Pyro gauge. Hydro, Electro, Cryo, Anemo, or Geo can extinguish it and stop the meter from filling; this does not destroy the pot.\nDelicious Hot Pot: The pot has 30U of Geo gauge. Use Geo or other blunt attacks to destroy it before cooking finishes.\nReignition: Fire circles appear at random positions roughly every 3s and relight the fire if they hit the pot. One extinguish is usually enough: a circle is unlikely to hit the pot, and a late relight usually leaves too little time to finish cooking. Retry if an unlucky relight lets the meter fill.\nPot Destroyed: Breaking the pot deals True Physical damage equal to 10% of the boss's Max HP plus the damage dealt to the pot, capped at 20% of the boss's Max HP. It also paralyzes the boss and opens a 10s weakened damage window.\nFailed Pot Break: If the pot survives the 16s deadline with unfinished soup, the boss becomes Enraged for 30s, doubling its ATK. If cooking finishes, it becomes Satisfied for 30s and recovers 20% of its Max HP. Extinguishing the fire alone does not complete the mechanic.",
               "stageEffects": "",
               "keyRecommendations": [
                 {
@@ -1454,7 +1454,7 @@
               "resistances": "Stonehide Lawachurl: Physical 50%; Geo 70%.",
               "requirements": "Clear: defeat 2 bounty opponents within 1m 25s.\nStar Challenge: complete the bounty objective within 55s.\nActive enemies: 1.",
               "notes": "",
-              "mechanics": "Bounty Priority: Focus the marked Stonehide Lawachurls. Smaller Hilichurls do not advance the bounty target.\nStone Force: Its Geo ward has 20U of gauge. It enables stronger attacks without changing the Lawachurl's resistance.",
+              "mechanics": "Bounty Priority: Focus the marked Stonehide Lawachurls. Smaller Hilichurls do not advance the bounty target.\nStone Force: Its ward has 20U of Geo gauge. It enables stronger attacks without changing the Lawachurl's resistance.",
               "stageEffects": ""
             },
             {
@@ -1494,7 +1494,7 @@
               "resistances": "Ruin Grader: Physical 70%.\nRuin Guard: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
               "requirements": "Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.",
               "notes": "",
-              "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
+              "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
               "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
             }
           ]
@@ -1728,7 +1728,7 @@
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
               "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
-              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
+              "mechanics": "Ruin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points when exposed. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.\nSentinels: Hit exposed cores twice to paralyze them for roughly 15s. The Scout exposes its core before a headbutt; the Destroyer exposes it during beam-field and vacuum attacks. Move around a Defender's frontal ward rather than attacking into it.",
               "stageEffects": ""
             }
           ],
@@ -1908,7 +1908,7 @@
               "resistances": "",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 35s.",
               "notes": "",
-              "mechanics": "Maximum HP Bar: The gray section filling from the right shows how much maximum HP has been removed. The Hunter is only defeated when its maximum HP reaches zero.\nGrief-Stricken: Depleting ordinary HP triggers this state for 10s instead of defeating it. Damage during this window reduces maximum HP.\nAscendant Gleam: Bring at least two Moonsign characters to enable Ascendant Gleam. An ability enhanced by Moonsign: Ascendant Gleam can trigger Grief-Stricken early (early-window duration unconfirmed). Damage reduces maximum HP more effectively at Ascendant Gleam, so reserve your strongest damage for these windows.\nRecovery: After a normal HP-depletion window, it can recover to its remaining maximum HP. During an early Gleam-triggered window it keeps attacking, so keep dodging instead of treating that window as a guaranteed stun.",
+              "mechanics": "Maximum HP Bar: The gray section filling from the right shows how much maximum HP has been removed. The Hunter is only defeated when its maximum HP reaches zero.\nGrief-Stricken: Its body turns gray, making this state visually recognizable. Depleting ordinary HP triggers this state for 10s instead of defeating it. Damage during this window reduces maximum HP.\nAscendant Gleam: Bring at least two Moonsign characters to enable Ascendant Gleam. An ability enhanced by Moonsign: Ascendant Gleam can trigger Grief-Stricken early. During Grief-Stricken, 65% of damage taken reduces its maximum HP; Ascendant Gleam increases this to 90%. Reserve your strongest damage for these windows.\nRecovery: After a normal HP-depletion window, it can recover to its remaining maximum HP. During an early Gleam-triggered window it can still attack.",
               "stageEffects": "Survival Pressure drains party HP after a delay.",
               "keyRecommendations": [
                 {
@@ -1984,7 +1984,7 @@
               "resistances": "Battle-Hardened Samachurl: Cooking: all damage types 120%. Satisfied: all damage types 120%. Paralyzed: all damage types -50%.",
               "requirements": "Clear: defeat all opponents within 1m 50s.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
-              "mechanics": "Cooking Progress Meter: The meter fills while the bonfire beneath the pot is lit. The fire has 1U of Pyro gauge. Hydro, Electro, Cryo, Anemo, or Geo can extinguish it and stop the meter from filling; this does not destroy the pot.\nDelicious Hot Pot: The pot has 30U of Geo gauge. Use Geo or other blunt attacks to destroy it before cooking finishes.\nReignition: Fire circles appear at random positions roughly every 3s and relight the fire if they hit the pot. One extinguish is usually enough: a circle is unlikely to hit the pot, and a late relight usually leaves too little time to finish cooking. Retry if an unlucky relight lets the meter fill.\nPot Destroyed: Breaking the pot deals True Physical damage equal to 10% of the boss's Max HP plus the damage dealt to the pot, capped at 20% of the boss's Max HP. It also paralyzes the boss and opens its weakened damage window. The paralysis duration is unconfirmed.\nFailed Pot Break: If the pot survives the 16s deadline with unfinished soup, the boss becomes Enraged for 30s, doubling its ATK. If cooking finishes, it becomes Satisfied for 30s and recovers 20% of its Max HP. Extinguishing the fire alone does not complete the mechanic.",
+              "mechanics": "Cooking Progress Meter: The meter fills while the bonfire beneath the pot is lit. The fire has 1U of Pyro gauge. Hydro, Electro, Cryo, Anemo, or Geo can extinguish it and stop the meter from filling; this does not destroy the pot.\nDelicious Hot Pot: The pot has 30U of Geo gauge. Use Geo or other blunt attacks to destroy it before cooking finishes.\nReignition: Fire circles appear at random positions roughly every 3s and relight the fire if they hit the pot. One extinguish is usually enough: a circle is unlikely to hit the pot, and a late relight usually leaves too little time to finish cooking. Retry if an unlucky relight lets the meter fill.\nPot Destroyed: Breaking the pot deals True Physical damage equal to 10% of the boss's Max HP plus the damage dealt to the pot, capped at 20% of the boss's Max HP. It also paralyzes the boss and opens a 10s weakened damage window.\nFailed Pot Break: If the pot survives the 16s deadline with unfinished soup, the boss becomes Enraged for 30s, doubling its ATK. If cooking finishes, it becomes Satisfied for 30s and recovers 20% of its Max HP. Extinguishing the fire alone does not complete the mechanic.",
               "stageEffects": "",
               "keyRecommendations": [
                 {
@@ -2036,7 +2036,7 @@
               "resistances": "Stonehide Lawachurl: Physical 50%; Geo 70%.",
               "requirements": "Clear: defeat 2 bounty opponents within 1m 25s.\nStar Challenge: complete the bounty objective within 55s.\nActive enemies: 1.",
               "notes": "",
-              "mechanics": "Bounty Priority: Focus the marked Stonehide Lawachurls. Smaller Hilichurls do not advance the bounty target.\nStone Force: Its Geo ward has 20U of gauge. It enables stronger attacks without changing the Lawachurl's resistance.",
+              "mechanics": "Bounty Priority: Focus the marked Stonehide Lawachurls. Smaller Hilichurls do not advance the bounty target.\nStone Force: Its ward has 20U of Geo gauge. It enables stronger attacks without changing the Lawachurl's resistance.",
               "stageEffects": ""
             },
             {
@@ -2076,7 +2076,7 @@
               "resistances": "Ruin Grader: Physical 70%.\nRuin Guard: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
               "requirements": "Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.",
               "notes": "",
-              "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
+              "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
               "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
             }
           ]
@@ -2182,6 +2182,46 @@
                 {
                   "name": "Barbara",
                   "reason": ""
+                },
+                {
+                  "name": "Alyosha",
+                  "reason": ""
+                },
+                {
+                  "name": "Qiqi",
+                  "reason": ""
+                },
+                {
+                  "name": "Linnea",
+                  "reason": ""
+                },
+                {
+                  "name": "Noelle",
+                  "reason": "Heals while attacking."
+                },
+                {
+                  "name": "Dori",
+                  "reason": ""
+                },
+                {
+                  "name": "Kuki Shinobu",
+                  "reason": ""
+                },
+                {
+                  "name": "Jahoda",
+                  "reason": ""
+                },
+                {
+                  "name": "Vodyanitsa",
+                  "reason": ""
+                },
+                {
+                  "name": "Xilonen",
+                  "reason": "Needs 2 Hydro/Electro/Cryo allies."
+                },
+                {
+                  "name": "Furina",
+                  "reason": "Healing mode (Pneuma)."
                 }
               ]
             }

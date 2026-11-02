@@ -110,6 +110,13 @@ try{
     const top=await page.locator('#act-details-act-3').evaluate(element=>element.getBoundingClientRect().top);
     assert.ok(top>=0);
   });
+  await check('mechanics show colored gauge badges with local element icons',async()=>{
+    const gauges=page.locator('#act-details-act-8 .mechanics-element.is-gauge');
+    assert.equal(await gauges.count(),2);
+    assert.match(await gauges.nth(0).textContent(),/1U.*Pyro/);
+    assert.match(await gauges.nth(1).textContent(),/30U.*Geo/);
+    assert.match(await gauges.nth(1).locator('img').getAttribute('src'),/icons\/elements\/Geo_Icon.png/);
+  });
   await check('video chapter links update and restart the embedded player',async()=>{
     await nav('Video Guide').click();
     assert.match(await page.locator('iframe').getAttribute('src'),/YqUCsZDrdZQ/);
