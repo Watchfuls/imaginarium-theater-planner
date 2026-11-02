@@ -72,20 +72,31 @@ function initialData():Data {
   }catch{/* Use published details if the browser draft is unavailable. */}
   return published as Data;
 }
-export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChange}:{seasons:Season[];now:number;bossesForAct:(season:number,difficulty:string,act:number)=>Enemy[];difficulty:string;onDifficultyChange:(difficulty:string)=>void}) {
+export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChange,target}:{target?:{act:number;season:number}|null;seasons:Season[];now:number;bossesForAct:(season:number,difficulty:string,act:number)=>Enemy[];difficulty:string;onDifficultyChange:(difficulty:string)=>void}) {
   const [data,setData]=useState<Data>(initialData);
   const [editing,setEditing]=useState(false);
   const [saveStatus,setSaveStatus]=useState('');
   const [collapsedActs,setCollapsedActs]=useState<Record<string,boolean>>({});
   const [collapsedChoices,setCollapsedChoices]=useState<Record<string,boolean>>({});
   const released=seasons.filter(season=>seasonStatus(season,now)==='Current');
-  const [selected,setSelected]=useState<number|undefined>(released[0]?.season);
+  const [selected,setSelected]=useState<number|undefined>(target?.season??released[0]?.season);
   const season=released.find(candidate=>candidate.season===selected)??released[0];
   useEffect(()=>{
     if(!import.meta.env.DEV)return;
     try{localStorage.setItem(storageKey,JSON.stringify(data));setSaveStatus('Draft saved in this browser.');}
     catch{setSaveStatus('Browser save unavailable. Download the JSON to keep your changes.');}
   },[data]);
+  useEffect(()=>{
+    if(!target||!season||target.season!==season.season)return;
+    const key=`${season.season}-${difficulty}-${target.act}`;
+    setCollapsedActs(current=>({...current,[key]:false}));
+    const frame=requestAnimationFrame(()=>{
+      const card=document.getElementById(`act-details-act-${target.act}`);
+      card?.scrollIntoView({block:'start'});
+      card?.focus({preventScroll:true});
+    });
+    return ()=>cancelAnimationFrame(frame);
+  },[target,season?.season,difficulty]);
   function update(act:number,value:Act){
     if(!season)return;
     const key=String(season.season);
@@ -120,7 +131,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
         const actKey=`${season.season}-${difficulty}-${number}`;
         const actLabel=number>10?`Lunar Act ${number-10} · Arcanum Challenge`:`Act ${number}`;
         const actCollapsed=!editing&&Boolean(collapsedActs[actKey]);
-        return <article className={`act-detail-card${actCollapsed?' is-collapsed':''}`} key={actKey}>
+        return <article id={`act-details-act-${number}`} tabIndex={-1} className={`act-detail-card${actCollapsed?' is-collapsed':''}`} key={actKey}>
           <div className="act-detail-heading"><button type="button" className="details-toggle" disabled={editing} aria-label={`${actCollapsed?'Expand':'Collapse'} ${actLabel}`} aria-expanded={!actCollapsed} aria-controls={`act-content-${actKey}`} onClick={()=>setCollapsedActs(current=>({...current,[actKey]:!actCollapsed}))}><span aria-hidden="true">{actCollapsed?'▸':'▾'}</span></button><h3>{actLabel}</h3>{headingBosses.length>0&&<span className="act-objective">Boss</span>}{act.level!==undefined&&<span className="act-level">Level {act.level}</span>}</div>
           <div id={`act-content-${actKey}`}>
           {!actCollapsed&&bosses.length>0&&!act.encounters.some(encounter=>encounterEnemyIds(encounter).length)&&<div><strong>Bosses</strong>{bosses.map((boss,index)=><a className="boss-preview-entry" key={index} href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(boss.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</div>}

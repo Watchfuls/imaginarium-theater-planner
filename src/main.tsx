@@ -1,4 +1,4 @@
-import React, {useEffect,useMemo,useRef,useState} from 'react';
+import React, {useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {CHARACTERS,ELEMENTS,sortCharacters,type Character,type CharacterSortOrder,type Element} from './characters';
 import {countEligibleCharacters} from './eligibility';
@@ -9,10 +9,11 @@ import rawBossData from './data/theater-bosses.json';
 import {currentSeason,seasonStatus} from './seasonTiming';
 import {changeTravelerElement, type TravelerElement} from './travelerSelection';
 import './style.css';
+const PlannerEncounterPicker=React.lazy(()=>import('./PlannerEncounterPicker').then(module=>({default:module.PlannerEncounterPicker})));
 const ActDetails=React.lazy(()=>import('./ActDetails').then(module=>({default:module.ActDetails})));
 type Ownership = Record<string,{owned:boolean;level:number}>;
 type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number};
-type Plan = {roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
+type Plan = {encounterChoices?:Record<string,string>;roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
 type TheaterBoss = {name:string;iconUrl:string|null};
 const enemyWikiUrl=(name:string)=>`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ','_'))}`;
 type BossCatalogEntry = TheaterBoss & {type:'Boss'|'Local Legend'};
@@ -396,6 +397,17 @@ useEffect(()=>{
   return ()=>{window.clearInterval(interval);window.removeEventListener('focus',refresh);};
 },[]);
 const [step,setStep]=useState(1);
+const stickyHeaderRef=useRef<HTMLDivElement>(null);
+useLayoutEffect(()=>{
+  const header=stickyHeaderRef.current;
+  if(!header)return;
+  const measure=()=>header.parentElement?.style.setProperty('--app-header-height',step===4?header.getBoundingClientRect().height+'px':'0px');
+  measure();
+  const observer=new ResizeObserver(measure);
+  observer.observe(header);
+  return ()=>observer.disconnect();
+},[step]);
+const [actDetailsTarget,setActDetailsTarget]=useState<{act:number;season:number}|null>(null);
 const [ownership,setOwnership]=useState<Ownership>(()=>normalizeOwnership(stored<unknown>('itp-ownership-v1',{})));
 const [setup,setSetup]=useState<Setup>(()=>stored('itp-setup-v1',defaultSetup()));
 const [bossData,setBossData]=useState<TheaterBossData>(theaterBosses);
@@ -663,6 +675,7 @@ const renderAct=(act:number,label:string)=>{
   const bossStage=selectedSeason?.bossStages.find(stage=>stage.act===act);
   const bosses=selectedSeason&&overrideSlot?getBossesForSlot(selectedSeason,bossData,overrideSlot):bossStage?.bosses??[];
   const objective=bosses.length?'Boss':stageObjectives[setup.difficulty]?.[act];
+  const encounterKey=`${selectedSeason?.season}-${setup.difficulty}-${act}`;
   return <div className={`act ${teamDropTarget===act?'team-drop-target':''}`} key={act} onDragOverCapture={event=>{
     if(!event.dataTransfer.types.includes('application/x-itp-team'))return;
     event.preventDefault();event.stopPropagation();event.dataTransfer.dropEffect='move';setTeamDropTarget(act);
@@ -675,7 +688,7 @@ const renderAct=(act:number,label:string)=>{
     if(setup.difficulty==='Lunar'){activeActs.add(11);activeActs.add(12);}
     if(raw&&Number.isInteger(source)&&activeActs.has(source))setPlan(current=>({...current,acts:swapTeams(current.acts,source,act)}));
     setTeamDropTarget(null);setCopiedTeam(null);
-  }}><div className="act-heading"><div className="act-heading-content"><strong>{label}</strong>{objective&&<span className="act-objective">{objective}</span>}{bosses.length>0&&<span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</span>}</div><div className="act-team-tools">
+  }}><div className="act-heading"><div className="act-heading-content"><strong>{selectedSeason&&seasonStatus(selectedSeason,seasonTime)==='Current'?<a className="act-details-link" href={`#act-details-act-${act}`} title={`View ${label} details`} onClick={event=>{event.preventDefault();setActDetailsTarget({act,season:selectedSeason.season});setStep(4);}}>{label}</a>:label}</strong>{objective&&<span className="act-objective">{objective}</span>}</div>{bosses.length>0&&<div className="planner-encounter-picker planner-boss-preview"><span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</span></div>}{!bosses.length&&selectedSeason&&<React.Suspense fallback={null}><PlannerEncounterPicker season={selectedSeason.season} difficulty={setup.difficulty} act={act} value={plan.encounterChoices?.[encounterKey]} onChange={value=>setPlan(current=>({...current,encounterChoices:{...current.encounterChoices,[encounterKey]:value}}))}/></React.Suspense>}<div className="act-team-tools">
     <button type="button" className={`team-icon paste-team ${copiedTeam?'':'clipboard-empty'}`} disabled={!copiedTeam} aria-label={`Paste copied team into ${label}`} title={`Paste copied team into ${label} (replaces this team)`} onClick={pasteTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M8 13h8M8 17h6"/></svg></button>
     <button type="button" className={`team-icon copy-team ${copyActive?'copied':''} ${hasTeam?'':'clipboard-empty'}`} aria-pressed={copyActive} disabled={!hasTeam} aria-label={copyActive?`Clear copied team from ${label}`:`Copy team from ${label}`} title={copyActive?'Team copied — click again to clear':`Copy team from ${label}`} onClick={copyTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg></button>
     <button type="button" className={`team-icon clear-team ${hasTeam?'':'clipboard-empty'}`} disabled={!hasTeam} aria-label={`Clear whole team from ${label}`} title="Clear whole team" onClick={()=>{setPlan(current=>({...current,acts:{...current.acts,[act]:[]}}));setCopiedTeam(null);setAssignmentNotice(null);}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
@@ -702,9 +715,9 @@ const renderAct=(act:number,label:string)=>{
     }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} selected={chosen.includes(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(plan.acts).filter(names=>names.includes(name)).length>=2} onSelect={name=>name?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,'')} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
   })}</div></div>;
 };
-return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL <a className="creator-credit" href="https://www.youtube.com/channel/UCO6TTgsXftMu8N-PySScVeQ" target="_blank" rel="noreferrer">Made by Watchful</a></p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><div className="header-right"><div className="related-sites" role="navigation" aria-label="More Genshin tools"><a href="https://watchfuls.github.io/GenshinGraph/">Character Graph</a><span aria-hidden="true">·</span><a href="https://watchfuls.github.io/genshinpuzzle/">Dummy Guesser</a></div><span className="version">v0.1 · Local save</span></div></header>
-<nav>{['Your Characters','Challenge Setup','Theater Planner','Act Details (WIP)'].map((n,i)=><button key={n} className={step===i+1?'active':''} disabled={i===2&&!canContinueToPlanner} title={i===2&&!canContinueToPlanner?'Meet the eligibility minimum in Challenge Setup first.':undefined} onClick={()=>{if(i!==2||canContinueToPlanner)setStep(i+1);}}><span className="stepnum">{i+1}</span>{n}</button>)}</nav>
-{step===4&&<React.Suspense fallback={<section><h2>Act Details (WIP)</h2><p>Loading act details…</p></section>}><ActDetails difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={availableSeasons} now={seasonTime} bossesForAct={(seasonNumber,difficulty,act)=>{
+return <main><div ref={stickyHeaderRef} className={`app-header${step===4?' is-sticky':''}`}><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL <a className="creator-credit" href="https://www.youtube.com/channel/UCO6TTgsXftMu8N-PySScVeQ" target="_blank" rel="noreferrer">Made by Watchful</a></p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><div className="header-right"><div className="related-sites" role="navigation" aria-label="More Genshin tools"><a href="https://watchfuls.github.io/GenshinGraph/">Character Graph</a><span aria-hidden="true">·</span><a href="https://watchfuls.github.io/genshinpuzzle/">Dummy Guesser</a></div><span className="version">v0.1 · Local save</span></div></header>
+<nav>{['Your Characters','Challenge Setup','Theater Planner','Act Details (WIP)'].map((n,i)=><button key={n} className={step===i+1?'active':''} disabled={i===2&&!canContinueToPlanner} title={i===2&&!canContinueToPlanner?'Meet the eligibility minimum in Challenge Setup first.':undefined} onClick={()=>{if(i!==2||canContinueToPlanner)setStep(i+1);}}><span className="stepnum">{i+1}</span>{n}</button>)}</nav></div>
+{step===4&&<React.Suspense fallback={<section><h2>Act Details (WIP)</h2><p>Loading act details…</p></section>}><ActDetails target={actDetailsTarget} difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={availableSeasons} now={seasonTime} bossesForAct={(seasonNumber,difficulty,act)=>{
   const season=availableSeasons.find(candidate=>candidate.season===seasonNumber);
   if(!season)return [];
   const slot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12?'lunar2':undefined;
