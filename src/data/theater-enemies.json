@@ -1,0 +1,932 @@
+{
+  "502": {
+    "name": "Hydro Mimic Boar",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Boar",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": -40,
+      "Hydro": 15,
+      "Electro": 15,
+      "Cryo": 15,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": 15
+    }
+  },
+  "503": {
+    "name": "Hydro Mimic Crane",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Crane",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": 15,
+      "Hydro": 15,
+      "Electro": -40,
+      "Cryo": 15,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": 15
+    }
+  },
+  "504": {
+    "name": "Hydro Mimic Crab",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Crab",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": 15,
+      "Hydro": 15,
+      "Electro": 15,
+      "Cryo": -40,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": 15
+    }
+  },
+  "505": {
+    "name": "Hydro Mimic Finch",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Finch",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": 15,
+      "Hydro": 15,
+      "Electro": 15,
+      "Cryo": 15,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": -40
+    }
+  },
+  "506": {
+    "name": "Hydro Mimic Mallard",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Mallard",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": 15,
+      "Hydro": 15,
+      "Electro": 15,
+      "Cryo": -40,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": 15
+    }
+  },
+  "507": {
+    "name": "Hydro Mimic Squirrel",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Squirrel",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": -40,
+      "Hydro": 15,
+      "Electro": 15,
+      "Cryo": 15,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": 15
+    }
+  },
+  "508": {
+    "name": "Hydro Mimic Frog",
+    "icon": "UI_MonsterIcon_Oceanid_Underling.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Frog",
+    "baseResistances": {
+      "Physical": 15,
+      "Pyro": 15,
+      "Hydro": 15,
+      "Electro": 15,
+      "Cryo": 15,
+      "Dendro": 15,
+      "Anemo": 15,
+      "Geo": -40
+    }
+  },
+  "10102": {
+    "name": "Hilichurl Fighter",
+    "icon": "UI_MonsterIcon_Hili_None_01.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hilichurl_Fighter",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "10105": {
+    "name": "Pyro Hilichurl Shooter",
+    "icon": "UI_MonsterIcon_Hili_Fire_Range.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Pyro_Hilichurl_Shooter",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "10106": {
+    "name": "Hilichurl Grenadiers",
+    "icon": "UI_MonsterIcon_Hili_Fire_Range.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hilichurl_Grenadier",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "10107": {
+    "name": "Hilichurl Berserker",
+    "icon": "UI_MonsterIcon_Hili_Fire_Range.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Hilichurl_Berserker",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "10110": {
+    "name": "Electro Hilichurl Shooter",
+    "icon": "UI_MonsterIcon_Hili_Electric_Range.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Electro_Hilichurl_Shooter",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "10116": {
+    "name": "Electro Hilichurl Grenadier",
+    "icon": "UI_MonsterIcon_Hili_Electric_Range.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Electro_Hilichurl_Grenadier",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "10205": {
+    "name": "Stonehide Lawachurl",
+    "icon": "UI_MonsterIcon_Brute_Rock_None.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Stonehide_Lawachurl",
+    "baseResistances": {
+      "Physical": 50,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 70
+    }
+  },
+  "10308": {
+    "name": "Battle-Hardened Samachurl",
+    "icon": "UI_MonsterIcon_Shaman_None_01.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Churldric",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "21310": {
+    "name": "Wilderness Hunter",
+    "icon": "UI_MonsterIcon_WildHunt_Elite.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Wilderness_Hunter",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "21501": {
+    "name": "Lord of the Hidden Depths: Whisperer of Nightmares",
+    "icon": "UI_MonsterIcon_Lloigor_Primo.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Lord_of_the_Hidden_Depths%3A_Whisperer_of_Nightmares",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30701": {
+    "name": "Oprichniki Line Trooper",
+    "icon": "UI_MonsterIcon_NodKrai_Oprichnik_Male.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Oprichniki_Line_Trooper",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30721": {
+    "name": "Oprichniki Support Trooper",
+    "icon": "UI_MonsterIcon_NodKrai_Oprichnik_MuscleMan.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Oprichniki_Support_Trooper",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30731": {
+    "name": "Oprichniki Grenadier",
+    "icon": "UI_MonsterIcon_NodKrai_Oprichnik_Female.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Oprichniki_Grenadier",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30781": {
+    "name": "Oprichniki Bombardier",
+    "icon": "UI_MonsterIcon_NodKrai_Oprichnik_Male.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Oprichniki_Bombardier",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30792": {
+    "name": "Oprichniki Hailstorm Cannoneer",
+    "icon": "UI_MonsterIcon_Oprichnik_Male_Fat_CannonShield.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Oprichniki_Hailstorm_Cannoneer",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30801": {
+    "name": "Close Combat Storm Landcruiser",
+    "icon": "UI_MonsterIcon_Fatuimecha_CoreA_MoveB_AttackA_Fire.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Close_Combat_Storm_Landcruiser",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30802": {
+    "name": "Close Combat Scout Landcruiser",
+    "icon": "UI_MonsterIcon_Fatuimecha_CoreA_MoveA_AttackC_Water.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Close_Combat_Scout_Landcruiser",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30803": {
+    "name": "Force Recon Storm Landcruiser",
+    "icon": "UI_MonsterIcon_Fatuimecha_CoreB_MoveB_AttackB_Grass.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Force_Recon_Storm_Landcruiser",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30804": {
+    "name": "Force Recon Scout Landcruiser",
+    "icon": "UI_MonsterIcon_Fatuimecha_CoreB_MoveA_AttackB_Ice.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Force_Recon_Scout_Landcruiser",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30851": {
+    "name": "Cutting Edge All-Purpose Storm Landcruiser",
+    "icon": "UI_MonsterIcon_Fatuimecha_CoreC_MoveD_AttackA_AttackC_AttackB_Electric.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Cutting_Edge_All-Purpose_Storm_Landcruiser",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "30853": {
+    "name": "Cutting Edge Fire Support Ground Effect Landcruiser",
+    "icon": "UI_MonsterIcon_Fatuimecha_CoreC_MoveF_AttackB_Fire.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Cutting_Edge_Fire_Support_Ground_Effect_Landcruiser",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "40101": {
+    "name": "Ruin Guard",
+    "icon": "UI_MonsterIcon_Defender_Noner_01.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Ruin_Guard",
+    "baseResistances": {
+      "Physical": 70,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "40103": {
+    "name": "Ruin Grader",
+    "icon": "UI_MonsterIcon_Konungmathr.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Ruin_Grader",
+    "baseResistances": {
+      "Physical": 70,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "40201": {
+    "name": "Ruin Cruiser",
+    "icon": "UI_MonsterIcon_Apparatus_Enigma_BionicDrone.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Ruin_Cruiser",
+    "baseResistances": {
+      "Physical": 30,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "40202": {
+    "name": "Ruin Destroyer",
+    "icon": "UI_MonsterIcon_Apparatus_Enigma_BionicFlora.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Ruin_Destroyer",
+    "baseResistances": {
+      "Physical": 30,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "40203": {
+    "name": "Ruin Defender",
+    "icon": "UI_MonsterIcon_Apparatus_Enigma_BionicInsecta.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Ruin_Defender",
+    "baseResistances": {
+      "Physical": 50,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "40204": {
+    "name": "Ruin Scout",
+    "icon": "UI_MonsterIcon_Apparatus_Enigma_BionicNettler.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Ruin_Scout",
+    "baseResistances": {
+      "Physical": 50,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "50802": {
+    "name": "Nobushi: Hitsukeban",
+    "icon": "UI_MonsterIcon_Samurai_Ronin_02.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Nobushi%3A_Hitsukeban",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "50803": {
+    "name": "Nobushi: Kikouban",
+    "icon": "UI_MonsterIcon_Samurai_Ronin_03.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Nobushi%3A_Kikouban",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "51001": {
+    "name": "Kairagi: Dancing Thunder",
+    "icon": "UI_MonsterIcon_Samurai_Kairagi_01.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Kairagi%3A_Dancing_Thunder",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "51002": {
+    "name": "Kairagi: Fiery Might",
+    "icon": "UI_MonsterIcon_Samurai_Kairagi_02.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Kairagi%3A_Fiery_Might",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55101": {
+    "name": "Tepetlisaurus Warrior: Shard Striker",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Powermaul_Drillhead.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Shard_Striker",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55102": {
+    "name": "Tepetlisaurus Warrior: Rockbreaker Blade",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Chainsword_Drillhead.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Rockbreaker_Blade",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55103": {
+    "name": "Yumkasaurus Warrior: Whirling Leaves",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Chainsword_Hookwalker.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Yumkasaurus_Warrior%3A_Whirling_Leaves",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55104": {
+    "name": "Yumkasaurus Warrior: Flowing Skyfire",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Launcher_Hookwalker.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Yumkasaurus_Warrior%3A_Flowing_Skyfire",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55107": {
+    "name": "Qucusaurus Warrior: Heartstar Hammer",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Powermaul_Flamingo.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Heartstar_Hammer",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55108": {
+    "name": "Qucusaurus Warrior: Blazing Sky",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Slingshot_Flamingo.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55109": {
+    "name": "Iktomisaurus Warrior: Icy Tidebearer",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Chainsword_Shamansaurus.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Icy_Tidebearer",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55110": {
+    "name": "Iktomisaurus Warrior: Cryocrystal Cannon",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Launcher_Shamansaurus.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55111": {
+    "name": "Tatankasaurus Warrior: Skybreaker",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Powermaul_Bisonsaurus.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Tatankasaurus_Warrior%3A_Skybreaker",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "55112": {
+    "name": "Tatankasaurus Warrior: Spiritlight Chaser",
+    "icon": "UI_MonsterIcon_Tribalwarrior_Slingshot_Bisonsaurus.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Tatankasaurus_Warrior%3A_Spiritlight_Chaser",
+    "baseResistances": {
+      "Physical": -20,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "60401": {
+    "name": "Geovishap",
+    "icon": "UI_MonsterIcon_Drake_Rock.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Geovishap",
+    "baseResistances": {
+      "Physical": 30,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 50
+    }
+  },
+  "60506": {
+    "name": "Primordial Bathysmal Vishap",
+    "icon": "UI_MonsterIcon_Drake_Deepsea_Water.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap",
+    "baseResistances": {
+      "Physical": 30,
+      "Pyro": 10,
+      "Hydro": 30,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "61001": {
+    "name": "Consecrated Horned Crocodile",
+    "icon": "UI_MonsterIcon_Gator_Sacred_Water.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Consecrated_Horned_Crocodile",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "61002": {
+    "name": "Consecrated Fanged Beast",
+    "icon": "UI_MonsterIcon_Panther_Sacred_Grass.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Consecrated_Fanged_Beast",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "61003": {
+    "name": "Consecrated Red Vulture",
+    "icon": "UI_MonsterIcon_Vulture_Sacred_Fire.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Consecrated_Red_Vulture",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "61004": {
+    "name": "Consecrated Scorpion",
+    "icon": "UI_MonsterIcon_Scorpion_Sacred_Electric.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Consecrated_Scorpion",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "61101": {
+    "name": "Jadeplume Terrorshroom",
+    "icon": "UI_MonsterIcon_Fungus_Raptor.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Jadeplume_Terrorshroom",
+    "baseResistances": {
+      "Physical": 25,
+      "Pyro": 25,
+      "Hydro": 25,
+      "Electro": 25,
+      "Cryo": 25,
+      "Dendro": 80,
+      "Anemo": 25,
+      "Geo": 25
+    }
+  },
+  "62002": {
+    "name": "Tepetlisaurus",
+    "icon": "UI_MonsterIcon_Natsaurus_Drillhead_Normal.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Tepetlisaurus",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 50
+    }
+  },
+  "62302": {
+    "name": "Qucusaurus",
+    "icon": "UI_MonsterIcon_Natsaurus_Flamingo_Normal.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Qucusaurus",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 50,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "62402": {
+    "name": "Iktomisaurus",
+    "icon": "UI_MonsterIcon_Natsaurus_Shamansaurus_Normal.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Iktomisaurus",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 50,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "62502": {
+    "name": "Tatankasaurus",
+    "icon": "UI_MonsterIcon_Natsaurus_Bisonsaurus_Normal.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Tatankasaurus",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 50,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "62610": {
+    "name": "Potapo's Solidarity: Secret Shadow's Re-Emergence",
+    "icon": "UI_MonsterIcon_Wayob_Shamansaurus.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Biting-Cold_Wayob_Manifestation",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 10,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 50,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "62701": {
+    "name": "Fluid Avatar of Lava",
+    "icon": "UI_MonsterIcon_Lava_Liquid.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Fluid_Avatar_of_Lava",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 70,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 10,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  },
+  "63011": {
+    "name": "Radiant Moonfly",
+    "icon": "UI_MonsterIcon_Magbeast_Pergesa.png",
+    "wikiUrl": "https://genshin-impact.fandom.com/wiki/Radiant_Moonfly",
+    "baseResistances": {
+      "Physical": 10,
+      "Pyro": 70,
+      "Hydro": 10,
+      "Electro": 10,
+      "Cryo": 10,
+      "Dendro": 70,
+      "Anemo": 10,
+      "Geo": 10
+    }
+  }
+}

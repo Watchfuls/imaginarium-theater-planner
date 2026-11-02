@@ -9,6 +9,7 @@ import rawBossData from './data/theater-bosses.json';
 import {currentSeason,seasonStatus} from './seasonTiming';
 import {changeTravelerElement, type TravelerElement} from './travelerSelection';
 import './style.css';
+const ActDetails=React.lazy(()=>import('./ActDetails').then(module=>({default:module.ActDetails})));
 type Ownership = Record<string,{owned:boolean;level:number}>;
 type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number};
 type Plan = {roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
@@ -701,8 +702,14 @@ const renderAct=(act:number,label:string)=>{
     }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} selected={chosen.includes(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(plan.acts).filter(names=>names.includes(name)).length>=2} onSelect={name=>name?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,'')} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
   })}</div></div>;
 };
-return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL</p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><div className="header-right"><div className="related-sites" role="navigation" aria-label="More Genshin tools"><a href="https://watchfuls.github.io/GenshinGraph/">Character Graph</a><span aria-hidden="true">·</span><a href="https://watchfuls.github.io/genshinpuzzle/">Dummy Guesser</a></div><span className="version">v0.1 · Local save</span></div></header>
-<nav>{['Your Characters','Challenge Setup','Theater Planner'].map((n,i)=><button key={n} className={step===i+1?'active':''} disabled={i===2&&!canContinueToPlanner} title={i===2&&!canContinueToPlanner?'Meet the eligibility minimum in Challenge Setup first.':undefined} onClick={()=>{if(i!==2||canContinueToPlanner)setStep(i+1);}}><span className="stepnum">{i+1}</span>{n}</button>)}</nav>
+return <main><header><div><p className="eyebrow">GENSHIN IMPACT · COMMUNITY PLANNING TOOL <a className="creator-credit" href="https://www.youtube.com/channel/UCO6TTgsXftMu8N-PySScVeQ" target="_blank" rel="noreferrer">Made by Watchful</a></p><h1>Imaginarium Theater Planner</h1><p>Build your roster, configure a rotation, and plan your acts.</p></div><div className="header-right"><div className="related-sites" role="navigation" aria-label="More Genshin tools"><a href="https://watchfuls.github.io/GenshinGraph/">Character Graph</a><span aria-hidden="true">·</span><a href="https://watchfuls.github.io/genshinpuzzle/">Dummy Guesser</a></div><span className="version">v0.1 · Local save</span></div></header>
+<nav>{['Your Characters','Challenge Setup','Theater Planner','Act Details (WIP)'].map((n,i)=><button key={n} className={step===i+1?'active':''} disabled={i===2&&!canContinueToPlanner} title={i===2&&!canContinueToPlanner?'Meet the eligibility minimum in Challenge Setup first.':undefined} onClick={()=>{if(i!==2||canContinueToPlanner)setStep(i+1);}}><span className="stepnum">{i+1}</span>{n}</button>)}</nav>
+{step===4&&<React.Suspense fallback={<section><h2>Act Details (WIP)</h2><p>Loading act details…</p></section>}><ActDetails difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={availableSeasons} now={seasonTime} bossesForAct={(seasonNumber,difficulty,act)=>{
+  const season=availableSeasons.find(candidate=>candidate.season===seasonNumber);
+  if(!season)return [];
+  const slot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12?'lunar2':undefined;
+  return slot?getBossesForSlot(season,bossData,slot):season.bossStages.find(stage=>stage.act===act)?.bosses??[];
+}}/></React.Suspense>}
 {step===1&&<section>
   <div className="sectionhead">
     <div><h2>Your Characters</h2><p>{count} owned · {CHARACTERS.length} in starter database</p></div>

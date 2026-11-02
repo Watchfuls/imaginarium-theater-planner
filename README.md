@@ -52,6 +52,33 @@ Commit the JSON change and rebuild/deploy the site for the override to appear fo
 
 ## Notes
 
+Curated act details are retained in the [local archive](docs/act-details-archive/README.md)
+for future same-act comparisons. Run `npm run archive:act-details` before a
+theater rotation; changed details create a new snapshot without overwriting
+older ones. Browser-only notes must first be exported from the development
+editor and archived using that JSON file. Archived seasons stay hidden on the site.
+
+For each new theater, ask **“Update Act Details for the current theater”** (or
+specify a season number and date). The reusable
+[Act Details workflow](docs/act-details-workflow.md) defines the sources,
+historical research, data format, preservation of your notes, and validation.
+Repository instructions direct coding agents to follow it automatically.
+This is an on-demand update; it does not add scheduled automation.
+
+Season 29's [research record](docs/act-details-research/2026-11-01.md) documents
+the Alioth enemy choices, resistance references, and comparisons across 28 prior
+Fandom seasons. The app distinguishes current enemy types from historical
+timers, waves, and stage effects; incomplete difficulty variants remain labelled.
+
+Act Details shows enemy portraits with locally bundled icons and only resistance
+exceptions to the standard 10%. Cross-references, graphic credits, confidence,
+and research commentary are retained only in repository research files;
+the visitor view focuses on the gameplay details.
+
+The fourth section, **Act Details**, is accessible independently of planner eligibility and shows only the active season (upcoming and expired seasons are excluded using the bundled release timestamps). Choose a difficulty to see its acts, including the two Lunar challenges at their unlock positions. Existing boss overrides also appear here. Encounter choices, resistance exceptions, clear requirements, and notes are curated in `src/data/theater-act-details.json`; unrecorded fields are explicitly marked rather than inferred.
+
+In `npm run dev`, click **Edit act details** to add selectable challenges and notes per season, difficulty, and act. Drafts persist in this browser. Download the act details JSON, replace `src/data/theater-act-details.json`, then commit and redeploy to share the details. Published visitors see the recorded details without editing controls. The scheduled lineup updater does not overwrite this file.
+
 - Character icons are copied from the sibling `genshin-shared/icons` directory into the build output.
 - Ownership, challenge setup, and planner selections are saved to browser `localStorage`. Traveler versions share one level setting in **Your Characters**.
 - Use **Import GOOD JSON** in **Your Characters** to load a GOOD character export, such as [Irminsul](https://github.com/konkers/irminsul). The import replaces the current ownership list after confirmation, rounds levels down to the nearest 10, and ignores character keys not in the starter roster.
