@@ -123,3 +123,5 @@ Stonehide Lawachurl simplification (user correction, 2026-11-02): removed suppor
 
 ### User Moonfly avoidance correction
 2026-11-02: User explicitly supplies two avoidance methods: i-frame the debuff with the active character (no need to heal away their mark, but no mark-clearing healing buff); or bait Moonfly off-center and move across the arena beyond its attack range to avoid the debuff entirely. Added as Avoid the Mark, preserving the healing route. Read the IT 7.2 and Luna 1 Floor 12 guide Moonfly sections for context; these exact avoidance methods are sourced to this conversation correction.
+
+User recommendation (2026-11-02): list Zibai, Noelle, Navia, and Zhongli as notable characters for Churldric/Battle-Hardened Samachurl. Applied to all current encounters for enemy 10308, alongside the existing Geo / Blunt Attacks recommendation, using the compact portrait/name layout without repeated explanatory notes.

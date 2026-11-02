@@ -1,6 +1,7 @@
+import {canonicalEnemyName} from './enemyIdentity';
 import React from 'react';
 import published from './data/theater-act-details.json';
-import catalog from './data/theater-enemies.json';
+import catalog from './data/theater-enemies.json' with {type:'json'};
 import type {ActDetailsData} from './actDetailsData';
 import {encounterEnemyIds} from './actDetailsPresentation';
 import {KeyRecommendations} from './KeyRecommendations';
@@ -8,10 +9,19 @@ import {KeyRecommendations} from './KeyRecommendations';
 const icons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const enemies=catalog as Record<string,{name:string;icon:string}>;
 
+export function LunarActOnePreview({season}:{season:number}){
+  const choices=(published as ActDetailsData).seasons[season]?.Lunar?.[11]?.encounters??[];
+  const ids=[...new Set(choices.flatMap(encounterEnemyIds))];
+  if(!ids.length)return null;
+  return <div className="boss-preview-card"><strong>Lunar Act 1</strong><div className="lunar-act-enemy-icons">{ids.map(id=>{
+    const enemy=catalog[id as keyof typeof catalog];
+    return enemy?<a key={id} href={enemy.wikiUrl} target="_blank" rel="noreferrer" title={enemy.name} aria-label={enemy.name}><img src={icons[`./assets/enemies/${enemy.icon}`]} alt="" width="38" height="38" loading="lazy"/></a>:null;
+  })}</div></div>;
+}
+
 export function PlannerKeyRecommendations({season,difficulty,act,bossNames}:{season:number;difficulty:string;act:number;bossNames:string[]}){
   const encounters=(published as ActDetailsData).seasons[season]?.[difficulty]?.[act]?.encounters??[];
-  const bossAliases:Record<string,string>={Churldric:'Battle-Hardened Samachurl',"Potapo's Solidarity":"Potapo's Solidarity: Secret Shadow's Re-Emergence"};
-  const canonicalNames=bossNames.map(name=>bossAliases[name]??name);
+  const canonicalNames=bossNames.map(canonicalEnemyName);
   const items=encounters.filter(encounter=>encounterEnemyIds(encounter).some(id=>canonicalNames.includes(enemies[id]?.name))).flatMap(encounter=>encounter.keyRecommendations??[]);
   return items.length?<KeyRecommendations items={items}/>:null;
 }

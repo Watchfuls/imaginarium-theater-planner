@@ -1,8 +1,10 @@
+import {bossPortrait} from './bossPortraits';
+import {DifficultySelect} from './DifficultySelect';
 import React, {useEffect, useState} from 'react';
 import published from './data/theater-act-details.json';
 import {seasonStatus} from './seasonTiming';
 import {mergeActDetailsDraft,type ActDetailsData as Data,type ActDetailsRecord as Act,type EncounterDetails as Encounter} from './actDetailsData';
-import enemyCatalog from './data/theater-enemies.json';
+import enemyCatalog from './data/theater-enemies.json' with {type:'json'};
 import physicalIcon from './assets/elements/Physical_Icon.png';
 import {KeyRecommendations} from './KeyRecommendations';
 import {mechanicStateDescription} from './mechanicStates';
@@ -134,13 +136,13 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
     : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value}/>:value}</p></div>:null;
   const actOrder=difficulty==='Lunar'?[1,2,3,11,4,5,6,12,7,8,9,10]:Array.from({length:modes[difficulty]},(_,index)=>index+1);
   return <section className="act-details">
-    <div className="sectionhead"><div><h2>Act Details (WIP)</h2><p>Enemy choices, resistances, clear requirements, and notes for the currently released theater.</p></div>
+    <div className="sectionhead"><div><h2>Act Details</h2><p>Enemy choices, resistances, clear requirements, and notes for the currently released theater.</p></div>
       {import.meta.env.DEV&&<div className="actions"><button onClick={()=>setEditing(!editing)}>{editing?'Finish editing':'Edit act details'}</button><button onClick={download}>Download act details JSON</button></div>}
     </div>
     {!season?<p role="status">No currently released theater is available in the bundled data.</p>:<>
       <div className="boss-editor-controls">
         <label>Theater<select value={season.season} onChange={event=>setSelected(Number(event.target.value))}>{released.map(candidate=><option key={candidate.season} value={candidate.season}>Season {candidate.season} · {candidate.id}</option>)}</select></label>
-        <label>Difficulty<select value={difficulty} onChange={event=>onDifficultyChange(event.target.value)}>{Object.keys(modes).map(mode=><option key={mode}>{mode}</option>)}</select></label>
+        <label>Difficulty<DifficultySelect value={difficulty} onChange={onDifficultyChange}/></label>
       </div>
       {editing&&<p className="note" role="status">{saveStatus} Replace src/data/theater-act-details.json with the download and redeploy to publish. Each encounter represents one selectable challenge; list its enemies and resistance exceptions together.</p>}
       <div className="act-details-grid">{actOrder.map(number=>{
@@ -156,7 +158,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
         return <article id={`act-details-act-${number}`} tabIndex={-1} className={`act-detail-card${actCollapsed?' is-collapsed':''}`} key={actKey}>
           <div className="act-detail-heading"><button type="button" className="details-toggle" disabled={editing} aria-label={`${actCollapsed?'Expand':'Collapse'} ${actLabel}`} aria-expanded={!actCollapsed} aria-controls={`act-content-${actKey}`} onClick={()=>setCollapsedActs(current=>({...current,[actKey]:!actCollapsed}))}><span aria-hidden="true">{actCollapsed?'▸':'▾'}</span></button><h3>{actLabel}</h3>{headingBosses.length>0&&<span className="act-objective">Boss</span>}{act.level!==undefined&&<span className="act-level">Level {act.level}</span>}</div>
           <div id={`act-content-${actKey}`}>
-          {!actCollapsed&&bosses.length>0&&!act.encounters.some(encounter=>encounterEnemyIds(encounter).length)&&<div><strong>Bosses</strong>{bosses.map((boss,index)=><a className="boss-preview-entry" key={index} href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(boss.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</div>}
+          {!actCollapsed&&bosses.length>0&&!act.encounters.some(encounter=>encounterEnemyIds(encounter).length)&&<div><strong>Bosses</strong>{bosses.map((boss,index)=><a className="boss-preview-entry" key={index} href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(boss.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</div>}
           {!actCollapsed&&field('Act Requirements',editing?act.requirements:playerActRequirements(act.requirements),value=>update(number,{...act,requirements:value}))}
           {!actCollapsed&&!!act.keyRecommendations?.length&&<div className="act-recommended-elements"><strong>Key Recommendation</strong><KeyRecommendations items={act.keyRecommendations}/></div>}
           {!actCollapsed&&!!act.notableCharacters?.length&&<NotableCharacters characters={act.notableCharacters}/>}

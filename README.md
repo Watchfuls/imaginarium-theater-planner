@@ -1,5 +1,29 @@
 # Imaginarium Theater Planner
 
+## Code layout and checks
+
+`src/main.tsx` mounts the app; `src/App.tsx` owns shared planner state and section
+navigation. UI components live separately in `SiteHeader`, `CharacterVisuals`,
+`CharacterPickers`, `BossPreview`, and the development-only `BossOverrideEditor`.
+Act Details, encounter selection, difficulty selection, and Video Guide also have
+their own components. Shared types and rules live in `plannerTypes` and
+`plannerConfig`; `theaterData` parses season/boss data, and `ownership` handles
+GOOD imports and saved ownership migration.
+
+Run `npm test` for regression checks and `npm run build` for TypeScript and the
+production build (use `npm.cmd` in Windows PowerShell). Deployment runs both.
+
+`npm run test:browser` runs interaction checks in an installed Google Chrome
+using Playwright. It starts an isolated local Vite server and fresh browser
+profile, so real saved plans and notes are untouched. It checks navigation,
+difficulty synchronization, keyboard controls, character/slot/team dragging,
+copy/paste limits, saved assignments, chapter links, and mobile overflow.
+Set `BROWSER_CHANNEL=msedge` to use installed Edge instead (in PowerShell:
+`$env:BROWSER_CHANNEL='msedge'`). Actual YouTube playback and audio may need
+manual verification in Firefox/Chrome because the media can be blocked in
+automated browser sessions. Browser checks are separate from the deployment's
+unit tests and require a locally installed supported browser.
+
 ## Run locally
 
 ```bash
