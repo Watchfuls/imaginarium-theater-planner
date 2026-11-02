@@ -12,10 +12,37 @@ app's rule that only the currently active theater is displayed.
 
 ## Standing brief
 
+### Source priority
+
+Use this order when sources disagree about the same mechanic or value:
+
+1. The user's notes, Markdown guides, and explicit corrections in conversation.
+2. Genshin Impact Fandom wiki.
+3. Alioth.
+4. Other sources.
+
+Lower-priority sources fill gaps; they must not override applicable user notes.
+Missing values and requests to verify in the user's notes are gaps to research,
+not a reason to stop at those notes. Continue through Fandom, Alioth, then other
+sources. Use supported intrinsic enemy mechanics as fallbacks and record any
+variant inference in the research record; do not label it direct Theater verification.
+Record conflicting evidence in repository research without duplicating it in
+the player UI. Preserve qualifications in the user's notes: a question,
+placeholder, or instruction to confirm a value is not a confirmed observation.
+Continue checking the exact enemy variant and encounter context; this priority
+does not permit transferring stage timings or objectives between different acts.
+
 Before external research, consult `docs/act-details-archive` and prior local
 research records for details we have collected ourselves, including information
 missing from external sites. Apply the same-act matching rule to these records.
 Keep original provenance and confidence; archived estimates remain estimates.
+
+For mechanics explanations, prioritize the user's Theater and Abyss Markdown
+guides in `C:/Users/gregh/Documents/Genshin/Abyss Guides`, especially the guide
+for the current theater. Cross-check intrinsic enemy behavior against exact
+enemy wiki pages and Alioth. Transfer no Abyss chamber or different Theater
+act objectives, spawn orders, or timers. Keep variant-specific mechanics
+separate, and record conflicts without inventing a resolution.
 
 Populate the fourth section with the selectable enemy encounters for every act
 and applicable difficulty, including the two Lunar challenges. Include enemy
@@ -86,6 +113,50 @@ season. Reading the exports does not require modifying or importing PSD files.
 ## App data format
 
 ### Visitor presentation
+
+Tie enemy-specific Key Recommendations and notable characters to the exact
+enemy variant, not an act number. Apply them to every encounter containing that
+enemy across applicable acts and difficulties, including planner previews.
+For example, Moonfly's Healing recommendation applies in Hard Act 8 as well as
+Visionary/Lunar Act 10. Keep genuinely stage-specific advice (such as Taunts for
+Monolith Defense or Healing/Shielding for unavoidable Lunar stage damage) tied
+to that stage. This does not permit transferring stage objectives or timings.
+
+Call enemy defenses **Wards**, including named wards and ward breaks. Reserve
+**Shields** and **Shielding** for characters, even when a source calls an enemy
+defense a shield.
+
+Mechanics notes must not repeat static resistances already shown with enemy
+portraits. Include resistance explanations only for conditional changes, such
+as transformations, elemental absorption, or weakened states. Preserve personal
+notes when cleaning curated mechanics text.
+Omit general positioning advice. Describe actionable mechanics available in
+this Theater; do not recommend player kuuvahki interactions, which are not
+available here. Leave Mechanics empty when an encounter has no relevant unique
+mechanic rather than adding generic combat advice or attack descriptions.
+Do not explain which other enemy variants are absent. Omit basic-enemy attack
+descriptions unless the user specifically requests them. Keep meaningful
+special interactions and counters; show None when no relevant mechanics remain.
+Do not add incidental counters such as staggering a Geovishap's roll with a
+shield. Prioritize the user's explicitly requested points and mechanics that
+materially affect team selection, damage windows, survival, or objectives.
+Research completeness is not a reason to include every documented interaction.
+Only mention player shields when they provide an explicit useful protection or
+benefit. Do not add notes stating that shields fail to prevent an effect.
+When describing weakened, stunned, paralyzed, exhausted, or disabled states,
+include their sourced duration. Distinguish control duration from a longer
+resistance-reduction window, and weak-point disable timers from full paralysis.
+Use stable state terminology and universal hover definitions: Paralyzed means
+unable to act; Exhausted means an inactive recovery state; neither inherently
+reduces resistance. Weakened means reduced resistance, not an action lock.
+Disabled refers to an inactive weak-point system, and Interrupted only means
+the current attack is canceled. Describe accompanying effects separately.
+Prefer Paralyzed over interchangeable uses of Stunned in curated text.
+If the exact variant's duration cannot be established, say it is unconfirmed;
+do not guess or borrow a different variant's timer.
+Avoid duplication between Resistance Notes and Mechanics, including conditional
+resistance changes. Keep a resistance-only explanation in Resistance Notes;
+Mechanics should explain other relevant interactions rather than restating it.
 
 Use consistent title capitalization for section labels. Show Challenge
 Use `%` instead of “percentage points” in all displayed resistance text.

@@ -12,8 +12,11 @@ export function siteActDetails(data:ActDetailsData):ActDetailsData {
   return {seasons:Object.fromEntries(Object.entries(data.seasons).map(([season,modes])=>[
     season,Object.fromEntries(Object.entries(modes).map(([mode,acts])=>[
       mode,Object.fromEntries(Object.entries(acts).map(([act,record])=>[
-        act,{...(record.level!==undefined?{level:record.level}:{}),requirements:playerActRequirements(record.requirements),notes:record.notes,encounters:record.encounters.map(encounter=>({
+        act,{...(record.level!==undefined?{level:record.level}:{}),...(record.keyRecommendations?{keyRecommendations:record.keyRecommendations}:{}),...(record.notableCharacters?{notableCharacters:record.notableCharacters}:{}),requirements:playerActRequirements(record.requirements),notes:record.notes,encounters:record.encounters.map(encounter=>({
           name:playerDetailText(encounter.name),enemyIds:encounterEnemyIds(encounter),enemies:playerEnemyNotes(encounter.enemies),
+          ...(encounter.keyRecommendations?{keyRecommendations:encounter.keyRecommendations}:{}),
+          ...(encounter.recommendedElements?{recommendedElements:encounter.recommendedElements}:{}),
+          ...(encounter.notableCharacters?{notableCharacters:encounter.notableCharacters}:{}),
           ...(encounter.bountyEnemyIds?{bountyEnemyIds:encounter.bountyEnemyIds}:{}),
           resistances:resistanceExceptions(encounter.resistances),requirements:playerDetailText(encounter.requirements),
           notes:encounter.notes,mechanics:playerDetailText(encounter.mechanics??''),stageEffects:playerDetailText(encounter.stageEffects??'')
@@ -26,6 +29,12 @@ export function siteActDetails(data:ActDetailsData):ActDetailsData {
 // Retain the full curation text in storage and the editor; show gameplay text to players.
 export function playerDetailText(value:string):string {
   return value
+    .replace(/^Qucusaurus (?:Warriors|Pair):\s*Approaching Blazing Sky[^\n]*(?:\n|$)/gm,'')
+    .replace(/\n?Mualani can especially take advantage of this stage:[^\n]*/g,'')
+    .replace(/The listed saurian species have elevated resistance to their own elements\./g,'')
+    .replace(/Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%\. This differs from a uniform resistance assumption\./g,'')
+    .replace(/All listed Hydro Mimics are immune to Hydro\. Their other resistance weaknesses vary by form; see the resistance list\./g,'')
+    .replace(/Shield durability is separate from its underlying Physical and Geo resistance\./g,'')
     .replace(/\s+percentage points?\b/gi,'%')
     .replace(/(\d)[ \t]+(s|ms|min)\b/g,'$1$2')
     .replace(/\b(\d+)s\b/g,(text,seconds)=>Number(seconds)>60?`${Math.floor(Number(seconds)/60)}m${Number(seconds)%60?` ${Number(seconds)%60}s`:''}`:text)

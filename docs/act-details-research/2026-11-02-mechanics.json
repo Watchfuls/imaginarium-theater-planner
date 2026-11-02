@@ -1,0 +1,666 @@
+{
+  "checkedOn": "2026-11-02",
+  "scope": "Intrinsic enemy mechanics and user-authored tactics; no cross-act or cross-difficulty transfers of objectives, waves, or timers.",
+  "guideDirectory": "C:/Users/gregh/Documents/Genshin/Abyss Guides",
+  "wikiRevisions": [
+    {
+      "title": "Ruin Guard",
+      "revid": 1960325,
+      "fetched": true
+    },
+    {
+      "title": "Stonehide Lawachurl",
+      "revid": 2087786,
+      "fetched": true
+    },
+    {
+      "title": "Hilichurl Fighter",
+      "revid": 2087929,
+      "fetched": true
+    },
+    {
+      "title": "Ruin Grader",
+      "revid": 2153533,
+      "fetched": true
+    },
+    {
+      "title": "Pyro Hilichurl Shooter",
+      "revid": 1689427,
+      "fetched": true
+    },
+    {
+      "title": "Hilichurl Grenadier",
+      "revid": 1681731,
+      "fetched": true
+    },
+    {
+      "title": "Electro Hilichurl Shooter",
+      "revid": 1689428,
+      "fetched": true
+    },
+    {
+      "title": "Hilichurl Berserker",
+      "revid": 1681768,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Boar",
+      "revid": 2175365,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Crane",
+      "revid": 2175380,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Finch",
+      "revid": 2175404,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Frog",
+      "revid": 2175418,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Mallard",
+      "revid": 2175412,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Crab",
+      "revid": 2176186,
+      "fetched": true
+    },
+    {
+      "title": "Hydro Mimic Squirrel",
+      "revid": 2175415,
+      "fetched": true
+    },
+    {
+      "title": "Electro Hilichurl Grenadier",
+      "revid": 1679153,
+      "fetched": true
+    },
+    {
+      "title": "Oprichniki Bombardier",
+      "revid": 2149811,
+      "fetched": true
+    },
+    {
+      "title": "Oprichniki Grenadier",
+      "revid": 2092416,
+      "fetched": true
+    },
+    {
+      "title": "Oprichniki Hailstorm Cannoneer",
+      "revid": 2092620,
+      "fetched": true
+    },
+    {
+      "title": "Oprichniki Line Trooper",
+      "revid": 2149813,
+      "fetched": true
+    },
+    {
+      "title": "Oprichniki Support Trooper",
+      "revid": 2192667,
+      "fetched": true
+    },
+    {
+      "title": "Close Combat Scout Landcruiser",
+      "revid": 1911631,
+      "fetched": true
+    },
+    {
+      "title": "Close Combat Storm Landcruiser",
+      "revid": 1893492,
+      "fetched": true
+    },
+    {
+      "title": "Cutting Edge All-Purpose Storm Landcruiser",
+      "revid": 1893485,
+      "fetched": true
+    },
+    {
+      "title": "Cutting Edge Fire Support Ground Effect Landcruiser",
+      "revid": 1893469,
+      "fetched": true
+    },
+    {
+      "title": "Force Recon Scout Landcruiser",
+      "revid": 1911639,
+      "fetched": true
+    },
+    {
+      "title": "Force Recon Storm Landcruiser",
+      "revid": 1911638,
+      "fetched": true
+    },
+    {
+      "title": "Wilderness Hunter",
+      "revid": 2136051,
+      "fetched": true
+    },
+    {
+      "title": "Lord of the Hidden Depths: Whisperer of Nightmares",
+      "revid": 2141289,
+      "fetched": true
+    },
+    {
+      "title": "Churldric",
+      "revid": 2135323,
+      "fetched": true
+    },
+    {
+      "title": "Geovishap",
+      "revid": 1909307,
+      "fetched": true
+    },
+    {
+      "title": "Nobushi: Hitsukeban",
+      "revid": 1965817,
+      "fetched": true
+    },
+    {
+      "title": "Nobushi: Kikouban",
+      "revid": 1965819,
+      "fetched": true
+    },
+    {
+      "title": "Kairagi: Fiery Might",
+      "revid": 2082616,
+      "fetched": true
+    },
+    {
+      "title": "Kairagi: Dancing Thunder",
+      "revid": 1682794,
+      "fetched": true
+    },
+    {
+      "title": "Ruin Cruiser",
+      "revid": 2140392,
+      "fetched": true
+    },
+    {
+      "title": "Ruin Destroyer",
+      "revid": 1684108,
+      "fetched": true
+    },
+    {
+      "title": "Ruin Defender",
+      "revid": 1684107,
+      "fetched": true
+    },
+    {
+      "title": "Ruin Scout",
+      "revid": 1684117,
+      "fetched": true
+    },
+    {
+      "title": "Primordial Bathysmal Vishap",
+      "revid": 2083557,
+      "fetched": true
+    },
+    {
+      "title": "Jadeplume Terrorshroom",
+      "revid": 1728160,
+      "fetched": true
+    },
+    {
+      "title": "Consecrated Scorpion",
+      "revid": 1722983,
+      "fetched": true
+    },
+    {
+      "title": "Consecrated Red Vulture",
+      "revid": 1754796,
+      "fetched": true
+    },
+    {
+      "title": "Consecrated Fanged Beast",
+      "revid": 2077491,
+      "fetched": true
+    },
+    {
+      "title": "Consecrated Horned Crocodile",
+      "revid": 2085591,
+      "fetched": true
+    },
+    {
+      "title": "Tepetlisaurus",
+      "revid": 2128753,
+      "fetched": true
+    },
+    {
+      "title": "Iktomisaurus",
+      "revid": 2135914,
+      "fetched": true
+    },
+    {
+      "title": "Tepetlisaurus Warrior: Rockbreaker Blade",
+      "revid": 2088959,
+      "fetched": true
+    },
+    {
+      "title": "Tepetlisaurus Warrior: Shard Striker",
+      "revid": 1860615,
+      "fetched": true
+    },
+    {
+      "title": "Yumkasaurus Warrior: Flowing Skyfire",
+      "revid": 1910196,
+      "fetched": true
+    },
+    {
+      "title": "Yumkasaurus Warrior: Whirling Leaves",
+      "revid": 2088948,
+      "fetched": true
+    },
+    {
+      "title": "Qucusaurus",
+      "revid": 2134340,
+      "fetched": true
+    },
+    {
+      "title": "Iktomisaurus Warrior: Cryocrystal Cannon",
+      "revid": 2165206,
+      "fetched": true
+    },
+    {
+      "title": "Iktomisaurus Warrior: Icy Tidebearer",
+      "revid": 1850418,
+      "fetched": true
+    },
+    {
+      "title": "Qucusaurus Warrior: Blazing Sky",
+      "revid": 1757031,
+      "fetched": true
+    },
+    {
+      "title": "Qucusaurus Warrior: Heartstar Hammer",
+      "revid": 1757030,
+      "fetched": true
+    },
+    {
+      "title": "Biting-Cold Wayob Manifestation",
+      "revid": 2050327,
+      "fetched": true
+    },
+    {
+      "title": "Tatankasaurus Warrior: Skybreaker",
+      "revid": 2102072,
+      "fetched": true
+    },
+    {
+      "title": "Tatankasaurus Warrior: Spiritlight Chaser",
+      "revid": 2193712,
+      "fetched": true
+    },
+    {
+      "title": "Tatankasaurus",
+      "revid": 2165359,
+      "fetched": true
+    },
+    {
+      "title": "Fluid Avatar of Lava",
+      "revid": 1850711,
+      "fetched": true
+    },
+    {
+      "title": "Radiant Moonfly",
+      "revid": 2088429,
+      "fetched": true
+    }
+  ],
+  "encounters": [
+    {
+      "act": "1",
+      "name": "Normal · Oprichniki patrol",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Oprichniki_Line_Trooper",
+        "https://genshin-impact.fandom.com/wiki/Oprichniki_Hailstorm_Cannoneer",
+        "https://genshin-impact.fandom.com/wiki/Oprichniki_Support_Trooper"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "1",
+      "name": "Normal · Vishap pair",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Geovishap",
+        "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "1",
+      "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus",
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Shard_Striker",
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Rockbreaker_Blade",
+        "https://genshin-impact.fandom.com/wiki/Iktomisaurus",
+        "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Icy_Tidebearer",
+        "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "2",
+      "name": "Normal · Fluid Avatars of Lava",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Fluid_Avatar_of_Lava"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md"
+      ]
+    },
+    {
+      "act": "2",
+      "name": "Normal · Tatankasaurus group",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Tatankasaurus",
+        "https://genshin-impact.fandom.com/wiki/Tatankasaurus_Warrior%3A_Skybreaker",
+        "https://genshin-impact.fandom.com/wiki/Tatankasaurus_Warrior%3A_Spiritlight_Chaser"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md"
+      ]
+    },
+    {
+      "act": "2",
+      "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Tatankasaurus_Warrior%3A_Skybreaker",
+        "https://genshin-impact.fandom.com/wiki/Tatankasaurus_Warrior%3A_Spiritlight_Chaser",
+        "https://genshin-impact.fandom.com/wiki/Tatankasaurus",
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus",
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Heartstar_Hammer",
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md"
+      ]
+    },
+    {
+      "act": "3",
+      "name": "Climactic Showdown · Jadeplume Terrorshroom",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Jadeplume_Terrorshroom"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "4",
+      "name": "Defense Sequence · Saurian-Crowned Warriors",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Heartstar_Hammer",
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky",
+        "https://genshin-impact.fandom.com/wiki/Yumkasaurus_Warrior%3A_Flowing_Skyfire",
+        "https://genshin-impact.fandom.com/wiki/Yumkasaurus_Warrior%3A_Whirling_Leaves",
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Shard_Striker",
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Rockbreaker_Blade"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md",
+        "5.5 Floor 11 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "4",
+      "name": "Defense Sequence · Landcruisers and Oprichniki",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Cutting_Edge_Fire_Support_Ground_Effect_Landcruiser",
+        "https://genshin-impact.fandom.com/wiki/Oprichniki_Grenadier",
+        "https://genshin-impact.fandom.com/wiki/Cutting_Edge_All-Purpose_Storm_Landcruiser",
+        "https://genshin-impact.fandom.com/wiki/Oprichniki_Bombardier"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md",
+        "5.5 Floor 11 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "4",
+      "name": "High-Pressure Defense · Ruin machines",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Ruin_Guard",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Grader",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Scout",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Destroyer",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Defender",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Cruiser"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md",
+        "5.5 Floor 11 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "5",
+      "name": "Normal · Ruin Sentinels",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Ruin_Scout",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Cruiser",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Defender",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Destroyer"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md",
+        "6.2 Luna 3 Floor 12 Abyss Guide.md",
+        "7.0 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "5",
+      "name": "Normal · Hydro Mimics",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Boar",
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Crane",
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Squirrel",
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Mallard",
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Finch",
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Crab",
+        "https://genshin-impact.fandom.com/wiki/Hydro_Mimic_Frog"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md",
+        "6.2 Luna 3 Floor 12 Abyss Guide.md",
+        "7.0 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "5",
+      "name": "Elite Assault · Kairagi and Nobushi",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Kairagi%3A_Fiery_Might",
+        "https://genshin-impact.fandom.com/wiki/Kairagi%3A_Dancing_Thunder",
+        "https://genshin-impact.fandom.com/wiki/Nobushi%3A_Hitsukeban",
+        "https://genshin-impact.fandom.com/wiki/Nobushi%3A_Kikouban"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md",
+        "6.2 Luna 3 Floor 12 Abyss Guide.md",
+        "7.0 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "6",
+      "name": "Climactic Showdown · Whisperer of Nightmares",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Lord_of_the_Hidden_Depths%3A_Whisperer_of_Nightmares"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "7.0_2 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "7",
+      "name": "Normal · Consecrated beasts",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Consecrated_Red_Vulture",
+        "https://genshin-impact.fandom.com/wiki/Consecrated_Scorpion"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md",
+        "6.1 Luna 2 Floor 12 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "7",
+      "name": "Normal · Wilderness Hunter",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Wilderness_Hunter"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md",
+        "6.1 Luna 2 Floor 12 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "7",
+      "name": "Elite Assault · Saurian-Crowned Warrior pairs",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky",
+        "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Heartstar_Hammer",
+        "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Icy_Tidebearer",
+        "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon",
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Shard_Striker",
+        "https://genshin-impact.fandom.com/wiki/Tepetlisaurus_Warrior%3A_Rockbreaker_Blade"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md",
+        "6.1 Luna 2 Floor 12 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "8",
+      "name": "Climactic Showdown · Radiant Moonfly",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Radiant_Moonfly"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "6.0 Luna 1 Floor 12 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "8",
+      "name": "Climactic Showdown · Battle-Hardened Samachurl",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Churldric"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "6.0 Luna 1 Floor 12 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "9",
+      "name": "Normal bounty · Stonehide Lawachurl and Hilichurls",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Stonehide_Lawachurl",
+        "https://genshin-impact.fandom.com/wiki/Pyro_Hilichurl_Shooter",
+        "https://genshin-impact.fandom.com/wiki/Electro_Hilichurl_Shooter",
+        "https://genshin-impact.fandom.com/wiki/Hilichurl_Berserker",
+        "https://genshin-impact.fandom.com/wiki/Hilichurl_Grenadier",
+        "https://genshin-impact.fandom.com/wiki/Hilichurl_Fighter",
+        "https://genshin-impact.fandom.com/wiki/Electro_Hilichurl_Grenadier"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "9",
+      "name": "Normal bounty · Landcruisers",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Cutting_Edge_All-Purpose_Storm_Landcruiser",
+        "https://genshin-impact.fandom.com/wiki/Force_Recon_Scout_Landcruiser",
+        "https://genshin-impact.fandom.com/wiki/Close_Combat_Storm_Landcruiser",
+        "https://genshin-impact.fandom.com/wiki/Force_Recon_Storm_Landcruiser",
+        "https://genshin-impact.fandom.com/wiki/Close_Combat_Scout_Landcruiser"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "9",
+      "name": "Elite Assault bounty · Ruin machines",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Ruin_Grader",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Guard",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Scout",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Destroyer",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Defender",
+        "https://genshin-impact.fandom.com/wiki/Ruin_Cruiser"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.4[2]Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "10",
+      "name": "Climactic Showdown · Radiant Moonfly",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Radiant_Moonfly"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "6.0 Luna 1 Floor 12 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "11",
+      "name": "Arcanum Challenge 1 · Consecrated beasts",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Consecrated_Fanged_Beast",
+        "https://genshin-impact.fandom.com/wiki/Consecrated_Scorpion",
+        "https://genshin-impact.fandom.com/wiki/Consecrated_Horned_Crocodile",
+        "https://genshin-impact.fandom.com/wiki/Consecrated_Red_Vulture"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md",
+        "5.5 Abyss Guide.md"
+      ]
+    },
+    {
+      "act": "12",
+      "name": "Arcanum Challenge 2 · Potapo’s Solidarity",
+      "enemyPages": [
+        "https://genshin-impact.fandom.com/wiki/Biting-Cold_Wayob_Manifestation"
+      ],
+      "guides": [
+        "Imaginarium Theater 7.2.md"
+      ]
+    }
+  ]
+}

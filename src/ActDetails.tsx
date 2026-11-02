@@ -4,9 +4,12 @@ import {seasonStatus} from './seasonTiming';
 import {mergeActDetailsDraft,type ActDetailsData as Data,type ActDetailsRecord as Act,type EncounterDetails as Encounter} from './actDetailsData';
 import enemyCatalog from './data/theater-enemies.json';
 import physicalIcon from './assets/elements/Physical_Icon.png';
+import {KeyRecommendations} from './KeyRecommendations';
+import {mechanicStateDescription} from './mechanicStates';
 import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation';
 
 const enemyIcons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
+const abilityIcons=import.meta.glob('./assets/abilities/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const enemiesById=enemyCatalog as Record<string,{name:string;icon:string;wikiUrl:string;baseResistances:Record<string,number>}>;
 
 function ResistanceLabels({value}:{value:string}){
@@ -34,6 +37,22 @@ function EnemyWaveText({value}:{value:string}){
   }
   return <>{parts}</>;
 }
+function NotableCharacters({characters}:{characters:{name:string;reason:string;ability?:{name:string;icon:string}}[]}){return <aside className={`act-notable-characters${characters.every(character=>!character.reason.trim()&&!character.ability)?' is-compact':''}`}><strong>Notable Characters</strong>{characters.map(character=><div className="act-notable-character" key={character.name}><a href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(character.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={character.name}><img src={`${import.meta.env.BASE_URL}icons/characters/${(character.name==='Itto'?'Arataki_Itto':character.name.replaceAll(' ','_'))}_Icon.webp`} alt={character.name} width="56" height="56" loading="lazy"/></a><div><strong>{character.name}</strong><p>{character.ability&&<img className="act-ability-icon" src={abilityIcons[`./assets/abilities/${character.ability.icon}`]} alt={character.ability.name} title={character.ability.name} width="28" height="28" loading="lazy"/>}{character.reason}</p></div></div>)}</aside>;}
+
+function MechanicStateTerm({text,enemyIds}:{text:string;enemyIds:string[]}){
+  const id=React.useId();
+  return <span className="mechanic-state-hint" tabIndex={0} aria-describedby={id}>{text}<span className="mechanic-state-tooltip" role="tooltip" id={id}>{mechanicStateDescription(text,enemyIds)}</span></span>;
+}
+
+function MechanicsDetails({value,enemyIds}:{value:string;enemyIds:string[]}){
+  const text=playerDetailText(value)||'None';
+  const explain=(value:string)=>value.split(/\b(paraly[sz](?:ed|es|e|ing)|paralysis|stunned|stuns?|exhaust(?:ed|ion)|weaken(?:ed|s)?|disabled|disabling|Grief-Stricken|interrupt(?:ed|s|ion)?)\b/gi).map((part,index)=>index%2?<MechanicStateTerm key={index} text={part} enemyIds={enemyIds}/>:part);
+  return <div className="act-detail-field"><strong>Mechanics</strong><div className="act-mechanics-sections">{text.split('\n').filter(Boolean).map((line,index)=>{
+    const section=line.match(/^([^:]{1,60}):\s*(.+)$/);
+    return <div className="act-mechanics-subsection" key={index}>{section?<><h5>{explain(section[1])}</h5><p>{explain(section[2])}</p></>:<p>{explain(line)}</p>}</div>;
+  })}</div></div>;
+}
+
 function ChallengeRequirements({value}:{value:string}){
   const lines=splitChallengeRequirements(value).requirements.split('\n').filter(Boolean);
   if(!lines.length)return null;
@@ -51,9 +70,12 @@ function ChallengeRequirements({value}:{value:string}){
 }
 
 function EnemyDetails({value,requirements}:{value:string;requirements:string}){
-  const lines=playerEnemyNotes(value).split('\n').filter(Boolean);
+  const lines=playerEnemyNotes(value).split('\n').filter(Boolean).map(line=>line
+    .replace(/^\d+ enem(?:y|ies) in (?:one|1) wave[^:]*:\s*/i,'Wave 1: ')
+    .replace(/^Wave 1: the Consecrated Red Vulture and Consecrated Scorpion\.?$/i,'Wave 1: 1 Consecrated Red Vulture + 1 Consecrated Scorpion.')
+    .replace(/^Wave 1: Wilderness Hunter\.?$/i,'Wave 1: 1 Wilderness Hunter.'));
   const waves=lines.filter(line=>/^Wave \d+:/i.test(line));
-  const total=value.match(/(\d+) enemies (?:total|in (?:one|1) wave)/i)?.[1];
+  const total=value.match(/(\d+) enem(?:y|ies) (?:total|in (?:one|1) wave)/i)?.[1];
   const waveCount=waves.length||(/in (?:one|1) wave/i.test(value)?1:undefined);
   const summary=[total?total+' '+(total==='1'?'Enemy':'Enemies'):null,waveCount?waveCount+' '+(waveCount===1?'Wave':'Waves'):null].filter(Boolean).join(' | ');
   const details=[...lines.filter(line=>!/^\d+ enemies total\.?$/i.test(line)),...splitChallengeRequirements(requirements).details];
@@ -136,6 +158,8 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
           <div id={`act-content-${actKey}`}>
           {!actCollapsed&&bosses.length>0&&!act.encounters.some(encounter=>encounterEnemyIds(encounter).length)&&<div><strong>Bosses</strong>{bosses.map((boss,index)=><a className="boss-preview-entry" key={index} href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(boss.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</div>}
           {!actCollapsed&&field('Act Requirements',editing?act.requirements:playerActRequirements(act.requirements),value=>update(number,{...act,requirements:value}))}
+          {!actCollapsed&&!!act.keyRecommendations?.length&&<div className="act-recommended-elements"><strong>Key Recommendation</strong><KeyRecommendations items={act.keyRecommendations}/></div>}
+          {!actCollapsed&&!!act.notableCharacters?.length&&<NotableCharacters characters={act.notableCharacters}/>}
           {!act.encounters.length&&<p>No encounter choices recorded yet.</p>}
           {act.encounters.map((encounter,index)=>{
             const change=(key:keyof Encounter,value:string)=>update(number,{...act,encounters:act.encounters.map((item,i)=>i===index?{...item,[key]:value}:item)});
@@ -150,7 +174,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
             const hasIndividual=!resistances.shared&&lineup.length>0;
             const hasResistances=Boolean(resistances.shared)||hasIndividual;
             const columnStyle=(position:number)=>({'--enemy-column':position+1,'--mobile-column':position%2+1,'--mobile-row':Math.floor(position/2)+1,'--mobile-resistance-row':Math.floor(position/2)+(resistances.shared?2:1)} as React.CSSProperties);
-            const portraits=<div className={`act-enemy-lineup${hasIndividual?' has-resistances':''}${compact?' is-compact':''}`} style={{'--enemy-count':Math.max(1,lineup.length),'--mobile-count':Math.max(1,Math.min(2,lineup.length))} as React.CSSProperties} aria-label={hasChoices?`Choice ${index+1} enemy lineup`:`${actLabel} enemy lineup`}>{lineup.map((enemy,position)=><div className={`act-enemy-link${bountyNames.has(enemy.name)?' is-bounty':''}`} style={columnStyle(position)} key={enemy.name}><figure className={`act-enemy-portrait${compact&&isBoss?' is-compact-boss':''}`}>{!compact&&isBoss&&<figcaption>{enemy.name}</figcaption>}<a href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name}${bountyNames.has(enemy.name)?' (Bounty)':''} on Fandom`} title={`View ${enemy.name} on Fandom`}><img src={enemyIcons[`./assets/enemies/${enemy.icon}`]} alt="" width="72" height="72" loading="lazy"/></a>{compact&&isBoss&&<figcaption>{enemy.name}</figcaption>}{!compact&&!isBoss&&<figcaption>{enemy.name}{bountyNames.has(enemy.name)&&<span className="act-bounty-badge">Bounty</span>}</figcaption>}</figure></div>)}
+            const portraits=<div className={`act-enemy-lineup${hasIndividual?' has-resistances':''}${compact?' is-compact':''}`} style={{'--enemy-count':Math.max(1,lineup.length),'--mobile-count':Math.max(1,Math.min(2,lineup.length))} as React.CSSProperties} aria-label={hasChoices?`Choice ${index+1} enemy lineup`:`${actLabel} enemy lineup`}>{lineup.map((enemy,position)=><div className={`act-enemy-link${bountyNames.has(enemy.name)?' is-bounty':''}`} style={columnStyle(position)} key={enemy.name}><figure className={`act-enemy-portrait${compact&&isBoss?' is-compact-boss':''}`}>{!compact&&isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a></figcaption>}<a href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name}${bountyNames.has(enemy.name)?' (Bounty)':''} on Fandom`} title={`View ${enemy.name} on Fandom`}><img src={enemyIcons[`./assets/enemies/${enemy.icon}`]} alt="" width="72" height="72" loading="lazy"/></a>{compact&&isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a></figcaption>}{!compact&&!isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a>{bountyNames.has(enemy.name)&&<span className="act-bounty-badge">Bounty</span>}</figcaption>}</figure></div>)}
               {!compact&&hasResistances&&<div className={`act-resistance-section${resistances.shared?' has-shared':''}${hasIndividual?' has-individual':''}`} aria-label="Resistance exceptions">
                 {resistances.shared&&<div className="act-resistance-shared" aria-label="Resistances shared by all enemies"><span className="resistance-scope">{lineup.length===2?'Both enemies':'All enemies'}</span><ResistanceLabels value={resistances.shared}/></div>}
                 {hasIndividual&&lineup.map((enemy,position)=><div className="act-resistance-enemy" style={columnStyle(position)} key={enemy.name} aria-label={resistances.individual[enemy.name]?`${enemy.name} resistance exceptions`:undefined}>{resistances.individual[enemy.name]&&<ResistanceLabels value={resistances.individual[enemy.name]}/>}</div>)}
@@ -165,12 +189,17 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
               {!hasChoices&&compact&&!!lineup.length&&portraits}
               <div id={`choice-content-${choiceKey}`} hidden={compact}>
               {field('Challenge',editing?encounter.name:playerDetailText(encounter.name),value=>change('name',value))}
+              {!!encounter.keyRecommendations?.length&&<div className="act-recommended-elements"><strong>Key Recommendation{encounter.keyRecommendations.length>1?'s':''}</strong><KeyRecommendations items={encounter.keyRecommendations}/></div>}
+              {!!encounter.recommendedElements?.length&&<div className="act-recommended-elements"><strong>Recommended Element{encounter.recommendedElements.length>1?'s':''}</strong>{encounter.recommendedElements.map(element=><span className={`element ${element}`} key={element}><img className="element-icon" src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt="" width="16" height="16"/>{element}</span>)}</div>}
               {!compact&&!!lineup.length&&portraits}
               {editing?field('Enemies / waves',encounter.enemies,value=>change('enemies',value)):<><ChallengeRequirements value={encounter.requirements}/><EnemyDetails value={encounter.enemies} requirements={encounter.requirements}/></>}
               {field(editing?'Resistances / immunities':'Resistance notes',editing?encounter.resistances:lineup.length?resistanceDetails.notes:resistanceExceptions(encounter.resistances),value=>change('resistances',value))}
               {editing&&field('Challenge Requirements',encounter.requirements,value=>change('requirements',value))}
               {(editing||((eliteAssault||number>10)&&encounter.stageEffects))&&field('Stage Effects',editing?encounter.stageEffects??'':playerDetailText(encounter.stageEffects??''),value=>change('stageEffects',value))}
-              {(encounter.mechanics||editing)&&field('Mechanics',editing?encounter.mechanics??'':playerDetailText(encounter.mechanics??''),value=>change('mechanics',value))}
+              <div className={encounter.notableCharacters?.length?'act-mechanics-layout':undefined}>
+              {editing?field('Mechanics',encounter.mechanics??'',value=>change('mechanics',value)):<MechanicsDetails value={encounter.mechanics??''} enemyIds={encounterEnemyIds(encounter)}/>}
+              {!!encounter.notableCharacters?.length&&<NotableCharacters characters={encounter.notableCharacters}/>}
+              </div>
               {field('Challenge Notes',encounter.notes,value=>change('notes',value))}
               {editing&&<button onClick={()=>update(number,{...act,encounters:act.encounters.filter((_,i)=>i!==index)})}>Remove challenge {index+1}</button>}
               </div>

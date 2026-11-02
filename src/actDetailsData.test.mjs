@@ -2,9 +2,89 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import data from '../docs/act-details-research/2026-11-01.json' with {type:'json'};
 import {mergeActDetailsDraft} from './actDetailsData.ts';
+import published from './data/theater-act-details.json' with {type:'json'};
+import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
+
+test('Monolith recommendations stay shared when loading older per-choice drafts',()=>{
+  const draft=structuredClone(published);
+  const act=draft.seasons[29].Hard[4];
+  for(const encounter of act.encounters){encounter.keyRecommendations=[{label:'Taunts'}];encounter.notableCharacters=act.notableCharacters;}
+  delete act.keyRecommendations;delete act.notableCharacters;
+  const merged=mergeActDetailsDraft(published,draft).seasons[29].Hard[4];
+  assert.deepEqual(merged.keyRecommendations,[{label:'Taunts'}]);
+  assert.equal(merged.notableCharacters.length,4);
+  for(const encounter of merged.encounters){assert.equal(encounter.keyRecommendations?.length??0,0);assert.equal(encounter.notableCharacters?.length??0,0);}
+});
+
+test('the original Lunar Beast Energy Block wording is removed from saved drafts',()=>{
+  const draft=structuredClone(published);
+  const encounter=draft.seasons[29].Lunar[11].encounters[0];
+  encounter.mechanics='Destroy matching-element Energy Blocks, absorb their power, then hit the corresponding Consecrated Beast to paralyze it. Its enhanced resistance falls outside the base resistance values.';
+  encounter.notes='Keep my healing team note';
+  const migrated=mergeActDetailsDraft(published,draft).seasons[29].Lunar[11].encounters[0];
+  assert.equal(migrated.mechanics,'');
+  assert.equal(migrated.notes,'Keep my healing team note');
+});
+
+test('expanded mechanics upgrade exact legacy drafts while preserving personal mechanics and notes',()=>{
+  const draft=structuredClone(published);
+  const encounter=draft.seasons[29].Lunar[3].encounters[0];
+  encounter.mechanics=previousMechanics[`29/3/${encounter.name}`][0];
+  encounter.notes='Save my Electro team';
+  const merged=mergeActDetailsDraft(published,draft);
+  assert.equal(merged.seasons[29].Lunar[3].encounters[0].mechanics,published.seasons[29].Lunar[3].encounters[0].mechanics);
+  assert.equal(merged.seasons[29].Lunar[3].encounters[0].notes,'Save my Electro team');
+  encounter.mechanics='My custom positioning observation';
+  assert.equal(mergeActDetailsDraft(published,draft).seasons[29].Lunar[3].encounters[0].mechanics,'My custom positioning observation');
+});
+
+test('mechanics retain important encounter variants and do not transfer disputed timings',()=>{
+  const acts=published.seasons[29].Lunar;
+  assert.match(acts[3].encounters[0].mechanics,/2%.*15%/s);
+  assert.match(acts[6].encounters[0].mechanics,/Four.*25%/s);
+  assert.match(acts[6].encounters[0].mechanics,/paralyzes the boss for 10s/);
+  assert.match(acts[7].encounters[1].mechanics,/this state for 10s/);
+  assert.match(acts[10].encounters[0].mechanics,/15s of exhaustion/);
+  assert.doesNotMatch(acts[6].encounters[0].mechanics,/18s|16s|15s|36.*Energy/);
+  assert.match(acts[7].encounters[1].mechanics,/maximum HP/);
+  assert.match(acts[7].encounters[1].mechanics,/^Maximum HP Bar:/);
+  assert.match(acts[8].encounters[0].mechanics,/^Cooking Progress Meter:/);
+  assert.match(acts[12].encounters[0].mechanics,/^Protection Spirit HP:/);
+  assert.equal(acts[11].encounters[0].mechanics,'');
+  assert.match(acts[11].encounters[0].stageEffects,/Unavoidable.*healing or shielding/s);
+  assert.match(acts[12].encounters[0].mechanics,/Protection Spirit/);
+  assert.doesNotMatch(acts[12].encounters[0].mechanics,/ordinary Wayob|normal variant/);
+  assert.equal(acts[1].encounters[2].mechanics,'');
+  assert.equal(acts[2].encounters[1].mechanics,'');
+  assert.doesNotMatch(acts[1].encounters[1].mechanics,/ordinary Vishap|Battle-Hardened version/);
+  assert.match(acts[10].encounters[0].mechanics,/Incoming Healing Bonus.*100% CRIT Rate/s);
+  for(const modes of Object.values(published.seasons))for(const entries of Object.values(modes))for(const act of Object.values(entries))for(const encounter of act.encounters){
+    assert.equal(typeof encounter.mechanics,'string');
+    assert.doesNotMatch(encounter.mechanics,/Positioning:|Kuuvahki interrupts|Kuuvahki can also interrupt/i);
+    assert.doesNotMatch(encounter.mechanics,/estimated|percentage points|https?:|alioth|fandom|Enemy HP:/i);
+  }
+});
 
 test('an empty pre-research browser draft retains the published lineup',()=>{
   assert.deepEqual(mergeActDetailsDraft(data,{seasons:{}}),data);
+});
+
+test('older Fluid Avatar drafts inherit mechanics without losing notes or replacing authored mechanics',()=>{
+  const draft=structuredClone(data);
+  for(const mode of Object.keys(draft.seasons[29])){
+    const encounter=draft.seasons[29][mode][2].encounters[0];
+    encounter.mechanics='';
+    encounter.notes='My Mualani team';
+  }
+  const merged=mergeActDetailsDraft(data,draft);
+  for(const mode of Object.keys(merged.seasons[29])){
+    const encounter=merged.seasons[29][mode][2].encounters[0];
+    assert.equal(encounter.notableCharacters[0].name,'Mualani');
+    assert.match(encounter.mechanics,/Pyro infusion/);
+    assert.equal(encounter.notes,'My Mualani team');
+  }
+  draft.seasons[29].Hard[2].encounters[0].mechanics='My edited mechanics';
+  assert.equal(mergeActDetailsDraft(data,draft).seasons[29].Hard[2].encounters[0].mechanics,'My edited mechanics');
 });
 
 test('every act has its difficulty-specific enemy level, including with older drafts',()=>{

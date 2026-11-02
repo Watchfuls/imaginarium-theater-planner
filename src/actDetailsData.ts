@@ -1,6 +1,7 @@
+import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
 export type DetailSource = {label:string;url:string};
-export type EncounterDetails = {name:string;enemies:string;resistances:string;requirements:string;notes:string;enemyIds?:string[];bountyEnemyIds?:string[];mechanics?:string;stageEffects?:string;status?:string;sources?:DetailSource[];graphicSources?:string[];inference?:{confidence:'high'|'medium'|'low';basis:string}};
-export type ActDetailsRecord = {requirements:string;notes:string;encounters:EncounterDetails[];level?:number};
+export type EncounterDetails = {name:string;enemies:string;resistances:string;requirements:string;notes:string;enemyIds?:string[];recommendedElements?:string[];keyRecommendations?:{label:string;element?:string;avoid?:boolean;icon?:'moon'}[];notableCharacters?:{name:string;reason:string;ability?:{name:string;icon:string}}[];bountyEnemyIds?:string[];mechanics?:string;stageEffects?:string;status?:string;sources?:DetailSource[];graphicSources?:string[];inference?:{confidence:'high'|'medium'|'low';basis:string}};
+export type ActDetailsRecord = {requirements:string;notes:string;encounters:EncounterDetails[];level?:number;keyRecommendations?:EncounterDetails['keyRecommendations'];notableCharacters?:EncounterDetails['notableCharacters']};
 export type ActDetailsData = {
   seasons:Record<string,Record<string,Record<string,ActDetailsRecord>>>;
   research?:Record<string,{checkedOn:string;summary:string;sources:DetailSource[]}>;
@@ -26,6 +27,30 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
             ? {...encounter,bountyEnemyIds:match.bountyEnemyIds}
             : encounter;
           if(match){
+            if(encounter.enemyIds?.includes('10308')&&merged.resistances==='Completed soup greatly raises resistance; the amount is unverified.'){
+              merged={...merged,resistances:match.resistances};
+            }
+            if(bundled?.keyRecommendations?.some(item=>item.label==='Taunts')){
+              merged={...merged,keyRecommendations:merged.keyRecommendations?.filter(item=>item.label!=='Taunts'),notableCharacters:merged.notableCharacters?.filter(character=>!bundled.notableCharacters?.some(item=>item.name===character.name))};
+            }
+            if(season==='29'&&act==='11'&&/^(?:Current Alioth description: )?Geo bursts periodically damage the active character\.$/.test(merged.stageEffects??'')){
+              merged={...merged,stageEffects:match.stageEffects};
+            }
+            const legacy=(previousMechanics as Record<string,string[]>)[`${season}/${act}/${match.name}`]??[];
+            if(match.mechanics!==undefined&&(!merged.mechanics?.trim()||legacy.includes(merged.mechanics))){
+              merged={...merged,mechanics:match.mechanics};
+            }
+            if(merged.keyRecommendations===undefined&&match.keyRecommendations)merged={...merged,keyRecommendations:match.keyRecommendations};
+            if(merged.recommendedElements===undefined&&match.recommendedElements)merged={...merged,recommendedElements:match.recommendedElements};
+            if(merged.notableCharacters===undefined&&match.notableCharacters)merged={...merged,notableCharacters:match.notableCharacters};
+            if(season==='29'&&act==='12'&&merged.notableCharacters){
+              merged={...merged,notableCharacters:merged.notableCharacters.map(character=>character.reason==="Healing helps fill the Protection Spirit's HP bar and strengthen its attack."?{...character,reason:''}:character)};
+            }
+            // Older Fluid Avatar drafts had no mechanics. Restore the newly
+            // curated explanation without replacing any authored mechanics.
+            if(/Fluid Avatar/i.test(match.name)&&!merged.mechanics?.trim()&&match.mechanics){
+              merged={...merged,mechanics:match.mechanics};
+            }
             if(merged.enemies.includes('6 enemies total across 2 waves (wave order unconfirmed).')||merged.enemies.includes('6 enemies total (graphic), arranged in 3 waves of 2 warriors.')||merged.enemies.includes('6 enemies total, arranged in 3 waves of 2 warriors.')){
               merged={...merged,enemies:match.enemies};
             }
@@ -42,7 +67,9 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
           const elite=bundled?.encounters.find(encounter=>encounter.name.startsWith('Elite Assault'));
           if(elite)encounters.push(elite);
         }
-        seasons[season][mode][act]={...seasons[season][mode][act],...details,encounters};
+        const notable=details.notableCharacters??bundled?.notableCharacters;
+        const notableCharacters=notable?.map(character=>({...character,...(!character.ability&&bundled?.notableCharacters?.find(item=>item.name===character.name)?.ability?{ability:bundled.notableCharacters.find(item=>item.name===character.name)!.ability}:{})}));
+        seasons[season][mode][act]={...seasons[season][mode][act],...details,encounters,...(notableCharacters?{notableCharacters}:{})};
       }
     }
   }

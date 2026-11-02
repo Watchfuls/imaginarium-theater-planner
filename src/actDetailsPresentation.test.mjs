@@ -12,6 +12,13 @@ test('countdown reductions and active enemy counts belong in details, not object
   assert.deepEqual(result.details,['Each defeat removes 15s.','Active Enemies: 2 or 3.']);
 });
 
+test('mechanic notes omit repeated static resistance profiles but retain resistance changes',()=>{
+  assert.equal(playerDetailText('Qucusaurus Warriors: Approaching Blazing Sky can stop her sustained projectile attack. Heartstar Hammer can leap away after an explosive strike'),'');
+  assert.equal(playerDetailText('The listed saurian species have elevated resistance to their own elements.'),'');
+  assert.equal(playerDetailText('Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%. This differs from a uniform resistance assumption.'),'');
+  assert.equal(playerDetailText('Breaking it weakens the boss and reduces all resistance.'),'Breaking it weakens the boss and reduces all resistance.');
+});
+
 test('standard resistance is hidden without losing negative values, immunity, or conditional states',()=>{
   assert.equal(resistanceExceptions('Enemy: all damage types 10%.'),'');
   assert.equal(resistanceExceptions('Enemy: Physical -20%; Pyro, Hydro 10%.'),'Enemy: Physical -20%.');
@@ -117,7 +124,13 @@ test('every listed enemy has a bundled PNG portrait and repeated source links do
 });
 
 test('shipped act data contains gameplay and enemy IDs without source links or research metadata',()=>{
-  assert.deepEqual(siteActDetails(research),data);
+  // Published gameplay text can include personal edits made after research.
+  // Check its structure and sanitization without overwriting those edits.
+  const prepared=siteActDetails(research);
+  for(const [season,modes]of Object.entries(prepared.seasons))for(const [mode,acts]of Object.entries(modes))for(const [act,record]of Object.entries(acts)){
+    assert.deepEqual(record.encounters.map(encounter=>encounter.enemyIds),data.seasons[season][mode][act].encounters.map(encounter=>encounter.enemyIds));
+  }
+  assert.doesNotMatch(JSON.stringify(prepared),/alioth|fandom|https?:|graphicSources|confidence|"sources"|"research"/i);
   assert.deepEqual(siteActDetails(data),data);
   assert.doesNotMatch(JSON.stringify(data),/alioth|fandom|https?:|graphicSources|confidence|"sources"|"research"/i);
   const draft=structuredClone(research);
