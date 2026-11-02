@@ -8,6 +8,16 @@
 .act-detail-field p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .act-wave-enemy{display:inline;line-height:2}
 .act-wave-enemy img{width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:4px;border-radius:4px;background:#293147}
+.act-wave-row{display:flex;align-items:center;flex-wrap:wrap;gap:4px;min-height:28px;color:#a2abc2}
+.act-wave-summary{font-weight:600;color:#cbd2e2}
+.act-requirements-lines{display:grid;gap:6px;color:#a2abc2;line-height:1.5}
+.act-requirements-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.act-requirement-card{display:grid;grid-template-rows:22px auto;gap:6px;padding:10px 12px;border-radius:8px;background:#151b2a;color:#a2abc2;line-height:1.5;white-space:pre-line}
+.act-requirement-label{display:flex;align-items:center;font-weight:600;color:#cbd2e2}
+.act-requirement-card>div strong{color:#e9ecf6}
+.act-requirement-card.is-star>div strong{color:#f2cb81}
+@media(max-width:550px){.act-requirements-comparison{grid-template-columns:1fr}}
+.act-star-icon{width:16px;height:16px;margin-right:6px;vertical-align:-3px;color:#f2cb81}
 .act-detail-field textarea{width:100%;box-sizing:border-box;resize:vertical;background:#151b2a;color:#e9ecf6;border:1px solid #53607c;border-radius:8px;padding:10px;font:inherit}
 .act-encounter{padding:0 12px 12px;border:1px solid #39435a;border-radius:9px;margin-bottom:12px}
 .act-encounter.is-elite-assault{border-color:#b28ad4;box-shadow:inset 3px 0 #b28ad4;background:#b28ad408}

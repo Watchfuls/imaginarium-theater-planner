@@ -16,10 +16,10 @@
               ],
               "enemies": "6 enemies total.\nWave 1: 2 Oprichniki Line Trooper + 1 Oprichniki Hailstorm Cannoneer.\nWave 2: 1 Oprichniki Support Trooper + 2 Oprichniki Hailstorm Cannoneer.",
               "resistances": "Oprichniki Line Trooper: Physical -20%.\nOprichniki Hailstorm Cannoneer: Physical -20%.\nOprichniki Support Trooper: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 20s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
               "notes": "",
               "mechanics": "Oprichniki weapons use kuuvahki. Their charge-up phase offers a window for kuuvahki-based attacks.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Vishap pair",
@@ -28,11 +28,11 @@
                 "60506"
               ],
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 25s.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
-              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20 percentage points of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20% of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
@@ -44,9 +44,9 @@
                 "55109",
                 "55110"
               ],
-              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave order estimated; confirm during a run.",
+              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.",
               "resistances": "Tepetlisaurus: Geo 50%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.\nIktomisaurus: Cryo 50%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 15s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "The listed saurian species have elevated resistance to their own elements.",
               "stageEffects": ""
@@ -65,10 +65,10 @@
               ],
               "enemies": "2 enemies total.\nWave 1: 2 Fluid Avatar of Lava.",
               "resistances": "Fluid Avatar of Lava: Pyro 70%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Tatankasaurus group",
@@ -79,10 +79,10 @@
               ],
               "enemies": "5 enemies total.\nWave 1: 3 Tatankasaurus.\nWave 2: 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.",
               "resistances": "Tatankasaurus: Electro 50%.\nTatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
@@ -96,10 +96,10 @@
               ],
               "enemies": "6 enemies total.\nWave 1: 1 Tatankasaurus + 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.\nWave 2: 1 Qucusaurus + 1 Qucusaurus Warrior: Heartstar Hammer + 1 Qucusaurus Warrior: Blazing Sky.",
               "resistances": "Tatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.\nTatankasaurus: Electro 50%.\nQucusaurus: Pyro 50%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
             }
           ]
         },
@@ -115,7 +115,7 @@
               ],
               "enemies": "",
               "resistances": "Jadeplume Terrorshroom: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 25%; Dendro 80%. Weak: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 0%; Dendro 55%.",
-              "requirements": "Clear (estimated): defeat all opponents within 1m 45s.\nStar Challenge (estimated): finish within 1m 10s.",
+              "requirements": "Clear: defeat all opponents within 1m 45s.\nStar Challenge: finish within 1m 10s.",
               "notes": "",
               "mechanics": "Electro hits and Catalyze increase Activation; Pyro reduces it. Full Activation triggers an attack sequence followed by exhaustion and reduced resistance. Pyro can instead scorch an inactive boss, causing it to create Fungi.",
               "stageEffects": ""
@@ -138,10 +138,10 @@
               ],
               "enemies": "6 enemies total.\nWave 1: 2 Oprichniki Line Trooper + 1 Oprichniki Hailstorm Cannoneer.\nWave 2: 1 Oprichniki Support Trooper + 2 Oprichniki Hailstorm Cannoneer.",
               "resistances": "Oprichniki Line Trooper: Physical -20%.\nOprichniki Hailstorm Cannoneer: Physical -20%.\nOprichniki Support Trooper: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 20s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
               "notes": "",
               "mechanics": "Oprichniki weapons use kuuvahki. Their charge-up phase offers a window for kuuvahki-based attacks.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Vishap pair",
@@ -150,11 +150,11 @@
                 "60506"
               ],
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 25s.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
-              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20 percentage points of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20% of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
@@ -166,9 +166,9 @@
                 "55109",
                 "55110"
               ],
-              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave order estimated; confirm during a run.",
+              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.",
               "resistances": "Tepetlisaurus: Geo 50%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.\nIktomisaurus: Cryo 50%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 15s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "The listed saurian species have elevated resistance to their own elements.",
               "stageEffects": ""
@@ -187,10 +187,10 @@
               ],
               "enemies": "2 enemies total.\nWave 1: 2 Fluid Avatar of Lava.",
               "resistances": "Fluid Avatar of Lava: Pyro 70%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Tatankasaurus group",
@@ -201,10 +201,10 @@
               ],
               "enemies": "5 enemies total.\nWave 1: 3 Tatankasaurus.\nWave 2: 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.",
               "resistances": "Tatankasaurus: Electro 50%.\nTatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
@@ -218,10 +218,10 @@
               ],
               "enemies": "6 enemies total.\nWave 1: 1 Tatankasaurus + 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.\nWave 2: 1 Qucusaurus + 1 Qucusaurus Warrior: Heartstar Hammer + 1 Qucusaurus Warrior: Blazing Sky.",
               "resistances": "Tatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.\nTatankasaurus: Electro 50%.\nQucusaurus: Pyro 50%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
             }
           ]
         },
@@ -237,7 +237,7 @@
               ],
               "enemies": "",
               "resistances": "Jadeplume Terrorshroom: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 25%; Dendro 80%. Weak: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 0%; Dendro 55%.",
-              "requirements": "Clear (estimated): defeat all opponents within 1m 45s.\nStar Challenge (estimated): finish within 1m 10s.",
+              "requirements": "Clear: defeat all opponents within 1m 45s.\nStar Challenge: finish within 1m 10s.",
               "notes": "",
               "mechanics": "Electro hits and Catalyze increase Activation; Pyro reduces it. Full Activation triggers an attack sequence followed by exhaustion and reduced resistance. Pyro can instead scorch an inactive boss, causing it to create Fungi.",
               "stageEffects": ""
@@ -261,7 +261,7 @@
               ],
               "enemies": "",
               "resistances": "Qucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.\nYumkasaurus Warrior: Flowing Skyfire: Physical -20%.\nYumkasaurus Warrior: Whirling Leaves: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
-              "requirements": "Clear (estimated): protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies (estimated): 2.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "",
               "stageEffects": ""
@@ -276,7 +276,7 @@
               ],
               "enemies": "",
               "resistances": "Oprichniki Grenadier: Physical -20%.\nOprichniki Bombardier: Physical -20%.",
-              "requirements": "Clear (estimated): protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies (estimated): 2.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "Repeated Electro-Charged or Lunar-Charged reactions can interrupt a Landcruiser while it uses kuuvahki.",
               "stageEffects": ""
@@ -293,7 +293,7 @@
               ],
               "enemies": "",
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
-              "requirements": "Clear (estimated): protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies (estimated): 2 or 3.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
               "mechanics": "Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%. This differs from a uniform resistance assumption.",
               "stageEffects": ""
@@ -315,7 +315,7 @@
               ],
               "enemies": "",
               "resistances": "Ruin Scout: Physical 50%.\nRuin Cruiser: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Destroyer: Physical 30%.",
-              "requirements": "Clear (estimated): defeat at least 7 opponents within 2m.\nStar Challenge (estimated): defeat 9 opponents.\nActive enemies (estimated): 2.",
+              "requirements": "Clear: defeat at least 7 opponents within 2m.\nStar Challenge: defeat 9 opponents.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "",
               "stageEffects": ""
@@ -333,7 +333,7 @@
               ],
               "enemies": "",
               "resistances": "Hydro Mimic Boar: Physical, Electro, Cryo, Dendro, Anemo, Geo 15%; Pyro -40%; Hydro immune.\nHydro Mimic Crane: Physical, Pyro, Cryo, Dendro, Anemo, Geo 15%; Hydro immune; Electro -40%.\nHydro Mimic Squirrel: Physical, Electro, Cryo, Dendro, Anemo, Geo 15%; Pyro -40%; Hydro immune.\nHydro Mimic Mallard: Physical, Pyro, Electro, Dendro, Anemo, Geo 15%; Hydro immune; Cryo -40%.\nHydro Mimic Finch: Physical, Pyro, Electro, Cryo, Dendro, Anemo 15%; Hydro immune; Geo -40%.\nHydro Mimic Crab: Physical, Pyro, Electro, Dendro, Anemo, Geo 15%; Hydro immune; Cryo -40%.\nHydro Mimic Frog: Physical, Pyro, Electro, Cryo, Dendro, Anemo 15%; Hydro immune; Geo -40%.",
-              "requirements": "Clear (estimated): defeat at least 20 opponents within 2m.\nStar Challenge (estimated): defeat 24 opponents.\nActive enemies (estimated): 3.",
+              "requirements": "Clear: defeat at least 20 opponents within 2m.\nStar Challenge: defeat 24 opponents.\nActive enemies: 3.",
               "notes": "",
               "mechanics": "All listed Hydro Mimics are immune to Hydro. Their other resistance weaknesses vary by form; see the resistance list.",
               "stageEffects": ""
@@ -348,10 +348,10 @@
               ],
               "enemies": "",
               "resistances": "Kairagi: Fiery Might: Physical -20%.\nKairagi: Dancing Thunder: Physical -20%.\nNobushi: Hitsukeban: Physical -20%.\nNobushi: Kikouban: Physical -20%.",
-              "requirements": "Clear (estimated): defeat at least 12 opponents within 2m.\nStar Challenge (estimated): defeat 15 opponents.\nActive enemies (estimated): 3.",
+              "requirements": "Clear: defeat at least 12 opponents within 2m.\nStar Challenge: defeat 15 opponents.\nActive enemies: 3.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
+              "stageEffects": "Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
             }
           ]
         },
@@ -367,7 +367,7 @@
               ],
               "enemies": "",
               "resistances": "Lord of the Hidden Depths: Whisperer of Nightmares: Weak: all damage types -60%.",
-              "requirements": "Clear (estimated): defeat all opponents within 1m 50s.\nStar Challenge (estimated): finish within 1m 15s.",
+              "requirements": "Clear: defeat all opponents within 1m 50s.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "Deepdark Shield is vulnerable to elemental and reaction damage; Lunar reaction damage is especially effective. Defeating summoned Fishers also reduces the shield. Breaking it weakens the boss and reduces all resistance.",
               "stageEffects": ""
@@ -390,330 +390,10 @@
               ],
               "enemies": "6 enemies total.\nWave 1: 2 Oprichniki Line Trooper + 1 Oprichniki Hailstorm Cannoneer.\nWave 2: 1 Oprichniki Support Trooper + 2 Oprichniki Hailstorm Cannoneer.",
               "resistances": "Oprichniki Line Trooper: Physical -20%.\nOprichniki Hailstorm Cannoneer: Physical -20%.\nOprichniki Support Trooper: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 20s.",
-              "notes": "",
-              "mechanics": "Oprichniki weapons use kuuvahki. Their charge-up phase offers a window for kuuvahki-based attacks.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
-            },
-            {
-              "name": "Normal · Vishap pair",
-              "enemyIds": [
-                "60401",
-                "60506"
-              ],
-              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 25s.",
-              "notes": "",
-              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20 percentage points of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
-            },
-            {
-              "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
-              "enemyIds": [
-                "62002",
-                "55101",
-                "55102",
-                "62402",
-                "55109",
-                "55110"
-              ],
-              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave order estimated; confirm during a run.",
-              "resistances": "Tepetlisaurus: Geo 50%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.\nIktomisaurus: Cryo 50%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 15s.",
-              "notes": "",
-              "mechanics": "The listed saurian species have elevated resistance to their own elements.",
-              "stageEffects": ""
-            }
-          ]
-        },
-        "2": {
-          "level": 85,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Normal · Fluid Avatars of Lava",
-              "enemyIds": [
-                "62701"
-              ],
-              "enemies": "2 enemies total.\nWave 1: 2 Fluid Avatar of Lava.",
-              "resistances": "Fluid Avatar of Lava: Pyro 70%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
-            },
-            {
-              "name": "Normal · Tatankasaurus group",
-              "enemyIds": [
-                "62502",
-                "55111",
-                "55112"
-              ],
-              "enemies": "5 enemies total.\nWave 1: 3 Tatankasaurus.\nWave 2: 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.",
-              "resistances": "Tatankasaurus: Electro 50%.\nTatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
-            },
-            {
-              "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
-              "enemyIds": [
-                "55111",
-                "55112",
-                "62502",
-                "62302",
-                "55107",
-                "55108"
-              ],
-              "enemies": "6 enemies total.\nWave 1: 1 Tatankasaurus + 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.\nWave 2: 1 Qucusaurus + 1 Qucusaurus Warrior: Heartstar Hammer + 1 Qucusaurus Warrior: Blazing Sky.",
-              "resistances": "Tatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.\nTatankasaurus: Electro 50%.\nQucusaurus: Pyro 50%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
-            }
-          ]
-        },
-        "3": {
-          "level": 90,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Climactic Showdown · Jadeplume Terrorshroom",
-              "enemyIds": [
-                "61101"
-              ],
-              "enemies": "",
-              "resistances": "Jadeplume Terrorshroom: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 25%; Dendro 80%. Weak: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 0%; Dendro 55%.",
-              "requirements": "Clear (estimated): defeat all opponents within 1m 45s.\nStar Challenge (estimated): finish within 1m 10s.",
-              "notes": "",
-              "mechanics": "Electro hits and Catalyze increase Activation; Pyro reduces it. Full Activation triggers an attack sequence followed by exhaustion and reduced resistance. Pyro can instead scorch an inactive boss, causing it to create Fungi.",
-              "stageEffects": ""
-            }
-          ]
-        },
-        "4": {
-          "level": 90,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Defense Sequence · Saurian-Crowned Warriors",
-              "enemyIds": [
-                "55107",
-                "55108",
-                "55104",
-                "55103",
-                "55101",
-                "55102"
-              ],
-              "enemies": "",
-              "resistances": "Qucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.\nYumkasaurus Warrior: Flowing Skyfire: Physical -20%.\nYumkasaurus Warrior: Whirling Leaves: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
-              "requirements": "Clear (estimated): protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies (estimated): 2.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": ""
-            },
-            {
-              "name": "Defense Sequence · Landcruisers and Oprichniki",
-              "enemyIds": [
-                "30853",
-                "30731",
-                "30851",
-                "30781"
-              ],
-              "enemies": "",
-              "resistances": "Oprichniki Grenadier: Physical -20%.\nOprichniki Bombardier: Physical -20%.",
-              "requirements": "Clear (estimated): protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies (estimated): 2.",
-              "notes": "",
-              "mechanics": "Repeated Electro-Charged or Lunar-Charged reactions can interrupt a Landcruiser while it uses kuuvahki.",
-              "stageEffects": ""
-            },
-            {
-              "name": "High-Pressure Defense · Ruin machines",
-              "enemyIds": [
-                "40101",
-                "40103",
-                "40204",
-                "40202",
-                "40203",
-                "40201"
-              ],
-              "enemies": "",
-              "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
-              "requirements": "Clear (estimated): protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies (estimated): 2 or 3.",
-              "notes": "",
-              "mechanics": "Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%. This differs from a uniform resistance assumption.",
-              "stageEffects": ""
-            }
-          ]
-        },
-        "5": {
-          "level": 90,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Normal · Ruin Sentinels",
-              "enemyIds": [
-                "40204",
-                "40201",
-                "40203",
-                "40202"
-              ],
-              "enemies": "",
-              "resistances": "Ruin Scout: Physical 50%.\nRuin Cruiser: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Destroyer: Physical 30%.",
-              "requirements": "Clear (estimated): defeat at least 7 opponents within 2m.\nStar Challenge (estimated): defeat 9 opponents.\nActive enemies (estimated): 2.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": ""
-            },
-            {
-              "name": "Normal · Hydro Mimics",
-              "enemyIds": [
-                "502",
-                "503",
-                "507",
-                "506",
-                "505",
-                "504",
-                "508"
-              ],
-              "enemies": "",
-              "resistances": "Hydro Mimic Boar: Physical, Electro, Cryo, Dendro, Anemo, Geo 15%; Pyro -40%; Hydro immune.\nHydro Mimic Crane: Physical, Pyro, Cryo, Dendro, Anemo, Geo 15%; Hydro immune; Electro -40%.\nHydro Mimic Squirrel: Physical, Electro, Cryo, Dendro, Anemo, Geo 15%; Pyro -40%; Hydro immune.\nHydro Mimic Mallard: Physical, Pyro, Electro, Dendro, Anemo, Geo 15%; Hydro immune; Cryo -40%.\nHydro Mimic Finch: Physical, Pyro, Electro, Cryo, Dendro, Anemo 15%; Hydro immune; Geo -40%.\nHydro Mimic Crab: Physical, Pyro, Electro, Dendro, Anemo, Geo 15%; Hydro immune; Cryo -40%.\nHydro Mimic Frog: Physical, Pyro, Electro, Cryo, Dendro, Anemo 15%; Hydro immune; Geo -40%.",
-              "requirements": "Clear (estimated): defeat at least 20 opponents within 2m.\nStar Challenge (estimated): defeat 24 opponents.\nActive enemies (estimated): 3.",
-              "notes": "",
-              "mechanics": "All listed Hydro Mimics are immune to Hydro. Their other resistance weaknesses vary by form; see the resistance list.",
-              "stageEffects": ""
-            },
-            {
-              "name": "Elite Assault · Kairagi and Nobushi",
-              "enemyIds": [
-                "51002",
-                "51001",
-                "50802",
-                "50803"
-              ],
-              "enemies": "",
-              "resistances": "Kairagi: Fiery Might: Physical -20%.\nKairagi: Dancing Thunder: Physical -20%.\nNobushi: Hitsukeban: Physical -20%.\nNobushi: Kikouban: Physical -20%.",
-              "requirements": "Clear (estimated): defeat at least 12 opponents within 2m.\nStar Challenge (estimated): defeat 15 opponents.\nActive enemies (estimated): 3.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": "Estimated: Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
-            }
-          ]
-        },
-        "6": {
-          "level": 92,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Climactic Showdown · Whisperer of Nightmares",
-              "enemyIds": [
-                "21501"
-              ],
-              "enemies": "",
-              "resistances": "Lord of the Hidden Depths: Whisperer of Nightmares: Weak: all damage types -60%.",
-              "requirements": "Clear (estimated): defeat all opponents within 1m 50s.\nStar Challenge (estimated): finish within 1m 15s.",
-              "notes": "",
-              "mechanics": "Deepdark Shield is vulnerable to elemental and reaction damage; Lunar reaction damage is especially effective. Defeating summoned Fishers also reduces the shield. Breaking it weakens the boss and reduces all resistance.",
-              "stageEffects": ""
-            }
-          ]
-        },
-        "7": {
-          "level": 92,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Normal · Consecrated beasts",
-              "enemyIds": [
-                "61003",
-                "61004"
-              ],
-              "enemies": "2 enemies total.\nWave 1: 1 Consecrated Red Vulture + 1 Consecrated Scorpion.",
-              "resistances": "Consecrated Red Vulture: Consecrated Enhance: Physical, Hydro, Electro, Cryo, Dendro, Anemo, Geo 40%; Pyro 70%.\nConsecrated Scorpion: Consecrated Enhance: Physical, Pyro, Hydro, Cryo, Dendro, Anemo, Geo 40%; Electro 70%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 5s.",
-              "notes": "",
-              "mechanics": "During Phagocytic form, destroy the released Energy Block with its matching element, then hit the beast with the absorbed power to paralyze it. Enhanced resistance differs from base resistance.",
-              "stageEffects": "Estimated: Survival Pressure drains party HP after a delay."
-            },
-            {
-              "name": "Normal · Wilderness Hunter",
-              "enemyIds": [
-                "21310"
-              ],
-              "enemies": "1 enemies total.\nWave 1: 1 Wilderness Hunter.",
-              "resistances": "",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 35s.",
-              "notes": "",
-              "mechanics": "Reducing ordinary HP alone does not finish a Wild Hunt enemy. Deplete its HP or use abilities enhanced by Moonsign: Ascendant Gleam to trigger Grief-Stricken, then damage it to reduce its maximum HP to zero.",
-              "stageEffects": "Estimated: Survival Pressure drains party HP after a delay."
-            },
-            {
-              "name": "Elite Assault · Saurian-Crowned Warrior pairs",
-              "enemyIds": [
-                "55108",
-                "55107",
-                "55109",
-                "55110",
-                "55101",
-                "55102"
-              ],
-              "enemies": "6 enemies total.\nWave 1: 1 Qucusaurus Warrior: Blazing Sky + 1 Qucusaurus Warrior: Heartstar Hammer.\nWave 2: 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave 3: 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave order estimated; confirm during a run.",
-              "resistances": "Qucusaurus Warrior: Blazing Sky: Physical -20%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
-              "requirements": "Clear (estimated): defeat all opponents.\nStar Challenge (estimated): finish within 1m 20s.",
-              "notes": "",
-              "mechanics": "",
-              "stageEffects": "Estimated: Survival Pressure drains HP; Enemy Stunt Double periodically raises affected enemies to the highest current HP percentage among them."
-            }
-          ]
-        },
-        "8": {
-          "level": 95,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Climactic Showdown · Radiant Moonfly",
-              "enemyIds": [
-                "63011"
-              ],
-              "enemies": "",
-              "resistances": "Radiant Moonfly: Pyro, Dendro 70%.",
-              "requirements": "Clear: defeat Radiant Moonfly; deadline unknown.\nTarget time: 1m 10s. (estimated).",
-              "notes": "",
-              "mechanics": "Radiant Cocoon reduces damage, incoming healing, and CRIT Rate. Heal the affected character to full HP to escape and receive a temporary damage and CRIT buff. The Moonfly can alternate between Dendro and Pyro attacks.",
-              "stageEffects": ""
-            }
-          ]
-        }
-      },
-      "Visionary": {
-        "1": {
-          "level": 85,
-          "requirements": "",
-          "notes": "",
-          "encounters": [
-            {
-              "name": "Normal · Oprichniki patrol",
-              "enemyIds": [
-                "30701",
-                "30792",
-                "30721"
-              ],
-              "enemies": "6 enemies total.\nWave 1: 2 Oprichniki Line Trooper + 1 Oprichniki Hailstorm Cannoneer.\nWave 2: 1 Oprichniki Support Trooper + 2 Oprichniki Hailstorm Cannoneer.",
-              "resistances": "Oprichniki Line Trooper: Physical -20%.\nOprichniki Hailstorm Cannoneer: Physical -20%.\nOprichniki Support Trooper: Physical -20%.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
               "notes": "",
               "mechanics": "Oprichniki weapons use kuuvahki. Their charge-up phase offers a window for kuuvahki-based attacks.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Vishap pair",
@@ -722,11 +402,11 @@
                 "60506"
               ],
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
-              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20 percentage points of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20% of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
@@ -738,7 +418,7 @@
                 "55109",
                 "55110"
               ],
-              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave order estimated; confirm during a run.",
+              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.",
               "resistances": "Tepetlisaurus: Geo 50%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.\nIktomisaurus: Cryo 50%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
@@ -762,7 +442,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Tatankasaurus group",
@@ -776,7 +456,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
@@ -793,7 +473,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
             }
           ]
         },
@@ -833,7 +513,7 @@
               ],
               "enemies": "",
               "resistances": "Qucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.\nYumkasaurus Warrior: Flowing Skyfire: Physical -20%.\nYumkasaurus Warrior: Whirling Leaves: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
-              "requirements": "Clear: protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies: 2.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "",
               "stageEffects": ""
@@ -848,7 +528,7 @@
               ],
               "enemies": "",
               "resistances": "Oprichniki Grenadier: Physical -20%.\nOprichniki Bombardier: Physical -20%.",
-              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies: 2.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "Repeated Electro-Charged or Lunar-Charged reactions can interrupt a Landcruiser while it uses kuuvahki.",
               "stageEffects": ""
@@ -865,7 +545,7 @@
               ],
               "enemies": "",
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
-              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
               "mechanics": "Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%. This differs from a uniform resistance assumption.",
               "stageEffects": ""
@@ -923,7 +603,7 @@
               "requirements": "Clear: defeat at least 12 opponents within 2m.\nStar Challenge: defeat 15 opponents.\nActive enemies: 3.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
+              "stageEffects": "Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
             }
           ]
         },
@@ -962,7 +642,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "During Phagocytic form, destroy the released Energy Block with its matching element, then hit the beast with the absorbed power to paralyze it. Enhanced resistance differs from base resistance.",
-              "stageEffects": "Estimated: Survival Pressure drains party HP after a delay."
+              "stageEffects": "Survival Pressure drains party HP after a delay."
             },
             {
               "name": "Normal · Wilderness Hunter",
@@ -974,7 +654,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 35s.",
               "notes": "",
               "mechanics": "Reducing ordinary HP alone does not finish a Wild Hunt enemy. Deplete its HP or use abilities enhanced by Moonsign: Ascendant Gleam to trigger Grief-Stricken, then damage it to reduce its maximum HP to zero.",
-              "stageEffects": "Estimated: Survival Pressure drains party HP after a delay."
+              "stageEffects": "Survival Pressure drains party HP after a delay."
             },
             {
               "name": "Elite Assault · Saurian-Crowned Warrior pairs",
@@ -986,12 +666,332 @@
                 "55101",
                 "55102"
               ],
-              "enemies": "6 enemies total.\nWave 1: 1 Qucusaurus Warrior: Blazing Sky + 1 Qucusaurus Warrior: Heartstar Hammer.\nWave 2: 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave 3: 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave order estimated; confirm during a run.",
+              "enemies": "6 enemies total.\nWave 1: 1 Qucusaurus Warrior: Blazing Sky + 1 Qucusaurus Warrior: Heartstar Hammer.\nWave 2: 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave 3: 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.",
               "resistances": "Qucusaurus Warrior: Blazing Sky: Physical -20%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Survival Pressure drains HP; Enemy Stunt Double periodically raises affected enemies to the highest current HP percentage among them."
+              "stageEffects": "Survival Pressure drains HP; Enemy Stunt Double periodically raises affected enemies to the highest current HP percentage among them."
+            }
+          ]
+        },
+        "8": {
+          "level": 95,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Climactic Showdown · Radiant Moonfly",
+              "enemyIds": [
+                "63011"
+              ],
+              "enemies": "",
+              "resistances": "Radiant Moonfly: Pyro, Dendro 70%.",
+              "requirements": "Clear: defeat Radiant Moonfly; deadline unknown.\nTarget time: 1m 10s.",
+              "notes": "",
+              "mechanics": "Radiant Cocoon reduces damage, incoming healing, and CRIT Rate. Heal the affected character to full HP to escape and receive a temporary damage and CRIT buff. The Moonfly can alternate between Dendro and Pyro attacks.",
+              "stageEffects": ""
+            }
+          ]
+        }
+      },
+      "Visionary": {
+        "1": {
+          "level": 85,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Normal · Oprichniki patrol",
+              "enemyIds": [
+                "30701",
+                "30792",
+                "30721"
+              ],
+              "enemies": "6 enemies total.\nWave 1: 2 Oprichniki Line Trooper + 1 Oprichniki Hailstorm Cannoneer.\nWave 2: 1 Oprichniki Support Trooper + 2 Oprichniki Hailstorm Cannoneer.",
+              "resistances": "Oprichniki Line Trooper: Physical -20%.\nOprichniki Hailstorm Cannoneer: Physical -20%.\nOprichniki Support Trooper: Physical -20%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
+              "notes": "",
+              "mechanics": "Oprichniki weapons use kuuvahki. Their charge-up phase offers a window for kuuvahki-based attacks.",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
+            },
+            {
+              "name": "Normal · Vishap pair",
+              "enemyIds": [
+                "60401",
+                "60506"
+              ],
+              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
+              "notes": "",
+              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20% of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
+            },
+            {
+              "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
+              "enemyIds": [
+                "62002",
+                "55101",
+                "55102",
+                "62402",
+                "55109",
+                "55110"
+              ],
+              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.",
+              "resistances": "Tepetlisaurus: Geo 50%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.\nIktomisaurus: Cryo 50%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
+              "notes": "",
+              "mechanics": "The listed saurian species have elevated resistance to their own elements.",
+              "stageEffects": ""
+            }
+          ]
+        },
+        "2": {
+          "level": 85,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Normal · Fluid Avatars of Lava",
+              "enemyIds": [
+                "62701"
+              ],
+              "enemies": "2 enemies total.\nWave 1: 2 Fluid Avatar of Lava.",
+              "resistances": "Fluid Avatar of Lava: Pyro 70%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
+            },
+            {
+              "name": "Normal · Tatankasaurus group",
+              "enemyIds": [
+                "62502",
+                "55111",
+                "55112"
+              ],
+              "enemies": "5 enemies total.\nWave 1: 3 Tatankasaurus.\nWave 2: 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.",
+              "resistances": "Tatankasaurus: Electro 50%.\nTatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
+            },
+            {
+              "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
+              "enemyIds": [
+                "55111",
+                "55112",
+                "62502",
+                "62302",
+                "55107",
+                "55108"
+              ],
+              "enemies": "6 enemies total.\nWave 1: 1 Tatankasaurus + 1 Tatankasaurus Warrior: Skybreaker + 1 Tatankasaurus Warrior: Spiritlight Chaser.\nWave 2: 1 Qucusaurus + 1 Qucusaurus Warrior: Heartstar Hammer + 1 Qucusaurus Warrior: Blazing Sky.",
+              "resistances": "Tatankasaurus Warrior: Skybreaker: Physical -20%.\nTatankasaurus Warrior: Spiritlight Chaser: Physical -20%.\nTatankasaurus: Electro 50%.\nQucusaurus: Pyro 50%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+            }
+          ]
+        },
+        "3": {
+          "level": 90,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Climactic Showdown · Jadeplume Terrorshroom",
+              "enemyIds": [
+                "61101"
+              ],
+              "enemies": "",
+              "resistances": "Jadeplume Terrorshroom: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 25%; Dendro 80%. Weak: Physical, Pyro, Hydro, Electro, Cryo, Anemo, Geo 0%; Dendro 55%.",
+              "requirements": "Clear: defeat all opponents within 1m 45s.\nStar Challenge: finish within 1m 10s.",
+              "notes": "",
+              "mechanics": "Electro hits and Catalyze increase Activation; Pyro reduces it. Full Activation triggers an attack sequence followed by exhaustion and reduced resistance. Pyro can instead scorch an inactive boss, causing it to create Fungi.",
+              "stageEffects": ""
+            }
+          ]
+        },
+        "4": {
+          "level": 90,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Defense Sequence · Saurian-Crowned Warriors",
+              "enemyIds": [
+                "55107",
+                "55108",
+                "55104",
+                "55103",
+                "55101",
+                "55102"
+              ],
+              "enemies": "",
+              "resistances": "Qucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.\nYumkasaurus Warrior: Flowing Skyfire: Physical -20%.\nYumkasaurus Warrior: Whirling Leaves: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": ""
+            },
+            {
+              "name": "Defense Sequence · Landcruisers and Oprichniki",
+              "enemyIds": [
+                "30853",
+                "30731",
+                "30851",
+                "30781"
+              ],
+              "enemies": "",
+              "resistances": "Oprichniki Grenadier: Physical -20%.\nOprichniki Bombardier: Physical -20%.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
+              "notes": "",
+              "mechanics": "Repeated Electro-Charged or Lunar-Charged reactions can interrupt a Landcruiser while it uses kuuvahki.",
+              "stageEffects": ""
+            },
+            {
+              "name": "High-Pressure Defense · Ruin machines",
+              "enemyIds": [
+                "40101",
+                "40103",
+                "40204",
+                "40202",
+                "40203",
+                "40201"
+              ],
+              "enemies": "",
+              "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
+              "notes": "",
+              "mechanics": "Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%. This differs from a uniform resistance assumption.",
+              "stageEffects": ""
+            }
+          ]
+        },
+        "5": {
+          "level": 90,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Normal · Ruin Sentinels",
+              "enemyIds": [
+                "40204",
+                "40201",
+                "40203",
+                "40202"
+              ],
+              "enemies": "",
+              "resistances": "Ruin Scout: Physical 50%.\nRuin Cruiser: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Destroyer: Physical 30%.",
+              "requirements": "Clear: defeat at least 7 opponents within 2m.\nStar Challenge: defeat 9 opponents.\nActive enemies: 2.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": ""
+            },
+            {
+              "name": "Normal · Hydro Mimics",
+              "enemyIds": [
+                "502",
+                "503",
+                "507",
+                "506",
+                "505",
+                "504",
+                "508"
+              ],
+              "enemies": "",
+              "resistances": "Hydro Mimic Boar: Physical, Electro, Cryo, Dendro, Anemo, Geo 15%; Pyro -40%; Hydro immune.\nHydro Mimic Crane: Physical, Pyro, Cryo, Dendro, Anemo, Geo 15%; Hydro immune; Electro -40%.\nHydro Mimic Squirrel: Physical, Electro, Cryo, Dendro, Anemo, Geo 15%; Pyro -40%; Hydro immune.\nHydro Mimic Mallard: Physical, Pyro, Electro, Dendro, Anemo, Geo 15%; Hydro immune; Cryo -40%.\nHydro Mimic Finch: Physical, Pyro, Electro, Cryo, Dendro, Anemo 15%; Hydro immune; Geo -40%.\nHydro Mimic Crab: Physical, Pyro, Electro, Dendro, Anemo, Geo 15%; Hydro immune; Cryo -40%.\nHydro Mimic Frog: Physical, Pyro, Electro, Cryo, Dendro, Anemo 15%; Hydro immune; Geo -40%.",
+              "requirements": "Clear: defeat at least 20 opponents within 2m.\nStar Challenge: defeat 24 opponents.\nActive enemies: 3.",
+              "notes": "",
+              "mechanics": "All listed Hydro Mimics are immune to Hydro. Their other resistance weaknesses vary by form; see the resistance list.",
+              "stageEffects": ""
+            },
+            {
+              "name": "Elite Assault · Kairagi and Nobushi",
+              "enemyIds": [
+                "51002",
+                "51001",
+                "50802",
+                "50803"
+              ],
+              "enemies": "",
+              "resistances": "Kairagi: Fiery Might: Physical -20%.\nKairagi: Dancing Thunder: Physical -20%.\nNobushi: Hitsukeban: Physical -20%.\nNobushi: Kikouban: Physical -20%.",
+              "requirements": "Clear: defeat at least 12 opponents within 2m.\nStar Challenge: defeat 15 opponents.\nActive enemies: 3.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": "Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
+            }
+          ]
+        },
+        "6": {
+          "level": 92,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Climactic Showdown · Whisperer of Nightmares",
+              "enemyIds": [
+                "21501"
+              ],
+              "enemies": "",
+              "resistances": "Lord of the Hidden Depths: Whisperer of Nightmares: Weak: all damage types -60%.",
+              "requirements": "Clear: defeat all opponents within 1m 50s.\nStar Challenge: finish within 1m 15s.",
+              "notes": "",
+              "mechanics": "Deepdark Shield is vulnerable to elemental and reaction damage; Lunar reaction damage is especially effective. Defeating summoned Fishers also reduces the shield. Breaking it weakens the boss and reduces all resistance.",
+              "stageEffects": ""
+            }
+          ]
+        },
+        "7": {
+          "level": 92,
+          "requirements": "",
+          "notes": "",
+          "encounters": [
+            {
+              "name": "Normal · Consecrated beasts",
+              "enemyIds": [
+                "61003",
+                "61004"
+              ],
+              "enemies": "2 enemies total.\nWave 1: 1 Consecrated Red Vulture + 1 Consecrated Scorpion.",
+              "resistances": "Consecrated Red Vulture: Consecrated Enhance: Physical, Hydro, Electro, Cryo, Dendro, Anemo, Geo 40%; Pyro 70%.\nConsecrated Scorpion: Consecrated Enhance: Physical, Pyro, Hydro, Cryo, Dendro, Anemo, Geo 40%; Electro 70%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
+              "notes": "",
+              "mechanics": "During Phagocytic form, destroy the released Energy Block with its matching element, then hit the beast with the absorbed power to paralyze it. Enhanced resistance differs from base resistance.",
+              "stageEffects": "Survival Pressure drains party HP after a delay."
+            },
+            {
+              "name": "Normal · Wilderness Hunter",
+              "enemyIds": [
+                "21310"
+              ],
+              "enemies": "1 enemies total.\nWave 1: 1 Wilderness Hunter.",
+              "resistances": "",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 35s.",
+              "notes": "",
+              "mechanics": "Reducing ordinary HP alone does not finish a Wild Hunt enemy. Deplete its HP or use abilities enhanced by Moonsign: Ascendant Gleam to trigger Grief-Stricken, then damage it to reduce its maximum HP to zero.",
+              "stageEffects": "Survival Pressure drains party HP after a delay."
+            },
+            {
+              "name": "Elite Assault · Saurian-Crowned Warrior pairs",
+              "enemyIds": [
+                "55108",
+                "55107",
+                "55109",
+                "55110",
+                "55101",
+                "55102"
+              ],
+              "enemies": "6 enemies total.\nWave 1: 1 Qucusaurus Warrior: Blazing Sky + 1 Qucusaurus Warrior: Heartstar Hammer.\nWave 2: 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave 3: 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.",
+              "resistances": "Qucusaurus Warrior: Blazing Sky: Physical -20%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
+              "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
+              "notes": "",
+              "mechanics": "",
+              "stageEffects": "Survival Pressure drains HP; Enemy Stunt Double periodically raises affected enemies to the highest current HP percentage among them."
             }
           ]
         },
@@ -1078,7 +1078,7 @@
               "requirements": "Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
+              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
             }
           ]
         },
@@ -1120,7 +1120,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
               "notes": "",
               "mechanics": "Oprichniki weapons use kuuvahki. Their charge-up phase offers a window for kuuvahki-based attacks.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Vishap pair",
@@ -1129,11 +1129,11 @@
                 "60506"
               ],
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
-              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20 percentage points of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "mechanics": "A Geovishap can be briefly stunned when its rolling charge fails to break a character shield. Absorbing an element adds 20% of resistance to that element. The Bathysmal Vishap drains Energy with Cleansing Shower; with insufficient Energy, the hit removes HP instead.",
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tepetlisaurus and Iktomisaurus groups",
@@ -1145,7 +1145,7 @@
                 "55109",
                 "55110"
               ],
-              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave order estimated; confirm during a run.",
+              "enemies": "6 enemies total.\nWave 1: 1 Tepetlisaurus + 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave 2: 1 Iktomisaurus + 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.",
               "resistances": "Tepetlisaurus: Geo 50%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.\nIktomisaurus: Cryo 50%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
@@ -1169,7 +1169,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Normal · Tatankasaurus group",
@@ -1183,7 +1183,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder periodically strikes characters."
+              "stageEffects": "Treacherous Thunder periodically strikes characters."
             },
             {
               "name": "Elite Assault · Tatankasaurus and Qucusaurus groups",
@@ -1200,7 +1200,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
             }
           ]
         },
@@ -1240,7 +1240,7 @@
               ],
               "enemies": "",
               "resistances": "Qucusaurus Warrior: Heartstar Hammer: Physical -20%.\nQucusaurus Warrior: Blazing Sky: Physical -20%.\nYumkasaurus Warrior: Flowing Skyfire: Physical -20%.\nYumkasaurus Warrior: Whirling Leaves: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
-              "requirements": "Clear: protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies: 2.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 10s countdown; each defeat removes 15s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "",
               "stageEffects": ""
@@ -1255,7 +1255,7 @@
               ],
               "enemies": "",
               "resistances": "Oprichniki Grenadier: Physical -20%.\nOprichniki Bombardier: Physical -20%.",
-              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies: 2.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2.",
               "notes": "",
               "mechanics": "Repeated Electro-Charged or Lunar-Charged reactions can interrupt a Landcruiser while it uses kuuvahki.",
               "stageEffects": ""
@@ -1272,7 +1272,7 @@
               ],
               "enemies": "",
               "resistances": "Ruin Guard: Physical 70%.\nRuin Grader: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
-              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge (estimated): finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
+              "requirements": "Clear: protect the Ley Line Monolith through a 3m 20s countdown; each defeat removes 20s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.",
               "notes": "",
               "mechanics": "Ruin Guard and Ruin Grader have 70% Physical resistance; the smaller Ruin machines have 30% or 50%. This differs from a uniform resistance assumption.",
               "stageEffects": ""
@@ -1330,7 +1330,7 @@
               "requirements": "Clear: defeat at least 12 opponents within 2m.\nStar Challenge: defeat 15 opponents.\nActive enemies: 3.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
+              "stageEffects": "Desolation sends a Dendro cluster after characters. On contact it damages characters or enemies; it shrinks and speeds up over time."
             }
           ]
         },
@@ -1369,7 +1369,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "During Phagocytic form, destroy the released Energy Block with its matching element, then hit the beast with the absorbed power to paralyze it. Enhanced resistance differs from base resistance.",
-              "stageEffects": "Estimated: Survival Pressure drains party HP after a delay."
+              "stageEffects": "Survival Pressure drains party HP after a delay."
             },
             {
               "name": "Normal · Wilderness Hunter",
@@ -1381,7 +1381,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 35s.",
               "notes": "",
               "mechanics": "Reducing ordinary HP alone does not finish a Wild Hunt enemy. Deplete its HP or use abilities enhanced by Moonsign: Ascendant Gleam to trigger Grief-Stricken, then damage it to reduce its maximum HP to zero.",
-              "stageEffects": "Estimated: Survival Pressure drains party HP after a delay."
+              "stageEffects": "Survival Pressure drains party HP after a delay."
             },
             {
               "name": "Elite Assault · Saurian-Crowned Warrior pairs",
@@ -1393,12 +1393,12 @@
                 "55101",
                 "55102"
               ],
-              "enemies": "6 enemies total.\nWave 1: 1 Qucusaurus Warrior: Blazing Sky + 1 Qucusaurus Warrior: Heartstar Hammer.\nWave 2: 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave 3: 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.\nWave order estimated; confirm during a run.",
+              "enemies": "6 enemies total.\nWave 1: 1 Qucusaurus Warrior: Blazing Sky + 1 Qucusaurus Warrior: Heartstar Hammer.\nWave 2: 1 Iktomisaurus Warrior: Icy Tidebearer + 1 Iktomisaurus Warrior: Cryocrystal Cannon.\nWave 3: 1 Tepetlisaurus Warrior: Shard Striker + 1 Tepetlisaurus Warrior: Rockbreaker Blade.",
               "resistances": "Qucusaurus Warrior: Blazing Sky: Physical -20%.\nQucusaurus Warrior: Heartstar Hammer: Physical -20%.\nIktomisaurus Warrior: Icy Tidebearer: Physical -20%.\nIktomisaurus Warrior: Cryocrystal Cannon: Physical -20%.\nTepetlisaurus Warrior: Shard Striker: Physical -20%.\nTepetlisaurus Warrior: Rockbreaker Blade: Physical -20%.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 20s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Survival Pressure drains HP; Enemy Stunt Double periodically raises affected enemies to the highest current HP percentage among them."
+              "stageEffects": "Survival Pressure drains HP; Enemy Stunt Double periodically raises affected enemies to the highest current HP percentage among them."
             }
           ]
         },
@@ -1485,7 +1485,7 @@
               "requirements": "Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Estimated: Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
+              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
             }
           ]
         },

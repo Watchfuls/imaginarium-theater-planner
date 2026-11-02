@@ -4,7 +4,13 @@ import {readFileSync} from 'node:fs';
 import data from './data/theater-act-details.json' with {type:'json'};
 import research from '../docs/act-details-research/2026-11-01.json' with {type:'json'};
 import catalog from './data/theater-enemies.json' with {type:'json'};
-import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails} from './actDetailsPresentation.ts';
+import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation.ts';
+
+test('countdown reductions and active enemy counts belong in details, not objectives',()=>{
+  const result=splitChallengeRequirements('Clear: protect the monolith through a 190s countdown; each defeat removes 15s.\nStar Challenge: finish with at least 35% monolith HP.\nActive enemies: 2 or 3.');
+  assert.equal(result.requirements,'Clear: protect the monolith through a 3m 10s countdown.\nStar Challenge: finish with at least 35% monolith HP.');
+  assert.deepEqual(result.details,['Each defeat removes 15s.','Active Enemies: 2 or 3.']);
+});
 
 test('standard resistance is hidden without losing negative values, immunity, or conditional states',()=>{
   assert.equal(resistanceExceptions('Enemy: all damage types 10%.'),'');
@@ -80,8 +86,9 @@ test('Mimics, Consecrated Beasts, and Whisperer use baseline/exception and state
 test('player text keeps gameplay goals and estimates but removes research commentary',()=>{
   assert.equal(playerDetailText('Clear (graphic-sourced): defeat all opponents within 110 s.'),'Clear: defeat all opponents within 1m 50s.');
   assert.equal(playerDetailText('190s, 120 s, 60s, 55s, 3m 10s.'),'3m 10s, 2m, 60s, 55s, 3m 10s.');
-  assert.equal(playerDetailText('Star Challenge (same-act historical inference): finish with at least 35% monolith HP. This threshold is not printed in the graphic.'),'Star Challenge (estimated): finish with at least 35% monolith HP.');
-  assert.equal(playerDetailText('Inferred from July 2026 Act 2: Thunder strikes.'),'Estimated: Thunder strikes.');
+  assert.equal(playerDetailText('Star Challenge (same-act historical inference): finish with at least 35% monolith HP. This threshold is not printed in the graphic.'),'Star Challenge: finish with at least 35% monolith HP.');
+  assert.equal(playerDetailText('Inferred from July 2026 Act 2: Thunder strikes.'),'Thunder strikes.');
+  assert.equal(playerDetailText('Wave 1: 3 Tatankasaurus.\nWave order estimated; confirm during a run.'),'Wave 1: 3 Tatankasaurus.');
   assert.equal(playerEnemyNotes('Current enemy types (Alioth:\n• Enemy\n\n6 enemies total (graphic).\nWave 1: 3 enemies.\nThe graphic says only Trooper; Alioth distinguishes variants.'),'6 enemies total.\nWave 1: 3 enemies.');
 });
 

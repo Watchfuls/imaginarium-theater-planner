@@ -4,7 +4,7 @@ import {seasonStatus} from './seasonTiming';
 import {mergeActDetailsDraft,type ActDetailsData as Data,type ActDetailsRecord as Act,type EncounterDetails as Encounter} from './actDetailsData';
 import enemyCatalog from './data/theater-enemies.json';
 import physicalIcon from './assets/elements/Physical_Icon.png';
-import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails} from './actDetailsPresentation';
+import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation';
 
 const enemyIcons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const enemiesById=enemyCatalog as Record<string,{name:string;icon:string;wikiUrl:string;baseResistances:Record<string,number>}>;
@@ -29,11 +29,38 @@ function EnemyWaveText({value}:{value:string}){
     if(!match){parts.push(remaining);break;}
     if(match.index)parts.push(remaining.slice(0,match.index));
     const {enemy}=match;
-    parts.push(<React.Fragment key={parts.length}><a className="act-wave-enemy" href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name} on Fandom`} title={enemy.name}><img src={enemyIcons[`./assets/enemies/${enemy.icon}`]} alt="" width="24" height="24" loading="lazy"/></a>{enemy.name}</React.Fragment>);
+    parts.push(<React.Fragment key={parts.length}><a className="act-wave-enemy" href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name} on Fandom`} title={enemy.name}><img src={enemyIcons[`./assets/enemies/${enemy.icon}`]} alt="" width="24" height="24" loading="lazy"/></a></React.Fragment>);
     remaining=remaining.slice(match.index+enemy.name.length);
   }
   return <>{parts}</>;
 }
+function ChallengeRequirements({value}:{value:string}){
+  const lines=splitChallengeRequirements(value).requirements.split('\n').filter(Boolean);
+  if(!lines.length)return null;
+  const clear=lines.filter(line=>/^Clear:/i.test(line)).map(line=>line.replace(/^Clear:\s*/i,'')).join('\n');
+  const star=lines.filter(line=>/^Star(?: Challenge)?:/i.test(line)).map(line=>line.replace(/^Star(?: Challenge)?:\s*/i,'')).join('\n');
+  const other=lines.filter(line=>!/^(?:Clear|Star(?: Challenge)?):/i.test(line));
+  const content=(text:string)=>{
+    const capitalized=text.charAt(0).toUpperCase()+text.slice(1);
+    return capitalized.split(/(\d+(?:\.\d+)?%?|\d+m(?: \d+s)?)/g).map((part,index)=>/^\d/.test(part)?<strong key={index}>{part}</strong>:part);
+  };
+  return <div className="act-detail-field"><strong>Challenge Requirements</strong><div className="act-requirements-comparison">
+    {clear&&<div className="act-requirement-card"><strong className="act-requirement-label">Clear</strong><div>{content(clear)}</div></div>}
+    {star&&<div className="act-requirement-card is-star"><span className="act-requirement-label"><svg className="act-star-icon" viewBox="0 0 24 24" role="img" aria-label="Star Challenge"><path fill="currentColor" d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01Z"/></svg></span><div>{content(star)}</div></div>}
+  </div>{other.length>0&&<div className="act-requirements-lines">{other.map((line,index)=><div key={index}>{content(line)}</div>)}</div>}</div>;
+}
+
+function EnemyDetails({value,requirements}:{value:string;requirements:string}){
+  const lines=playerEnemyNotes(value).split('\n').filter(Boolean);
+  const waves=lines.filter(line=>/^Wave \d+:/i.test(line));
+  const total=value.match(/(\d+) enemies (?:total|in (?:one|1) wave)/i)?.[1];
+  const waveCount=waves.length||(/in (?:one|1) wave/i.test(value)?1:undefined);
+  const summary=[total?total+' '+(total==='1'?'Enemy':'Enemies'):null,waveCount?waveCount+' '+(waveCount===1?'Wave':'Waves'):null].filter(Boolean).join(' | ');
+  const details=[...lines.filter(line=>!/^\d+ enemies total\.?$/i.test(line)),...splitChallengeRequirements(requirements).details];
+  if(!summary&&!details.length)return null;
+  return <div className="act-detail-field act-enemy-details"><strong>Details</strong>{summary&&<div className="act-wave-summary">{summary}</div>}{details.map((line,index)=><div key={index} className="act-wave-row"><EnemyWaveText value={line.replace(/^\d+ enemies in (?:one|1) wave[^:]*:\s*/i,'Wave 1: ').replace(/\.$/,'')}/></div>)}</div>;
+}
+
 type Season = {season:number;id:string;startsAt:string;endsAt:string;sourceUrl:string};
 const emptyAct = ():Act=>({requirements:'',notes:'',encounters:[]});
 const modes:Record<string,number>={Easy:3,Normal:6,Hard:8,Visionary:10,Lunar:12};
@@ -97,7 +124,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
           <div className="act-detail-heading"><button type="button" className="details-toggle" disabled={editing} aria-label={`${actCollapsed?'Expand':'Collapse'} ${actLabel}`} aria-expanded={!actCollapsed} aria-controls={`act-content-${actKey}`} onClick={()=>setCollapsedActs(current=>({...current,[actKey]:!actCollapsed}))}><span aria-hidden="true">{actCollapsed?'▸':'▾'}</span></button><h3>{actLabel}</h3>{headingBosses.length>0&&<span className="act-objective">Boss</span>}{act.level!==undefined&&<span className="act-level">Level {act.level}</span>}</div>
           <div id={`act-content-${actKey}`}>
           {!actCollapsed&&bosses.length>0&&!act.encounters.some(encounter=>encounterEnemyIds(encounter).length)&&<div><strong>Bosses</strong>{bosses.map((boss,index)=><a className="boss-preview-entry" key={index} href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(boss.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={boss.iconUrl} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</div>}
-          {!actCollapsed&&field('Act requirements',editing?act.requirements:playerActRequirements(act.requirements),value=>update(number,{...act,requirements:value}))}
+          {!actCollapsed&&field('Act Requirements',editing?act.requirements:playerActRequirements(act.requirements),value=>update(number,{...act,requirements:value}))}
           {!act.encounters.length&&<p>No encounter choices recorded yet.</p>}
           {act.encounters.map((encounter,index)=>{
             const change=(key:keyof Encounter,value:string)=>update(number,{...act,encounters:act.encounters.map((item,i)=>i===index?{...item,[key]:value}:item)});
@@ -128,18 +155,18 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
               <div id={`choice-content-${choiceKey}`} hidden={compact}>
               {field('Challenge',editing?encounter.name:playerDetailText(encounter.name),value=>change('name',value))}
               {!compact&&!!lineup.length&&portraits}
-              {field('Enemies / waves',editing?encounter.enemies:lineup.length?playerEnemyNotes(encounter.enemies):playerDetailText(encounter.enemies),value=>change('enemies',value))}
+              {editing?field('Enemies / waves',encounter.enemies,value=>change('enemies',value)):<><ChallengeRequirements value={encounter.requirements}/><EnemyDetails value={encounter.enemies} requirements={encounter.requirements}/></>}
               {field(editing?'Resistances / immunities':'Resistance notes',editing?encounter.resistances:lineup.length?resistanceDetails.notes:resistanceExceptions(encounter.resistances),value=>change('resistances',value))}
-              {field('Clear requirements',editing?encounter.requirements:playerDetailText(encounter.requirements),value=>change('requirements',value))}
-              {(encounter.stageEffects||editing)&&field('Stage effects',editing?encounter.stageEffects??'':playerDetailText(encounter.stageEffects??''),value=>change('stageEffects',value))}
+              {editing&&field('Challenge Requirements',encounter.requirements,value=>change('requirements',value))}
+              {(editing||((eliteAssault||number>10)&&encounter.stageEffects))&&field('Stage Effects',editing?encounter.stageEffects??'':playerDetailText(encounter.stageEffects??''),value=>change('stageEffects',value))}
               {(encounter.mechanics||editing)&&field('Mechanics',editing?encounter.mechanics??'':playerDetailText(encounter.mechanics??''),value=>change('mechanics',value))}
-              {field('Challenge notes',encounter.notes,value=>change('notes',value))}
+              {field('Challenge Notes',encounter.notes,value=>change('notes',value))}
               {editing&&<button onClick={()=>update(number,{...act,encounters:act.encounters.filter((_,i)=>i!==index)})}>Remove challenge {index+1}</button>}
               </div>
             </div>;
           })}
           {editing&&<button onClick={()=>update(number,{...act,encounters:[...act.encounters,{name:'',enemies:'',resistances:'',requirements:'',notes:''}]})}>Add enemy choice</button>}
-          {!actCollapsed&&field('Act notes',act.notes,value=>update(number,{...act,notes:value}))}
+          {!actCollapsed&&field('Act Notes',act.notes,value=>update(number,{...act,notes:value}))}
           </div>
         </article>;
       })}</div>

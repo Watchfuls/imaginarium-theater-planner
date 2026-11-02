@@ -87,6 +87,16 @@ season. Reading the exports does not require modifying or importing PSD files.
 
 ### Visitor presentation
 
+Use consistent title capitalization for section labels. Show Challenge
+Use `%` instead of “percentage points” in all displayed resistance text.
+Requirements before Details. Details uses a compact count summary such as
+`5 Enemies | 2 Waves`, followed by numbered wave rows with counts and enemy
+icons (icon links only, with names available on hover). Use a star icon for the
+Star Challenge objective. Do not display “estimated” labels or run-confirmation
+boilerplate; retain provenance and uncertainty in the repository research.
+Only show additional Stage Effects for Elite Assault and Lunar challenge stages.
+Do not invent missing counts or wave orders to fill the compact summary.
+
 Do not display enemy HP values in Act Details, including boss cards or clear
 requirements. Keep existing HP research in repository records only. Continue
 showing recorded enemy levels beside act headings.

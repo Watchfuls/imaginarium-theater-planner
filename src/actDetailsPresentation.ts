@@ -26,6 +26,7 @@ export function siteActDetails(data:ActDetailsData):ActDetailsData {
 // Retain the full curation text in storage and the editor; show gameplay text to players.
 export function playerDetailText(value:string):string {
   return value
+    .replace(/\s+percentage points?\b/gi,'%')
     .replace(/(\d)[ \t]+(s|ms|min)\b/g,'$1$2')
     .replace(/\b(\d+)s\b/g,(text,seconds)=>Number(seconds)>60?`${Math.floor(Number(seconds)/60)}m${Number(seconds)%60?` ${Number(seconds)%60}s`:''}`:text)
     .replace(/^Current enemy types \(Alioth:?\)?\s*:\s*/gm,'')
@@ -50,9 +51,26 @@ export function playerDetailText(value:string):string {
     .replace(/ Its interpretation as the star timer is inferred;[^\n]*/g,' (estimated).')
     .replace(/ no matching prior Act 8 encounter supports a deadline\./g,'')
     .replace(/\breference\s*·/gi,'·')
+    .replace(/^.*(?:Wave order estimated|confirm during a run)[^\n]*(?:\n|$)/gmi,'')
+    .replace(/\s*\(estimated\)\.?/gi,'')
+    .replace(/\bestimated\s*:\s*/gi,'')
+    .replace(/\bestimated\s+/gi,'')
     .replace(/\n[ \t]+/g,'\n')
     .replace(/\n{3,}/g,'\n\n')
     .trim();
+}
+
+export function splitChallengeRequirements(value:string):{requirements:string;details:string[]} {
+  const details:string[]=[];
+  const requirements=playerDetailText(value).split('\n').flatMap(line=>{
+    if(/^Active enemies:/i.test(line)){details.push(line.replace(/^Active enemies:/i,'Active Enemies:'));return [];}
+    const cleaned=line.replace(/;\s*(each defeat removes [^.;]+)\.?/gi,(_,detail:string)=>{
+      details.push(detail.charAt(0).toUpperCase()+detail.slice(1)+'.');
+      return '.';
+    });
+    return cleaned?[cleaned]:[];
+  }).join('\n');
+  return {requirements,details};
 }
 
 export function playerEnemyNotes(value:string):string {
@@ -68,6 +86,7 @@ export function playerActRequirements(value:string):string {
 }
 
 export function resistanceExceptions(value:string):string {
+  value=value.replace(/\s+percentage points?\b/gi,'%');
   return value.split('\n').map(line=>{
     const match=line.match(/^(.+?:\s*)(?=(?:Physical|Pyro|Hydro|Electro|Cryo|Dendro|Anemo|Geo|all damage types)\b)(.*)$/);
     const label=match?.[1]??'';
