@@ -130,7 +130,8 @@
   "29/9/Normal bounty · Landcruisers": [
     "Repeated Electro-Charged or Lunar-Charged reactions can interrupt a Landcruiser while it uses kuuvahki.",
     "Bounty Priority: The Cutting Edge All-Purpose Storm Landcruiser is the target. Supporting Landcruisers do not count toward the bounty total; include them in area damage without losing focus on the target.\nKuuvahki Interrupt: During the bounty's powered melee sequence or sustained barrage, trigger Electro-Charged or Lunar-Charged four times to interrupt and briefly paralyze it. Kuuvahki can also interrupt these attacks.\nPositioning: Move toward ranged attackers so close-combat units approach you rather than spreading your damage across the arena.",
-    "Bounty Priority: The Cutting Edge All-Purpose Storm Landcruiser is the target. Supporting Landcruisers do not count toward the bounty total; include them in area damage without losing focus on the target.\nInterrupt: During the bounty's powered melee sequence or sustained barrage, trigger Electro-Charged or Lunar-Charged four times to interrupt and briefly paralyze it."
+    "Bounty Priority: The Cutting Edge All-Purpose Storm Landcruiser is the target. Supporting Landcruisers do not count toward the bounty total; include them in area damage without losing focus on the target.\nInterrupt: During the bounty's powered melee sequence or sustained barrage, trigger Electro-Charged or Lunar-Charged four times to interrupt and briefly paralyze it.",
+    "Bounty Priority: The Cutting Edge All-Purpose Storm Landcruiser is the target. Supporting Landcruisers do not count toward the bounty total; include them in area damage without losing focus on the target.\nInterrupt: During the bounty's powered melee sequence or sustained barrage, trigger Electro-Charged or Lunar-Charged four times to interrupt and paralyze it for 2s."
   ],
   "29/9/Elite Assault bounty · Ruin machines": [
     "",
