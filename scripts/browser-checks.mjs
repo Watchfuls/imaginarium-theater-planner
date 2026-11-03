@@ -303,6 +303,11 @@ try{
   for(const label of ['Your Characters','Challenge Setup','Theater Planner','Act Details','Video Guide']){
     await check(`mobile layout: ${label}`,async()=>{
       await page.setViewportSize({width:390,height:844});await nav(label).click();
+      if(label==='Theater Planner'){
+        const selected=page.locator('.act-picker-trigger').filter({has:page.locator('.act-picker-name')}).first();
+        assert.equal(await selected.locator(':scope > .element').isVisible(),false,'compact slots hide the element badge');
+        assert.ok((await selected.locator('.act-picker-name').boundingBox()).width>=30,'compact slots leave room for character names');
+      }
       const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll('main *')].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,15).map(el=>({tag:el.tagName,class:el.className,right:el.getBoundingClientRect().right,text:el.textContent.slice(0,60)}))}));
       await page.evaluate(()=>window.scrollTo(0,800));
       const navigation=await page.locator('.app-navigation').boundingBox();
