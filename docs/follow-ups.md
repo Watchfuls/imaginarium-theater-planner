@@ -1,3 +1,3 @@
 # Follow-ups
 
-- Investigate the GitHub hovercard for `github-actions[bot]` showing “Failed to fetch hovercard content: 404”. Reported with a screenshot during Google Drive setup. Deferred at the user's request; no fix attempted. The exact GitHub page and browser context have not been recorded.
+- [x] Resolved 3 November 2026: GitHub hovercard for `github-actions[bot]` showing "Failed to fetch hovercard content: 404". The user identified the target as `https://github.com/github-actions[bot]` and confirmed this issue resolved. The workflow uses GitHub's documented bot identity; no planner or workflow change was needed. No further action planned.
