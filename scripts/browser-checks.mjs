@@ -116,6 +116,63 @@ try{
       assert.ok(await backupPage.getByText('Act 1: Mona',{exact:true}).isVisible());
     }finally{await backupContext.close();}
   });
+  await check('Google Drive connects, saves, loads, and handles expired connections without storing tokens',async()=>{
+    const driveContext=await browser.newContext();
+    try{
+      const drivePage=await driveContext.newPage();
+      drivePage.setDefaultTimeout(10000);
+      let cloud=null,writeCount=0,expired=false;
+      await drivePage.route('https://www.googleapis.com/**',async route=>{
+        const request=route.request();
+        assert.equal(request.headers().authorization,'Bearer test-drive-token');
+        if(expired){await route.fulfill({status:401,body:'{}'});return;}
+        if(request.method()==='POST'){
+          writeCount++;
+          const body=request.postData();
+          assert.match(body,/appDataFolder/);
+          const pieces=body.split('Content-Type: application/json\r\n\r\n');
+          cloud=JSON.parse(pieces[1].split('\r\n--')[0]);
+          await route.fulfill({json:{id:'test-save'}});return;
+        }
+        if(request.url().includes('alt=media')){await route.fulfill({json:cloud});return;}
+        await route.fulfill({json:{files:cloud?[{id:'test-save',modifiedTime:'2026-11-03T10:00:00Z'}]:[]}});
+      });
+      await drivePage.goto(base,{waitUntil:'domcontentloaded'});
+      await drivePage.evaluate(async()=>{
+        const {default:React}=await import('/node_modules/.vite/deps/react.js');
+        const {default:ReactDOM}=await import('/node_modules/.vite/deps/react-dom_client.js');
+        const {DriveControls}=await import('/src/DriveControls.tsx');
+        window.google={accounts:{oauth2:{initTokenClient:options=>({requestAccessToken:()=>{
+          if(options.scope!=='https://www.googleapis.com/auth/drive.appdata')throw new Error('Unexpected OAuth scope');
+          options.callback({access_token:'test-drive-token',expires_in:3600,scope:options.scope});
+        }})}}};
+        const host=document.createElement('div');document.body.appendChild(host);
+        ReactDOM.createRoot(host).render(React.createElement(DriveControls,{clientId:'test.apps.googleusercontent.com',save:{ownership:{Aino:{owned:true,level:95}},setup:{difficulty:'Hard',elements:['Hydro'],opening:[],guests:[]},plan:{roster:['Aino'],acts:{1:['Aino']}},sort:'name'},onRestore:save=>{window.driveRestored=save;return 'Drive backup restored.';}}));
+      });
+      await drivePage.getByRole('button',{name:'Connect Google Drive',exact:true}).click();
+      await drivePage.getByRole('button',{name:'Load from Drive',exact:true}).click();
+      await drivePage.getByText('No planner backup was found in this Google account. Save from your other device first.',{exact:true}).waitFor();
+      await drivePage.getByRole('button',{name:'Save to Drive',exact:true}).click();
+      await drivePage.getByText('Saved to Google Drive.',{exact:true}).waitFor();
+      assert.equal(writeCount,1);
+      assert.equal(cloud.ownership.Aino.level,95);
+      await Promise.all([
+        drivePage.waitForEvent('dialog').then(dialog=>dialog.dismiss()),
+        drivePage.getByRole('button',{name:'Save to Drive',exact:true}).click(),
+      ]);
+      // The subsequent click waits for the cancelled operation to finish.
+      drivePage.once('dialog',dialog=>dialog.accept());
+      await drivePage.getByRole('button',{name:'Load from Drive',exact:true}).click();
+      await drivePage.getByText('Drive backup restored.',{exact:true}).waitFor();
+      assert.equal(writeCount,1,'cancelling replacement does not upload');
+      assert.equal(await drivePage.evaluate(()=>window.driveRestored.ownership.Aino.level),95);
+      assert.equal(await drivePage.evaluate(()=>JSON.stringify(localStorage).includes('test-drive-token')),false);
+      expired=true;
+      await drivePage.getByRole('button',{name:'Load from Drive',exact:true}).click();
+      await drivePage.getByText('Your Google connection expired. Connect again.',{exact:true}).waitFor();
+      await drivePage.getByRole('button',{name:'Connect Google Drive',exact:true}).waitFor();
+    }finally{await driveContext.close();}
+  });
   await check('planner stays locked until the account is eligible',async()=>{
     await nav('Your Characters').waitFor();
     assert.equal(await nav('Theater Planner').isDisabled(),true);

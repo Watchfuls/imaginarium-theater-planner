@@ -1,9 +1,11 @@
 import {useRef,useState} from 'react';
 import {createPlannerBackup,parsePlannerBackup,type PlannerSave} from './plannerBackup';
+import {DriveControls} from './DriveControls';
 
 export function BackupControls({save,onRestore}:{save:PlannerSave;onRestore:(save:PlannerSave)=>string}){
   const input=useRef<HTMLInputElement>(null);
   const [message,setMessage]=useState('');
+  const [expanded,setExpanded]=useState(false);
   function download(){
     const url=URL.createObjectURL(new Blob([JSON.stringify(createPlannerBackup(save))],{type:'application/json'}));
     const link=document.createElement('a');
@@ -20,11 +22,12 @@ export function BackupControls({save,onRestore}:{save:PlannerSave;onRestore:(sav
     }catch(error){setMessage(`Restore failed: ${error instanceof Error?error.message:'Unable to read this file.'}`);}
     finally{if(input.current)input.current.value='';}
   }
-  return <details className="backup-controls"><summary>Saves &amp; backups</summary>
+  return <details className="backup-controls" onToggle={event=>setExpanded(event.currentTarget.open)}><summary>Saves &amp; backups</summary>
     <p>Move your characters, current challenge setup, and plan between devices with one backup file.</p>
     <div className="actions"><button type="button" onClick={download}>Download backup</button><button type="button" onClick={()=>input.current?.click()}>Restore backup</button></div>
     <input ref={input} type="file" accept=".json,application/json" aria-label="Planner backup file" hidden onChange={event=>{const file=event.target.files?.[0];if(file)void restore(file);}}/>
     {message&&<p role="status">{message}</p>}
+    {expanded&&import.meta.env.VITE_GOOGLE_CLIENT_ID&&<DriveControls save={save} onRestore={onRestore} clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}/>}
     {!!save.history?.length&&<details><summary>Historical plans ({save.history.length})</summary>
       <p>Saved team selections for reference. Historical enemy details are not included.</p>
       {save.history.map((entry,index)=><details key={index}><summary>Season {entry.setup.seasonId??'custom'} · {entry.setup.difficulty}</summary>

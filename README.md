@@ -105,6 +105,7 @@ In `npm run dev`, click **Edit act details** to add selectable challenges and no
 
 - Character icons are copied from the sibling `genshin-shared/icons` directory into the build output.
 - Ownership, challenge setup, and planner selections are saved to browser `localStorage`. Traveler versions share one level setting in **Your Characters**.
+- **Saves & backups** downloads/restores a compact player backup. Optional manual Google Drive save/load uses the same format; see [Google Drive setup](docs/google-drive-setup.md) for OAuth and deployment configuration.
 - Use **Import GOOD JSON** in **Your Characters** to load a GOOD character export, such as [Irminsul](https://github.com/konkers/irminsul). The import replaces the current ownership list after confirmation, rounds levels down to the nearest 10, and ignores character keys not in the starter roster.
 - Challenge Setup previews the selected season's four boss slots, including manual overrides, and blocks planner navigation until the account eligibility estimate meets the selected difficulty's minimum.
 - In the planner, drag an eligible character directly to an act slot to add them to the selected cast and assign them in one step.

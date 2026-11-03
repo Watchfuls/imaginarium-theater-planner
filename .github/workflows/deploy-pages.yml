@@ -39,6 +39,8 @@ jobs:
         run: npm ci
       - name: Build site
         working-directory: imaginarium-theater-planner
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
         run: npm run build
       - name: Test planner
         working-directory: imaginarium-theater-planner
