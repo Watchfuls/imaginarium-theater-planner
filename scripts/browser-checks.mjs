@@ -3,6 +3,7 @@ import {chromium} from 'playwright';
 import {createServer} from 'vite';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {readFile} from 'node:fs/promises';
 import lineup from '../src/data/theater-lineups.json' with {type:'json'};
 
 // A separate server and browser context keep real saved plans/notes untouched.
@@ -77,6 +78,43 @@ try{
       await mobilePage.getByRole('button',{name:'Close feedback'}).click();
       assert.equal(await mobilePage.getByRole('dialog').count(),0);
     }finally{await mobile.close();}
+  });
+  await check('backups round-trip, reject invalid uploads, and retain unavailable seasons as history',async()=>{
+    const backupContext=await browser.newContext();
+    try{
+      const backupPage=await backupContext.newPage();
+      await backupPage.goto(base,{waitUntil:'domcontentloaded'});
+      const original=await backupPage.evaluate(async season=>{
+        const {createPlannerBackup}=await import('/src/plannerBackup.ts');
+        return createPlannerBackup({ownership:{Aino:{owned:true,level:95}},setup:{difficulty:'Hard',elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests,seasonId:season.season},plan:{roster:['Aino'],acts:{1:['Aino','','','']}},sort:'game'});
+      },lineup.current);
+      await backupPage.getByText('Saves & backups',{exact:true}).click();
+      const upload=async value=>{
+        backupPage.once('dialog',dialog=>dialog.accept());
+        await backupPage.getByLabel('Planner backup file').setInputFiles({name:'backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(value))});
+      };
+      await upload(original);
+      await backupPage.getByRole('status').filter({hasText:'Backup restored.'}).waitFor();
+      await backupPage.waitForFunction(()=>JSON.parse(localStorage.getItem('itp-ownership-v1')).Aino?.level===95);
+      const downloadEvent=backupPage.waitForEvent('download');
+      await backupPage.getByRole('button',{name:'Download backup',exact:true}).click();
+      const download=await downloadEvent;
+      const downloaded=JSON.parse(await readFile(await download.path(),'utf8'));
+      assert.deepEqual(downloaded,original);
+      await backupPage.getByLabel('Planner backup file').setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from('{"format":"GOOD","characters":[]}')});
+      await backupPage.getByRole('status').filter({hasText:'Restore failed:'}).waitFor();
+      assert.equal(await backupPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-ownership-v1')).Aino.level),95);
+      const old={...original,setup:{...original.setup,seasonId:1},plan:{roster:['Mona'],acts:{1:['Mona']}}};
+      await upload(old);
+      await backupPage.getByRole('status').filter({hasText:'Season 1 is no longer available'}).waitFor();
+      await backupPage.waitForFunction(()=>JSON.parse(localStorage.getItem('itp-plan-history-v1')).length===1);
+      assert.deepEqual(await backupPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1'))),original.plan);
+      await backupPage.reload({waitUntil:'domcontentloaded'});
+      await backupPage.getByText('Saves & backups',{exact:true}).click();
+      await backupPage.getByText('Historical plans (1)',{exact:true}).click();
+      await backupPage.getByText('Season 1 · Hard',{exact:true}).click();
+      assert.ok(await backupPage.getByText('Act 1: Mona',{exact:true}).isVisible());
+    }finally{await backupContext.close();}
   });
   await check('planner stays locked until the account is eligible',async()=>{
     await nav('Your Characters').waitFor();

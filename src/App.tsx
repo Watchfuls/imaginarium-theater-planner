@@ -1,5 +1,7 @@
 import {SiteHeader} from './SiteHeader';
 import {Feedback} from './Feedback';
+import {BackupControls} from './BackupControls';
+import {mergePlanHistory,type HistoricalPlan} from './plannerBackup';
 import {BossPreview} from './BossPreview';
 import type {Ownership,Setup,Plan,TheaterBossData,BossOverrideSlot} from './plannerTypes';
 import {LEVEL_OPTIONS,travelerNames,difficulties,stageObjectives,isTraveler,enemyWikiUrl} from './plannerConfig';
@@ -57,6 +59,7 @@ const [ownership,setOwnership]=useState<Ownership>(()=>normalizeOwnership(stored
 const [setup,setSetup]=useState<Setup>(()=>stored('itp-setup-v1',defaultSetup(),validSetup));
 const [bossData,setBossData]=useState<TheaterBossData>(theaterBosses);
 const [plan,setPlan]=useState<Plan>(()=>stored('itp-plan-v1',{roster:[],acts:{},borrowed:''},validPlan));
+const [planHistory,setPlanHistory]=useState<HistoricalPlan[]>(()=>stored('itp-plan-history-v1',[],Array.isArray));
 const [dropTarget,setDropTarget]=useState('');
 const [assignmentNotice,setAssignmentNotice]=useState<{message:string;id:number}|null>(null);
 const [copiedTeam,setCopiedTeam]=useState<{act:number;team:string[]}|null>(null);
@@ -79,9 +82,10 @@ useEffect(()=>{
     saveText('itp-ownership-v1',JSON.stringify(ownership)),
     saveText('itp-setup-v1',JSON.stringify(setup)),
     saveText('itp-plan-v1',JSON.stringify(plan)),
+    saveText('itp-plan-history-v1',JSON.stringify(planHistory)),
   ];
   setStorageUnavailable(writes.some(saved=>!saved));
-},[plannerCharacterOrder,ownership,setup,plan]);
+},[plannerCharacterOrder,ownership,setup,plan,planHistory]);
 useEffect(()=>{
   if(!copiedTeam)return;
   const cancelOnInteraction=(event:Event)=>{
@@ -375,6 +379,14 @@ const renderAct=(act:number,label:string)=>{
   })}</div></div>;
 };
 return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContinueToPlanner={canContinueToPlanner} setStep={setStep}/>
+<BackupControls save={{ownership,setup,plan,sort:plannerCharacterOrder,history:planHistory}} onRestore={save=>{
+  const unavailable=save.setup.seasonId!==undefined&&!availableSeasons.some(season=>season.season===save.setup.seasonId);
+  setOwnership(normalizeOwnership(save.ownership));setPlannerCharacterOrder(save.sort);
+  setPlanHistory(current=>mergePlanHistory(current,save.history??[],unavailable?[{setup:save.setup,plan:save.plan}]:[]));
+  if(!unavailable){setSetup(save.setup);setPlan(save.plan);}
+  setCopiedTeam(null);setOpenCharacterPicker('');setActDetailsTarget(null);setStep(1);
+  return unavailable?`Characters restored. Season ${save.setup.seasonId} is no longer available, so its plan was kept under Historical plans. Your current challenge setup and plan were left in place.`:'Backup restored.';
+}}/>
 {step===4&&<React.Suspense fallback={<section><h2>Act Details</h2><p>Loading act details…</p></section>}><ActDetails target={actDetailsTarget} difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={availableSeasons} now={seasonTime} bossesForAct={(seasonNumber,difficulty,act)=>{
   const season=availableSeasons.find(candidate=>candidate.season===seasonNumber);
   if(!season)return [];
