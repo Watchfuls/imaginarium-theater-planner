@@ -45,8 +45,8 @@ export function BossOverrideEditor({data,seasons,bossCatalog,onChange}:{data:The
   const [editingBoss,setEditingBoss]=useState<number|null>(null);
   const [editedBossName,setEditedBossName]=useState('');
   const season=seasons.find(candidate=>candidate.season===seasonNumber)??seasons[0];
-  const slotTitles:Record<BossOverrideSlot,string>={boss1:'Boss 1',boss2:'Boss 2',boss3:'Boss 3',boss4:'Boss 4',lunar2:'Lunar Act 2 boss'};
-  const slotDescriptions:Record<BossOverrideSlot,string>={boss1:'Act 3 in every difficulty.',boss2:'Act 6 in Normal and above.',boss3:'Act 8 in Visionary and Lunar.',boss4:'Act 8 in Hard; Act 10 in Visionary and Lunar.',lunar2:'Second Lunar stage (Act 12), if it has a boss.'};
+  const slotTitles:Record<BossOverrideSlot,string>={boss1:'Boss 1',boss2:'Boss 2',boss3:'Boss 3',boss4:'Boss 4',lunar2:'Arcana 2 boss'};
+  const slotDescriptions:Record<BossOverrideSlot,string>={boss1:'Act 3 in every difficulty.',boss2:'Act 6 in Normal and above.',boss3:'Act 8 in Visionary and Lunar.',boss4:'Act 8 in Hard; Act 10 in Visionary and Lunar.',lunar2:'Arcana Challenge 2, if it has a boss.'};
   const generatedBosses=season?getDefaultBossesForSlot(season,slot):[];
   const currentBosses=season?getBossesForSlot(season,data,slot):[];
   const bossOptions=useMemo(()=>{

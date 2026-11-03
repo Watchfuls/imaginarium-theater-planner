@@ -165,7 +165,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
           : [];
         const headingBosses=bossNames.length?bossNames:bosses.map(boss=>boss.name);
         const actKey=`${season.season}-${difficulty}-${number}`;
-        const actLabel=number>10?`Lunar Act ${number-10} · Arcanum Challenge`:`Act ${number}`;
+        const actLabel=number>10?`Arcana ${number-10} · Arcanum Challenge`:`Act ${number}`;
         const actCollapsed=!editing&&Boolean(collapsedActs[actKey]);
         const sharedThunder=season.season===29&&[1,2].includes(number)&&act.encounters.length>0&&act.encounters.every(encounter=>/Treacherous Thunder/.test(encounter.stageEffects??''));
         return <article id={`act-details-act-${number}`} tabIndex={-1} className={`act-detail-card${actCollapsed?' is-collapsed':''}`} key={actKey}>

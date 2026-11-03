@@ -17,7 +17,7 @@ export function BossPreview({season,bossData,difficulty}:{season:TheaterSeason;b
       if(act===11)return <React.Suspense key={act} fallback={null}><LunarActOnePreview season={season.season}/></React.Suspense>;
       const bosses=act===12?getBossesForSlot(season,bossData,'lunar2'):season.bossStages.find(stage=>stage.act===act)?.bosses??[];
       if(!bosses.length)return null;
-      return <div className="boss-preview-card" key={act}><strong>Lunar Act {index+1}</strong>{bosses.map((boss,bossIndex)=><a className="boss-preview-entry" key={`${boss.name}-${bossIndex}`} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl?<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>:<span className="boss-preview-icon-fallback" aria-hidden="true">?</span>}<span>{boss.name}</span></a>)}</div>;
+      return <div className="boss-preview-card" key={act}><strong>Arcana {index+1}</strong>{bosses.map((boss,bossIndex)=><a className="boss-preview-entry" key={`${boss.name}-${bossIndex}`} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl?<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>:<span className="boss-preview-icon-fallback" aria-hidden="true">?</span>}<span>{boss.name}</span></a>)}</div>;
     })}</div>}
   </div>;
 }

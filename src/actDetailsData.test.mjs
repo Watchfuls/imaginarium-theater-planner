@@ -83,8 +83,8 @@ test('Monolith recommendations stay shared when loading older per-choice drafts'
   for(const encounter of act.encounters){encounter.keyRecommendations=[{label:'Taunts'}];encounter.notableCharacters=act.notableCharacters;}
   delete act.keyRecommendations;delete act.notableCharacters;
   const merged=mergeActDetailsDraft(published,draft).seasons[29].Hard[4];
-  assert.deepEqual(merged.keyRecommendations,[{label:'Taunts'}]);
-  assert.equal(merged.notableCharacters.length,4);
+  assert.deepEqual(merged.keyRecommendations,[{label:'Taunts'},{label:'Freeze'}]);
+  assert.equal(merged.notableCharacters.length,5);
   for(const encounter of merged.encounters){assert.equal(encounter.keyRecommendations?.length??0,0);assert.equal(encounter.notableCharacters?.length??0,0);}
 });
 

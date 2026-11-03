@@ -338,6 +338,9 @@
           "keyRecommendations": [
             {
               "label": "Taunts"
+            },
+            {
+              "label": "Freeze"
             }
           ],
           "notableCharacters": [
@@ -372,6 +375,10 @@
                 "name": "Hunter's Advance",
                 "icon": "Alyosha_Burst.png"
               }
+            },
+            {
+              "name": "Qiqi",
+              "reason": "Elemental Skill: applies Cryo to nearby enemies. Pair with Hydro to Freeze attackers and help protect the monolith."
             }
           ]
         },
@@ -682,6 +689,9 @@
           "keyRecommendations": [
             {
               "label": "Taunts"
+            },
+            {
+              "label": "Freeze"
             }
           ],
           "notableCharacters": [
@@ -716,6 +726,10 @@
                 "name": "Hunter's Advance",
                 "icon": "Alyosha_Burst.png"
               }
+            },
+            {
+              "name": "Qiqi",
+              "reason": "Elemental Skill: applies Cryo to nearby enemies. Pair with Hydro to Freeze attackers and help protect the monolith."
             }
           ]
         },
@@ -940,6 +954,18 @@
               ],
               "notableCharacters": [
                 {
+                  "name": "Sigewinne",
+                  "reason": ""
+                },
+                {
+                  "name": "Sangonomiya Kokomi",
+                  "reason": ""
+                },
+                {
+                  "name": "Barbara",
+                  "reason": ""
+                },
+                {
                   "name": "Alyosha",
                   "reason": ""
                 },
@@ -950,6 +976,34 @@
                 {
                   "name": "Linnea",
                   "reason": ""
+                },
+                {
+                  "name": "Noelle",
+                  "reason": "Heals while attacking."
+                },
+                {
+                  "name": "Dori",
+                  "reason": ""
+                },
+                {
+                  "name": "Kuki Shinobu",
+                  "reason": ""
+                },
+                {
+                  "name": "Jahoda",
+                  "reason": ""
+                },
+                {
+                  "name": "Vodyanitsa",
+                  "reason": ""
+                },
+                {
+                  "name": "Xilonen",
+                  "reason": "Needs 2 Hydro/Electro/Cryo allies."
+                },
+                {
+                  "name": "Furina",
+                  "reason": "Healing mode (Pneuma)."
                 }
               ]
             }
@@ -1153,6 +1207,9 @@
           "keyRecommendations": [
             {
               "label": "Taunts"
+            },
+            {
+              "label": "Freeze"
             }
           ],
           "notableCharacters": [
@@ -1187,6 +1244,10 @@
                 "name": "Hunter's Advance",
                 "icon": "Alyosha_Burst.png"
               }
+            },
+            {
+              "name": "Qiqi",
+              "reason": "Elemental Skill: applies Cryo to nearby enemies. Pair with Hydro to Freeze attackers and help protect the monolith."
             }
           ]
         },
@@ -1522,6 +1583,18 @@
               ],
               "notableCharacters": [
                 {
+                  "name": "Sigewinne",
+                  "reason": ""
+                },
+                {
+                  "name": "Sangonomiya Kokomi",
+                  "reason": ""
+                },
+                {
+                  "name": "Barbara",
+                  "reason": ""
+                },
+                {
                   "name": "Alyosha",
                   "reason": ""
                 },
@@ -1532,6 +1605,34 @@
                 {
                   "name": "Linnea",
                   "reason": ""
+                },
+                {
+                  "name": "Noelle",
+                  "reason": "Heals while attacking."
+                },
+                {
+                  "name": "Dori",
+                  "reason": ""
+                },
+                {
+                  "name": "Kuki Shinobu",
+                  "reason": ""
+                },
+                {
+                  "name": "Jahoda",
+                  "reason": ""
+                },
+                {
+                  "name": "Vodyanitsa",
+                  "reason": ""
+                },
+                {
+                  "name": "Xilonen",
+                  "reason": "Needs 2 Hydro/Electro/Cryo allies."
+                },
+                {
+                  "name": "Furina",
+                  "reason": "Healing mode (Pneuma)."
                 }
               ]
             }
@@ -1735,6 +1836,9 @@
           "keyRecommendations": [
             {
               "label": "Taunts"
+            },
+            {
+              "label": "Freeze"
             }
           ],
           "notableCharacters": [
@@ -1769,6 +1873,10 @@
                 "name": "Hunter's Advance",
                 "icon": "Alyosha_Burst.png"
               }
+            },
+            {
+              "name": "Qiqi",
+              "reason": "Elemental Skill: applies Cryo to nearby enemies. Pair with Hydro to Freeze attackers and help protect the monolith."
             }
           ]
         },
@@ -2104,6 +2212,18 @@
               ],
               "notableCharacters": [
                 {
+                  "name": "Sigewinne",
+                  "reason": ""
+                },
+                {
+                  "name": "Sangonomiya Kokomi",
+                  "reason": ""
+                },
+                {
+                  "name": "Barbara",
+                  "reason": ""
+                },
+                {
                   "name": "Alyosha",
                   "reason": ""
                 },
@@ -2114,6 +2234,34 @@
                 {
                   "name": "Linnea",
                   "reason": ""
+                },
+                {
+                  "name": "Noelle",
+                  "reason": "Heals while attacking."
+                },
+                {
+                  "name": "Dori",
+                  "reason": ""
+                },
+                {
+                  "name": "Kuki Shinobu",
+                  "reason": ""
+                },
+                {
+                  "name": "Jahoda",
+                  "reason": ""
+                },
+                {
+                  "name": "Vodyanitsa",
+                  "reason": ""
+                },
+                {
+                  "name": "Xilonen",
+                  "reason": "Needs 2 Hydro/Electro/Cryo allies."
+                },
+                {
+                  "name": "Furina",
+                  "reason": "Healing mode (Pneuma)."
                 }
               ]
             }
@@ -2125,7 +2273,7 @@
           "notes": "",
           "encounters": [
             {
-              "name": "Arcanum Challenge 1 · Consecrated beasts",
+              "name": "Arcana Challenge 1 · Consecrated beasts",
               "enemyIds": [
                 "61002",
                 "61004",
@@ -2155,7 +2303,7 @@
           "notes": "",
           "encounters": [
             {
-              "name": "Arcanum Challenge 2 · Potapo’s Solidarity",
+              "name": "Arcana Challenge 2 · Potapo’s Solidarity",
               "enemyIds": [
                 "62610"
               ],

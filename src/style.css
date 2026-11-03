@@ -515,3 +515,26 @@ main>section>.sectionhead>div{min-width:0}
 .unallocated-panel{top:calc(var(--app-header-height,0px) + 12px);max-height:calc(100dvh - var(--app-header-height,0px) - 24px)}
 @media(max-width:1200px){.unallocated-panel{max-height:320px}}
 @media(max-width:900px){.chosen-section{max-height:none}}
+
+.planner-fixed-recommendations{max-width:420px}
+.planner-fixed-recommendations:empty{display:none}
+.planner-fixed-recommendations .planner-option-recommendations,.planner-boss-preview .planner-option-recommendations{justify-content:center}
+
+.planner-fixed-recommendations{display:flex;align-items:center;justify-content:center;gap:8px}
+.planner-recommendation-dropdown{position:relative;flex-shrink:0}
+.planner-recommendation-dropdown>summary{display:flex;align-items:center;gap:6px;min-height:36px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a;cursor:pointer;list-style:none;font-size:12px;white-space:nowrap}
+.planner-recommendation-dropdown>summary::-webkit-details-marker{display:none}
+.planner-recommendation-dropdown>summary .planner-option-recommendations{padding:0;flex-wrap:nowrap}
+.planner-recommendation-dropdown>summary:focus-visible{outline:2px solid #c7a4ff;outline-offset:2px}
+.planner-character-panel{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);z-index:40;width:min(300px,calc(100vw - 60px));max-height:320px;overflow:auto;padding:12px;border:1px solid #53607c;border-radius:9px;background:#151b2a;box-shadow:0 8px 24px #0008;text-align:left;font-size:12px;white-space:normal}
+.planner-character-panel>strong{display:block;margin-bottom:10px;color:#cbd2e2}
+.planner-character-recommendation{display:flex;align-items:flex-start;gap:9px;margin-top:9px}
+.planner-character-recommendation>img{flex-shrink:0;border-radius:5px;background:#293147}
+.planner-character-recommendation p{margin:3px 0 0;color:#a2abc2;font-size:11px;line-height:1.5}
+
+/* Match the existing separate portrait and recommendation controls. */
+.planner-boss-preview:has(>.planner-recommendation-dropdown),.planner-lunar-preview:has(>.planner-recommendation-dropdown){padding:0;border:0;background:transparent;gap:8px}
+.planner-boss-preview:has(>.planner-recommendation-dropdown)>.act-bosses,.planner-lunar-preview:has(>.planner-recommendation-dropdown)>.planner-encounter-icons{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a}
+.planner-recommendation-dropdown>summary{height:36px}
+.planner-recommendation-dropdown>summary .planner-option-recommendations{gap:0}
+@media(max-width:700px){.planner-lunar-preview{height:auto;flex-wrap:wrap}}

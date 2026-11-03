@@ -17,7 +17,7 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
       for(const [act,details] of Object.entries(acts)){
         const bundled=published.seasons[season]?.[mode]?.[act];
         const encounters=details.encounters.map(encounter=>{
-          const match=bundled?.encounters.find(candidate=>candidate.name===encounter.name||(
+          const match=bundled?.encounters.find(candidate=>candidate.name.replace('Arcanum Challenge','Arcana Challenge')===encounter.name.replace('Arcanum Challenge','Arcana Challenge')||(
             encounter.enemyIds?.length&&candidate.enemyIds?.length&&
             [...encounter.enemyIds].sort().join(',')===[...candidate.enemyIds].sort().join(',')
           ));
@@ -27,6 +27,7 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
             ? {...encounter,bountyEnemyIds:match.bountyEnemyIds}
             : encounter;
           if(match){
+            if(Number(act)>10&&merged.name.startsWith('Arcanum Challenge'))merged={...merged,name:match.name};
             if(season==='29'&&act==='9'&&match.name.startsWith('Elite Assault')&&match.bountyEnemyIds?.includes('40103')){
               const requirements=merged.requirements
                 .replace(/^Clear: defeat 3 bounty opponents within (?:2m|120 s)\.$/m,'Clear: defeat 3 bounty opponents within 1m 40s.')
@@ -61,7 +62,7 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
             if(season==='29'&&act==='11'&&/^(?:Current Alioth description: )?Geo bursts periodically damage the active character\.$/.test(merged.stageEffects??'')){
               merged={...merged,stageEffects:match.stageEffects};
             }
-            const legacy=(previousMechanics as Record<string,string[]>)[`${season}/${act}/${match.name}`]??[];
+            const legacy=(previousMechanics as Record<string,string[]>)[`${season}/${act}/${match.name.replace('Arcana Challenge','Arcanum Challenge')}`]??[];
             if(match.mechanics!==undefined&&(!merged.mechanics?.trim()||legacy.includes(merged.mechanics))){
               merged={...merged,mechanics:match.mechanics};
             }

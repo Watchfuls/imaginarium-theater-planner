@@ -439,7 +439,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     <div>
       <h3>Difficulty</h3>
       <DifficultySelect value={setup.difficulty} onChange={difficulty=>setSetup(current=>({...current,difficulty}))}/>
-      <p>{requirement.acts} acts{requirement.lunarActs?` + ${requirement.lunarActs} Lunar acts`:''} · at least {requirement.minimum}, up to {requirement.cap} characters · Level {requirement.minimumLevel}+</p>
+      <p>{requirement.acts} acts{requirement.lunarActs?` + ${requirement.lunarActs} Arcana Challenges`:''} · at least {requirement.minimum}, up to {requirement.cap} characters · Level {requirement.minimumLevel}+</p>
       <h3>Three featured elements</h3>
       <div className="chips featured-elements">{ELEMENTS.map(element=><button type="button" className={selectedElements.includes(element)?'selected':''} key={element} aria-pressed={selectedElements.includes(element)} onClick={()=>toggleElement(element)}><img src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt="" aria-hidden="true"/><span>{element}</span></button>)}</div>
       <p>{selectedElements.length}/3 selected</p>
@@ -509,9 +509,9 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     </section>
     <section className="assignment-only">
       <h3>Act Assignments</h3>
-      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Each character can be assigned to at most two acts. Lunar Arcanum Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10.</p>
+      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Each character can be assigned to at most two acts. Arcana Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10.</p>
       <div className="act-group"><h4>Acts</h4><div className="acts">{setup.difficulty==='Lunar'
-        ? <>{renderAct(1,'Act 1')}{renderAct(2,'Act 2')}{renderAct(3,'Act 3')}{renderAct(11,'Lunar Act 1')}{renderAct(4,'Act 4')}{renderAct(5,'Act 5')}{renderAct(6,'Act 6')}{renderAct(12,'Lunar Act 2')}{Array.from({length:4},(_,index)=>renderAct(index+7,`Act ${index+7}`))}</>
+        ? <>{renderAct(1,'Act 1')}{renderAct(2,'Act 2')}{renderAct(3,'Act 3')}{renderAct(11,'Arcana 1')}{renderAct(4,'Act 4')}{renderAct(5,'Act 5')}{renderAct(6,'Act 6')}{renderAct(12,'Arcana 2')}{Array.from({length:4},(_,index)=>renderAct(index+7,`Act ${index+7}`))}</>
         : Array.from({length:requirement.acts},(_,index)=>renderAct(index+1,`Act ${index+1}`))}</div></div>
     </section>
     <aside className="unallocated-panel" aria-labelledby="unallocated-heading">
