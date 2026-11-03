@@ -471,9 +471,10 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   <p>Select your cast, then assign up to four characters to each act. Changes are saved locally.</p>
   <div className="planner-character-controls">
   <div className="borrowed-control">
-    <div><h3>Supporting Character</h3><p>Choose any character allowed by this rotation. Supporting characters count toward the cast cap, but not the minimum requirement.</p></div>
+    <div><h3>Supporting Character</h3><p>Choose any character allowed by this rotation. Supporting characters count toward the cast cap, but not the minimum requirement.</p>
+      {chosen.length>=requirement.cap&&!borrowedCharacter&&<p role="status">Your cast is full. Remove a character to add someone new as Supporting, or choose a Supporting character already in your cast.</p>}
+    </div>
     <div className="borrowed-field"><span>Supporting character</span><BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} canSelect={name=>canBorrowCharacter(chosen,borrowedCharacter,name,requirement.cap)} onSelect={setBorrowedCharacter} open={openCharacterPicker==='borrowed'} onOpenChange={open=>setOpenCharacterPicker(open?'borrowed':'')}/></div>
-    {chosen.length>=requirement.cap&&!borrowedCharacter&&<p role="status">Your cast is full. Remove a character to add someone new as Supporting, or choose a Supporting character already in your cast.</p>}
   </div>
   <div className="traveler-control">
     <label className="traveler-element-control"><span>Traveler element</span>
