@@ -67,13 +67,14 @@ export function ActAssignmentPicker({act,slot,characters,chosenNames,selected,bo
     options[next].focus();
     options[next].scrollIntoView({block:'nearest'});
   }}>
-    <button className="act-picker-trigger" type="button" aria-label={`Act ${act}, slot ${slot+1}`} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>onOpenChange(!open)}>
-      {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span className="act-picker-identity"><span className="act-picker-name">{selectedCharacter.name}</span>{characterLabel(selectedCharacter.name)&&<small>{characterLabel(selectedCharacter.name)}</small>}</span><ElementBadge element={selectedCharacter.element}/></>:<span>+ Slot {slot+1}</span>}
+    <button className="act-picker-trigger" type="button" aria-label={`Act ${act}, slot ${slot+1}${selectedCharacter?`: ${selectedCharacter.name}`:''}`} title={selectedCharacter?.name} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>onOpenChange(!open)}>
+      {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span className="act-picker-identity"><span className="act-picker-name">{selectedCharacter.name}</span>{characterLabel(selectedCharacter.name)&&<small>{characterLabel(selectedCharacter.name)}</small>}</span><ElementBadge element={selectedCharacter.element}/></>:<span className="act-empty-label"><span>+ Slot </span>{slot+1}</span>}
       <span className="borrowed-chevron" aria-hidden="true">▾</span>
     </button>
     {open&&<div className="act-picker-menu">
       <input autoFocus className="act-picker-search" type="search" aria-label={`Search characters for Act ${act}, slot ${slot+1}`} placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
       <div className="act-picker-options" role="listbox" aria-label={`Act ${act}, slot ${slot+1} characters`}>
+      <div className="act-picker-options-content">
       <button type="button" role="option" aria-selected={!selected} className="act-picker-option clear-act-option" onClick={()=>{onSelect('');onOpenChange(false);}}>Clear slot</button>
       {availableCharacters.map(character=><button type="button" role="option" aria-selected={character.name===selected} className="act-picker-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
         <CharacterIcon name={character.name}/><span className="act-picker-identity"><span className="act-picker-name">{character.name}</span>{characterLabel(character.name)&&<small>{characterLabel(character.name)}</small>}</span><ElementBadge element={character.element}/>
@@ -85,6 +86,7 @@ export function ActAssignmentPicker({act,slot,characters,chosenNames,selected,bo
         <CharacterIcon name={character.name}/><span className="act-picker-identity"><span className="act-picker-name">{character.name}</span>{characterLabel(character.name)&&<small>{characterLabel(character.name)}</small>}</span><ElementBadge element={character.element}/>
       </button>)}</>}
       {matchingCharacters.length===0&&<p className="selection-empty">No characters match your search.</p>}
+      </div>
       </div>
     </div>}
     {selected&&<button className="act-clear-button" type="button" aria-label={`Clear Act ${act}, slot ${slot+1}`} title="Clear slot" onClick={()=>onSelect('')}>×</button>}

@@ -263,7 +263,7 @@ try{
   await check('Act Details keeps only compact navigation visible while scrolling',async()=>{
     for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){
       await page.setViewportSize(viewport);
-      await page.evaluate(()=>window.scrollTo(0,800));
+      await page.evaluate(async()=>{window.scrollTo(0,800);await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
       const navigation=await page.locator('.app-navigation').boundingBox();
       const header=await page.locator('.app-header').boundingBox();
       assert.ok(Math.abs(navigation.y)<1,'navigation stays at the top');
@@ -306,10 +306,11 @@ try{
       if(label==='Theater Planner'){
         const selected=page.locator('.act-picker-trigger').filter({has:page.locator('.act-picker-name')}).first();
         assert.equal(await selected.locator(':scope > .element').isVisible(),false,'compact slots hide the element badge');
-        assert.ok((await selected.locator('.act-picker-name').boundingBox()).width>=30,'compact slots leave room for character names');
+        assert.equal(await selected.locator('.character-icon').isVisible(),true,'compact slots retain character portraits');
+        assert.match(await selected.getAttribute('aria-label'),/: .+/,'portrait-only slots expose the character name to assistive technology');
       }
       const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll('main *')].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,15).map(el=>({tag:el.tagName,class:el.className,right:el.getBoundingClientRect().right,text:el.textContent.slice(0,60)}))}));
-      await page.evaluate(()=>window.scrollTo(0,800));
+      await page.evaluate(async()=>{window.scrollTo(0,800);await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
       const navigation=await page.locator('.app-navigation').boundingBox();
       assert.ok(Math.abs(navigation.y)<1,'navigation stays pinned on every tab');
       assert.ok(navigation.height<100,'navigation stays compact on every tab');
@@ -317,6 +318,61 @@ try{
       assert.ok(overflow.scroll<=overflow.width+1,'horizontal page overflow');
     });
   }
+  await check('all tabs and planner controls fit standard mobile, tablet, and desktop resolutions',async()=>{
+    await nav('Theater Planner').click();
+    for(const [width,height] of [[320,568],[360,800],[375,667],[390,844],[412,915],[430,932],[667,375],[768,1024],[1024,768],[1280,720],[1366,768],[1440,900],[1920,1080],[2560,1440]]){
+      await page.setViewportSize({width,height});
+      for(const label of ['Your Characters','Challenge Setup','Act Details','Video Guide','Theater Planner']){
+        await nav(label).click();
+        await page.getByRole('heading',{name:label,exact:true}).waitFor();
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`${label} overflows at ${width}x${height}`);
+      }
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`page overflow at ${width}`);
+      const escaping=await page.locator('.act-team-tools').evaluateAll(elements=>elements.some(element=>element.getBoundingClientRect().right>element.closest('.act').getBoundingClientRect().right+1));
+      assert.equal(escaping,false,`act controls spill outside cards at ${width}`);
+      for(const heading of await page.locator('.act-heading').all()){
+        const title=await heading.locator('.act-heading-content>strong').boundingBox();
+        const icon=await heading.locator('.act-team-tools .copy-team').boundingBox();
+        assert.ok(Math.abs(title.y+title.height/2-icon.y-icon.height/2)<=1,`act title and toolbar have different vertical centers at ${width}`);
+      }
+      const list=await page.locator('.unallocated-list').evaluate(element=>element.scrollWidth<=element.clientWidth+1);
+      assert.ok(list,`unallocated list clips horizontally at ${width}`);
+      assert.ok(await page.locator('.unallocated-list').evaluate(element=>{
+        const right=element.getBoundingClientRect().left+element.clientWidth;
+        return [...element.children].every(child=>child.getBoundingClientRect().right<=right-6);
+      }),`unallocated rows need space before the scrollbar at ${width}`);
+      for(const index of [0,1]){
+        await page.locator('.act-picker-trigger').nth(index).click();
+        const menu=await page.locator('.act-picker-menu').boundingBox();
+        assert.ok(menu.x>=0&&menu.x+menu.width<=width,`slot menu leaves viewport at ${width}`);
+        assert.ok(await page.locator('.act-picker-options').evaluate(element=>{
+          const right=element.getBoundingClientRect().left+element.clientWidth;
+          return element.scrollWidth<=element.clientWidth+1&&[...element.querySelectorAll('.act-picker-option')].every(child=>child.getBoundingClientRect().right<=right-4&&child.scrollWidth<=child.clientWidth+1);
+        }),`character choices are clipped by their menu at ${width}`);
+        await page.keyboard.press('Escape');
+      }
+      const encounter=page.locator('.planner-choice-dropdown summary').first();
+      if(await encounter.count()){
+        await encounter.click();
+        const menu=page.locator('.planner-choice-dropdown[open] .planner-encounter-options');
+        assert.ok(await menu.evaluate(element=>{
+          const right=element.getBoundingClientRect().left+element.clientWidth;
+          return element.scrollWidth<=element.clientWidth+1&&[...element.children].every(child=>child.getBoundingClientRect().right<=right-6&&child.scrollWidth<=child.clientWidth+1);
+        }),`enemy choices are clipped by their menu at ${width}`);
+        await page.keyboard.press('Escape');
+      }
+      for(const preview of await page.locator('.act-heading>.planner-encounter-picker').all()){
+        const heading=await preview.locator('..').boundingBox();
+        const bounds=await preview.boundingBox();
+        assert.ok(Math.abs(bounds.x+bounds.width/2-heading.x-heading.width/2)<2,`encounter preview is not centered at ${width}`);
+      }
+      if([375,768,1366,1920].includes(width)){
+        await page.locator('.assignment-only .act').first().scrollIntoViewIfNeeded();
+        await page.screenshot({path:join(tmpdir(),`itp-final-${width}x${height}.png`)});
+      }
+      console.log(`PASS resolution ${width}x${height}: all five tabs and planner dropdowns`);
+    }
+  });
   await page.screenshot({path:join(tmpdir(),'itp-browser-check-mobile.png'),fullPage:true});
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS no uncaught app errors');
