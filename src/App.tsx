@@ -428,7 +428,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
       {availableSeasons.map(season=><option key={season.id} value={season.season}>{seasonStatus(season,seasonTime)} · Season {season.season} ({season.id})</option>)}
     </select>
     {selectedSeason&&<p>
-      {new Date(selectedSeason.startsAt).toLocaleDateString()} – {new Date(selectedSeason.endsAt).toLocaleDateString()} · <a href={selectedSeason.sourceUrl} target="_blank" rel="noreferrer">Fandom source</a>
+      {new Date(selectedSeason.startsAt).toLocaleDateString()} – {new Date(selectedSeason.endsAt).toLocaleDateString()} {selectedSeason.sourceUrl&&<>· <a href={selectedSeason.sourceUrl} target="_blank" rel="noreferrer">Fandom source</a></>}
       {theaterLineups.generatedAt&&<> · source updated {new Date(theaterLineups.generatedAt).toLocaleDateString()}</>}
     </p>}
     {selectedSeason&&selectedSeason.charactersMissingFromRoster.length>0&&<p className="lineup-warning">Not in the local character roster: {selectedSeason.charactersMissingFromRoster.join(', ')}</p>}
