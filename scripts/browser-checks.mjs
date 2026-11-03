@@ -292,7 +292,7 @@ try{
       const shared=page.locator(`#act-details-act-${number} .act-shared-stage-effect`);
       assert.equal(await shared.count(),1);
       assert.equal(await shared.isVisible(),true);
-      assert.match(await shared.textContent(),new RegExp(`All Choices.*Treacherous Thunder: Thunder starts roughly ${number===1?10:5}s after the star time limit`));
+      assert.match(await shared.textContent(),/All Choices.*Treacherous Thunder: Thunder starts roughly 5–15s after the star time limit/);
       assert.match(await shared.textContent(),/escalates about every 15s up to Level V/);
       const choices=page.locator(`#act-details-act-${number} .act-encounter:not(.is-elite-assault)`);
       assert.equal(await choices.count(),2);
