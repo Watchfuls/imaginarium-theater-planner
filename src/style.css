@@ -441,6 +441,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .video-guide a:focus-visible{outline:2px solid #bca5f4;outline-offset:3px}
 main>footer{margin-top:24px;padding:0 4px 12px;font-size:13px;line-height:1.6}
 main>footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+main>footer a{color:#cbb5ff;text-underline-offset:3px}
 .feedback-dialog{width:min(640px,calc(100% - 24px));max-width:none;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;padding:0;border:1px solid #39435a;border-radius:15px;background:#151b2a;color:#e9ecf6}
 .feedback-dialog::backdrop{background:#000a}
 .feedback-content{padding:16px;height:min(900px,calc(100dvh - 28px));display:flex;flex-direction:column}

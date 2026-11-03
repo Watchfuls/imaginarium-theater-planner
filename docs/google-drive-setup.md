@@ -6,6 +6,7 @@ The planner supports manual Save to Drive and Load from Drive using the same com
 
 1. Create or select a project in Google Cloud Console and enable the **Google Drive API**.
 2. Configure **Google Auth Platform** branding, audience, and contact details. For initial testing, keep the audience in testing and add the Google accounts you will use as test users.
+   For publishing, set the homepage to `https://watchfuls.github.io/imaginarium-theater-planner/` and privacy policy to `https://watchfuls.github.io/imaginarium-theater-planner/privacy.html` after deploying the privacy page. Both pages are publicly accessible without sign-in. Complete the support/contact email fields, save Branding, then return to Audience to publish.
 3. Add the scope `https://www.googleapis.com/auth/drive.appdata` under Data Access. No email, profile, or full Drive scope is needed.
 4. Create an OAuth client of type **Web application**. Add authorized JavaScript origins:
    - `http://localhost:5173` (or your actual local Vite port)

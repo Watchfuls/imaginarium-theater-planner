@@ -7,6 +7,9 @@ export default defineConfig({
   publicDir: resolve(__dirname, '../genshin-shared'),
   build: {
     copyPublicDir: false,
+    rollupOptions: {
+      input: {main:resolve(__dirname,'index.html'),privacy:resolve(__dirname,'privacy.html')},
+    },
   },
   plugins: [{
     name: 'copy-shared-icons',
