@@ -1,0 +1,11 @@
+[
+  {
+    "id": "2026-12-01",
+    "season": 30,
+    "startsAt": "2026-12-01T04:00:00.000Z",
+    "endsAt": "2027-01-01T03:59:59.000Z",
+    "elements": ["Pyro", "Hydro", "Geo"],
+    "openingCharacters": ["Arlecchino", "Bennett", "Furina", "Xingqiu", "Navia", "Illuga"],
+    "specialGuests": ["Chasca", "Varesa", "Kinich", "Iansan"]
+  }
+]

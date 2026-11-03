@@ -1,4 +1,5 @@
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
+import { mergeLineupOverrides } from './theater-lineup-overrides.mjs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -332,9 +333,11 @@ const today = new Date(Date.UTC(NOW.getUTCFullYear(), NOW.getUTCMonth(), NOW.get
 const latestPageIndex = seasonPages.findLastIndex(({ start }) => start <= today);
 const selectedPages = seasonPages.slice(Math.max(0, latestPageIndex - 1), latestPageIndex + 2);
 const pageContents = await getPageContents(selectedPages.map(({ title }) => title));
-const parsedSeasons = selectedPages
+const fetchedSeasons = selectedPages
   .map(({ title }) => parseSeason(pageContents.get(title)))
   .filter(Boolean);
+const overrides = JSON.parse(await readFile(new URL('../src/data/theater-lineup-overrides.json', import.meta.url), 'utf8'));
+const parsedSeasons = mergeLineupOverrides(fetchedSeasons, overrides);
 const current = parsedSeasons.find((season) => new Date(season.startsAt) <= NOW && new Date(season.endsAt) >= NOW) ?? null;
 if (!current) {
   throw new Error('The Fandom API did not provide a complete lineup for the active Theater season.');
