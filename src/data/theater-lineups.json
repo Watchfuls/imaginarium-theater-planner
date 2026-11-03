@@ -1,6 +1,6 @@
 {
   "source": "Fandom MediaWiki Action API (community-maintained season templates)",
-  "generatedAt": "2026-10-22T10:08:54Z",
+  "generatedAt": "2026-11-03T06:57:07Z",
   "current": {
     "id": "2026-11-01",
     "season": 29,
@@ -25,7 +25,44 @@
       "Vesna",
       "Jahoda"
     ],
-    "bossStages": [],
+    "bossStages": [
+      {
+        "act": 3,
+        "bosses": [
+          {
+            "name": "Jadeplume Terrorshroom",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Jadeplume_Terrorshroom_Icon.png/revision/latest?cb=20220824024707"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "bosses": [
+          {
+            "name": "Lord of the Hidden Depths: Whisperer of Nightmares",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/5a/Lord_of_the_Hidden_Depths_Whisperer_of_Nightmares_Icon.png/revision/latest?cb=20260114092748"
+          }
+        ]
+      },
+      {
+        "act": 8,
+        "bosses": [
+          {
+            "name": "Battle-Hardened Samachurl",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/21/Churldric_Icon.png/revision/latest?cb=20260507130634"
+          }
+        ]
+      },
+      {
+        "act": 10,
+        "bosses": [
+          {
+            "name": "Radiant Moonfly",
+            "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f3/Radiant_Moonfly_Icon.png/revision/latest?cb=20250910024517"
+          }
+        ]
+      }
+    ],
     "sourceUrl": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater%2FSeasons%2F2026-11-01"
   },
   "next": null,
