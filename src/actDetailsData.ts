@@ -27,6 +27,31 @@ export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsDa
             ? {...encounter,bountyEnemyIds:match.bountyEnemyIds}
             : encounter;
           if(match){
+            if(season==='29'&&act==='9'&&match.name.startsWith('Elite Assault')&&match.bountyEnemyIds?.includes('40103')){
+              const requirements=merged.requirements
+                .replace(/^Clear: defeat 3 bounty opponents within (?:2m|120 s)\.$/m,'Clear: defeat 3 bounty opponents within 1m 40s.')
+                .replace(/^Star Challenge: complete the bounty objective within (?:1m 20s|80 s)\.$/m,'Star Challenge: complete the bounty objective within 1m 5s.');
+              const oldEffect='Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside.';
+              const stageEffects=(merged.stageEffects??'').replace(/^Inferred stage effects:\s*/,'').trim()===oldEffect?match.stageEffects:merged.stageEffects;
+              merged={...merged,requirements,stageEffects};
+            }
+            if(season==='29'&&(act==='1'||act==='2')&&match.name.startsWith('Elite Assault')){
+              const previousEffects=(merged.stageEffects??'').replace(/^Inferred stage effects:\s*/,'').trim();
+              const oldBombEffect='Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.';
+              if(!previousEffects||(act==='2'&&previousEffects===oldBombEffect)){
+                merged={...merged,stageEffects:match.stageEffects};
+              }
+            }
+            if(season==='29'&&act==='1'&&match.enemyIds?.includes('60401')){
+              const currentNote="The Geovishap's Pyro transformation adds 20% Pyro RES.";
+              let resistances=merged.resistances;
+              for(const oldNote of [
+                "The Geovishap's transformations adds 20% RES to the respective element.",
+                'Geovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.',
+                'Geovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.',
+              ])resistances=resistances.replace(oldNote,currentNote);
+              merged={...merged,resistances,enemies:merged.enemies.replace('Wave 1: 1 Geovishap.','Wave 1: 1 Geovishap (Pyro).')};
+            }
             if(encounter.enemyIds?.includes('10308')&&merged.resistances==='Completed soup greatly raises resistance; the amount is unverified.'){
               merged={...merged,resistances:match.resistances};
             }

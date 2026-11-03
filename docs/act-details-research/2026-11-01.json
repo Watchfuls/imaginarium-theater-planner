@@ -68,12 +68,12 @@
             {
               "name": "Normal reference · Vishap pair",
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear (inferred applicability to this difficulty; graphic depicts the higher-level profile): defeat all opponents.\nStar Challenge (inferred applicability to this difficulty; graphic depicts the higher-level profile): finish within 85 s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
               "stageEffects": "Inferred stage effects: Treacherous Thunder periodically strikes characters.",
-              "status": "Season enemy types: Alioth. Easy mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile.",
+              "status": "Season enemy types: Alioth. Easy mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile. Update 2026-11-03: current Fandom confirms this exact act and battle. Pyro variant is also user-authored in the IT 7.2 guide and wave notes; prior infusion uncertainty is superseded.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -106,6 +106,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -126,8 +130,8 @@
               "requirements": "Clear (inferred difficulty mapping): defeat all opponents.\nStar Challenge (inferred difficulty mapping): finish within 75 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "",
-              "status": "Current enemy types: Alioth. Easy mapping and requirements are inferred from the same Act 1 roster and supplied guide; no difficulty restriction excludes Elite Assault.",
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters.",
+              "status": "Current enemy types: Alioth. Easy mapping and requirements are inferred from the same Act 1 roster and supplied guide; no difficulty restriction excludes Elite Assault. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -184,6 +188,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -319,8 +327,8 @@
               "requirements": "Clear (inferred applicability to this difficulty; graphic depicts the higher-level profile): defeat all opponents.\nStar Challenge (inferred applicability to this difficulty; graphic depicts the higher-level profile): finish within 65 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Inferred from July 2026 Act 2: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.",
-              "status": "Season enemy types: Alioth. Easy mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile.",
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks.",
+              "status": "Season enemy types: Alioth. Easy mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -381,6 +389,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky"
+                },
+                {
+                  "label": "Current Season 29 Act 2 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_2"
                 }
               ],
               "inference": {
@@ -514,12 +526,12 @@
             {
               "name": "Normal reference · Vishap pair",
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear (inferred applicability to this difficulty; graphic depicts the higher-level profile): defeat all opponents.\nStar Challenge (inferred applicability to this difficulty; graphic depicts the higher-level profile): finish within 85 s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
               "stageEffects": "Inferred stage effects: Treacherous Thunder periodically strikes characters.",
-              "status": "Season enemy types: Alioth. Normal mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile.",
+              "status": "Season enemy types: Alioth. Normal mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile. Update 2026-11-03: current Fandom confirms this exact act and battle. Pyro variant is also user-authored in the IT 7.2 guide and wave notes; prior infusion uncertainty is superseded.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -552,6 +564,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -572,8 +588,8 @@
               "requirements": "Clear (inferred difficulty mapping): defeat all opponents.\nStar Challenge (inferred difficulty mapping): finish within 75 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "",
-              "status": "Current enemy types: Alioth. Normal mapping and requirements are inferred from the same Act 1 roster and supplied guide; no difficulty restriction excludes Elite Assault.",
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters.",
+              "status": "Current enemy types: Alioth. Normal mapping and requirements are inferred from the same Act 1 roster and supplied guide; no difficulty restriction excludes Elite Assault. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -630,6 +646,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -765,8 +785,8 @@
               "requirements": "Clear (inferred applicability to this difficulty; graphic depicts the higher-level profile): defeat all opponents.\nStar Challenge (inferred applicability to this difficulty; graphic depicts the higher-level profile): finish within 65 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Inferred from July 2026 Act 2: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.",
-              "status": "Season enemy types: Alioth. Normal mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile.",
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks.",
+              "status": "Season enemy types: Alioth. Normal mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -827,6 +847,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky"
+                },
+                {
+                  "label": "Current Season 29 Act 2 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_2"
                 }
               ],
               "inference": {
@@ -1532,12 +1556,12 @@
             {
               "name": "Normal reference · Vishap pair",
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear (inferred applicability to this difficulty; graphic depicts the higher-level profile): defeat all opponents.\nStar Challenge (inferred applicability to this difficulty; graphic depicts the higher-level profile): finish within 85 s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
               "stageEffects": "Inferred stage effects: Treacherous Thunder periodically strikes characters.",
-              "status": "Season enemy types: Alioth. Hard mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile.",
+              "status": "Season enemy types: Alioth. Hard mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile. Update 2026-11-03: current Fandom confirms this exact act and battle. Pyro variant is also user-authored in the IT 7.2 guide and wave notes; prior infusion uncertainty is superseded.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -1570,6 +1594,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -1590,8 +1618,8 @@
               "requirements": "Clear (inferred difficulty mapping): defeat all opponents.\nStar Challenge (inferred difficulty mapping): finish within 75 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "",
-              "status": "Current enemy types: Alioth. Hard mapping and requirements are inferred from the same Act 1 roster and supplied guide; no difficulty restriction excludes Elite Assault.",
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters.",
+              "status": "Current enemy types: Alioth. Hard mapping and requirements are inferred from the same Act 1 roster and supplied guide; no difficulty restriction excludes Elite Assault. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -1648,6 +1676,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -1783,8 +1815,8 @@
               "requirements": "Clear (inferred applicability to this difficulty; graphic depicts the higher-level profile): defeat all opponents.\nStar Challenge (inferred applicability to this difficulty; graphic depicts the higher-level profile): finish within 65 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Inferred from July 2026 Act 2: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.",
-              "status": "Season enemy types: Alioth. Hard mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile.",
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks.",
+              "status": "Season enemy types: Alioth. Hard mapping and requirements are inferred from same-act references; the supplied graphic depicts the higher-level profile. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -1845,6 +1877,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky"
+                },
+                {
+                  "label": "Current Season 29 Act 2 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_2"
                 }
               ],
               "inference": {
@@ -2805,12 +2841,12 @@
             {
               "name": "Normal reference · Vishap pair",
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear (graphic-sourced): defeat all opponents.\nStar Challenge (graphic-sourced): finish within 85 s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
               "stageEffects": "Inferred stage effects: Treacherous Thunder periodically strikes characters.",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences. Update 2026-11-03: current Fandom confirms this exact act and battle. Pyro variant is also user-authored in the IT 7.2 guide and wave notes; prior infusion uncertainty is superseded.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -2843,6 +2879,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -2863,8 +2903,8 @@
               "requirements": "Clear (graphic-sourced): defeat all opponents.\nStar Challenge (graphic-sourced): finish within 75 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters.",
+              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -2921,6 +2961,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -3056,8 +3100,8 @@
               "requirements": "Clear (graphic-sourced): defeat all opponents.\nStar Challenge (graphic-sourced): finish within 65 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Inferred from July 2026 Act 2: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act2.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks.",
+              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act2.jpg. Stage effects not shown in the graphic remain historical inferences. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -3118,6 +3162,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky"
+                },
+                {
+                  "label": "Current Season 29 Act 2 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_2"
                 }
               ],
               "inference": {
@@ -4177,11 +4225,11 @@
               "name": "Elite Assault bounty reference · Ruin machines",
               "enemies": "Current enemy types (Alioth:\n• Ruin Grader\n• Ruin Guard\n• Ruin Scout\n• Ruin Destroyer\n• Ruin Defender\n• Ruin Cruiser\n\nActive enemies in the graphic: 1.",
               "resistances": "Ruin Grader: Physical 70%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Guard: Physical 70%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Scout: Physical 50%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Destroyer: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Defender: Physical 50%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Cruiser: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.",
-              "requirements": "Clear (graphic-sourced): defeat 3 bounty opponents within 120 s.\nStar Challenge (graphic-sourced): complete the bounty objective within 80 s.\nActive enemies (graphic-sourced): 1.",
+              "requirements": "Clear (user-provided in-game countdown and elapsed-time observation): defeat 3 bounty opponents within 100 s.\nStar Challenge (user-provided in-game screenshot): complete the bounty objective within 65 s.\nActive enemies (graphic-sourced): 1.",
               "notes": "",
               "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
-              "stageEffects": "Inferred stage effects: Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside. ",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act9.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy?s Duel Zone and inflicts damage every 2s outside.",
+              "status": "Current enemy types: Alioth. User-provided in-game evidence, 2026-11-03: a 65-second star target; 40% Duel Zone damage bonus; outside damage every 2 seconds; 1:38 countdown remaining at two seconds elapsed, establishing a 100-second initial clear timer. This supersedes the supplied Act9.jpg graphic's 120/80 timings and agrees with current Fandom revision 2200747. Screenshot difficulty was not stated; applying to both normal Visionary/Lunar Act 9 uses existing shared-act rules evidence. The graphic-sourced three-bounty quota and one active bounty remain unchanged.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -4242,11 +4290,15 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Ruin_Cruiser"
+                },
+                {
+                  "label": "Current Fandom Season 29 Act 9, revision 2200747; star/effects corroboration, clear-time conflict",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_9"
                 }
               ],
               "inference": {
                 "confidence": "high",
-                "basis": "The supplied Act9.jpg directly states the recorded counts or targets for this act. This is graphic-sourced evidence, not independent official verification."
+                "basis": "Current user-provided in-game evidence supersedes the old graphic: clear 100 seconds (98 remaining plus reported 2 elapsed), star 65 seconds directly visible, Duel Zone bonus 40% and outside damage interval 2 seconds directly visible. Fandom revision 2200747 corroborates these values. Shared normal-act mapping supplies Visionary/Lunar applicability."
               },
               "graphicSources": [
                 "Act9.jpg"
@@ -4392,12 +4444,12 @@
             {
               "name": "Normal reference · Vishap pair",
               "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nGeovishap conversion adds 20 percentage points of resistance to its absorbed element; the current infusion is unverified.",
+              "resistances": "Geovishap: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo 10%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%; Pyro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear (graphic-sourced): defeat all opponents.\nStar Challenge (graphic-sourced): finish within 85 s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
               "stageEffects": "Inferred stage effects: Treacherous Thunder periodically strikes characters.",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences. Update 2026-11-03: current Fandom confirms this exact act and battle. Pyro variant is also user-authored in the IT 7.2 guide and wave notes; prior infusion uncertainty is superseded.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -4430,6 +4482,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Primordial_Bathysmal_Vishap"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -4450,8 +4506,8 @@
               "requirements": "Clear (graphic-sourced): defeat all opponents.\nStar Challenge (graphic-sourced): finish within 75 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters.",
+              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act1.jpg. Stage effects not shown in the graphic remain historical inferences. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -4508,6 +4564,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Iktomisaurus_Warrior%3A_Cryocrystal_Cannon"
+                },
+                {
+                  "label": "Current Season 29 Act 1 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_1"
                 }
               ],
               "inference": {
@@ -4643,8 +4703,8 @@
               "requirements": "Clear (graphic-sourced): defeat all opponents.\nStar Challenge (graphic-sourced): finish within 65 s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Inferred from July 2026 Act 2: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act2.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks.",
+              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act2.jpg. Stage effects not shown in the graphic remain historical inferences. Update 2026-11-03: current Fandom confirms this exact act and battle. Stage effects directly verified from the current-season battle table.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -4705,6 +4765,10 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Qucusaurus_Warrior%3A_Blazing_Sky"
+                },
+                {
+                  "label": "Current Season 29 Act 2 verification, revision 2200747 (2026-11-03)",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_2"
                 }
               ],
               "inference": {
@@ -5764,11 +5828,11 @@
               "name": "Elite Assault bounty reference · Ruin machines",
               "enemies": "Current enemy types (Alioth:\n• Ruin Grader\n• Ruin Guard\n• Ruin Scout\n• Ruin Destroyer\n• Ruin Defender\n• Ruin Cruiser\n\nActive enemies in the graphic: 1.",
               "resistances": "Ruin Grader: Physical 70%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Guard: Physical 70%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Scout: Physical 50%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Destroyer: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Defender: Physical 50%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.\nRuin Cruiser: Physical 30%; Pyro, Hydro, Electro, Cryo, Dendro, Anemo, Geo 10%.",
-              "requirements": "Clear (graphic-sourced): defeat 3 bounty opponents within 120 s.\nStar Challenge (graphic-sourced): complete the bounty objective within 80 s.\nActive enemies (graphic-sourced): 1.",
+              "requirements": "Clear (user-provided in-game countdown and elapsed-time observation): defeat 3 bounty opponents within 100 s.\nStar Challenge (user-provided in-game screenshot): complete the bounty objective within 65 s.\nActive enemies (graphic-sourced): 1.",
               "notes": "",
               "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice to paralyze it (duration unconfirmed).\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
-              "stageEffects": "Inferred stage effects: Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside. ",
-              "status": "Current enemy types: Alioth. Objectives and printed counts/timings: provided Act9.jpg. Stage effects not shown in the graphic remain historical inferences.",
+              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy?s Duel Zone and inflicts damage every 2s outside.",
+              "status": "Current enemy types: Alioth. User-provided in-game evidence, 2026-11-03: a 65-second star target; 40% Duel Zone damage bonus; outside damage every 2 seconds; 1:38 countdown remaining at two seconds elapsed, establishing a 100-second initial clear timer. This supersedes the supplied Act9.jpg graphic's 120/80 timings and agrees with current Fandom revision 2200747. Screenshot difficulty was not stated; applying to both normal Visionary/Lunar Act 9 uses existing shared-act rules evidence. The graphic-sourced three-bounty quota and one active bounty remain unchanged.",
               "sources": [
                 {
                   "label": "Alioth · Season 29 lineup",
@@ -5829,11 +5893,15 @@
                 {
                   "label": "Enemy mechanics cross-check (2026-11-02)",
                   "url": "https://genshin-impact.fandom.com/wiki/Ruin_Cruiser"
+                },
+                {
+                  "label": "Current Fandom Season 29 Act 9, revision 2200747; star/effects corroboration, clear-time conflict",
+                  "url": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/2026-11-01?oldid=2200747#Act_9"
                 }
               ],
               "inference": {
                 "confidence": "high",
-                "basis": "The supplied Act9.jpg directly states the recorded counts or targets for this act. This is graphic-sourced evidence, not independent official verification."
+                "basis": "Current user-provided in-game evidence supersedes the old graphic: clear 100 seconds (98 remaining plus reported 2 elapsed), star 65 seconds directly visible, Duel Zone bonus 40% and outside damage interval 2 seconds directly visible. Fandom revision 2200747 corroborates these values. Shared normal-act mapping supplies Visionary/Lunar applicability."
               },
               "graphicSources": [
                 "Act9.jpg"

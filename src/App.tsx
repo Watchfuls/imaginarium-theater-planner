@@ -151,7 +151,7 @@ const plannerCharacters=CHARACTERS.filter(character=>rosterCandidateNames.has(ch
 const chosenForRequirement=chosen.filter(name=>name!==borrowedCharacter).length;
 const castStatus=chosenForRequirement<requirement.minimum?'below-minimum':chosen.length<requirement.cap?'minimum-met':'full-cast';
 const castMessage=chosenForRequirement<requirement.minimum
-  ?`Select ${requirement.minimum-chosenForRequirement} more non-borrowed characters to meet the ${setup.difficulty} entry minimum.`
+  ?`Select ${requirement.minimum-chosenForRequirement} more non-supporting characters to meet the ${setup.difficulty} entry minimum.`
   :chosen.length<requirement.cap
     ?`Entry minimum met. You can select ${requirement.cap-chosen.length} more characters for additional blessing benefits.`
     :'Full cast selected for the maximum roster-size blessing benefits.';
@@ -316,7 +316,7 @@ const renderPlannerCharacter=(character:Character)=>{
   const remainingUses=Math.max(0,2-usedActs);
   const exhausted=usedActs>=2;
   const disabled=!canChoose||full||travelerConflict;
-  return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' borrowed':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top">{isChosen&&<span className="chosen-number" aria-label={`Chosen character ${chosenNumber}`} title={`Chosen character ${chosenNumber}`}>{chosenNumber}</span>}<CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Borrowed':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
+  return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' supporting':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top">{isChosen&&<span className="chosen-number" aria-label={`Chosen character ${chosenNumber}`} title={`Chosen character ${chosenNumber}`}>{chosenNumber}</span>}<CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Supporting':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
 };
 const renderAct=(act:number,label:string)=>{
   const copyActive=copiedTeam?.act===act;
@@ -471,9 +471,9 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   <p>Select your cast, then assign up to four characters to each act. Changes are saved locally.</p>
   <div className="planner-character-controls">
   <div className="borrowed-control">
-    <div><h3>Borrowed Character</h3><p>Choose any character allowed by this rotation. Borrowed characters count toward the cast cap, but not the minimum requirement.</p></div>
-    <div className="borrowed-field"><span>Borrowed character</span><BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} canSelect={name=>canBorrowCharacter(chosen,borrowedCharacter,name,requirement.cap)} onSelect={setBorrowedCharacter} open={openCharacterPicker==='borrowed'} onOpenChange={open=>setOpenCharacterPicker(open?'borrowed':'')}/></div>
-    {chosen.length>=requirement.cap&&!borrowedCharacter&&<p role="status">Your cast is full. Remove a character to borrow someone new, or borrow a character already in your cast.</p>}
+    <div><h3>Supporting Character</h3><p>Choose any character allowed by this rotation. Supporting characters count toward the cast cap, but not the minimum requirement.</p></div>
+    <div className="borrowed-field"><span>Supporting character</span><BorrowedCharacterPicker characters={borrowedOptions} selected={borrowedCharacter} canSelect={name=>canBorrowCharacter(chosen,borrowedCharacter,name,requirement.cap)} onSelect={setBorrowedCharacter} open={openCharacterPicker==='borrowed'} onOpenChange={open=>setOpenCharacterPicker(open?'borrowed':'')}/></div>
+    {chosen.length>=requirement.cap&&!borrowedCharacter&&<p role="status">Your cast is full. Remove a character to add someone new as Supporting, or choose a Supporting character already in your cast.</p>}
   </div>
   <div className="traveler-control">
     <label className="traveler-element-control"><span>Traveler element</span>
@@ -489,7 +489,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   </div>
   <div className="planner-layout">
     <section className="chosen-section">
-      <div className="sectionhead"><div><h3 className={`cast-count ${castStatus}`}>Chosen ({chosen.length}/{requirement.cap})</h3><div className={`cast-status ${castStatus}`} role="status"><strong>{chosenForRequirement}/{requirement.minimum} toward entry minimum</strong><p>{castMessage}</p></div><p>Borrowed characters use a cast slot but do not count toward the entry minimum. Assigning every act does not replace this requirement.</p></div></div>
+      <div className="sectionhead"><div><h3 className={`cast-count ${castStatus}`}>Chosen ({chosen.length}/{requirement.cap})</h3><div className={`cast-status ${castStatus}`} role="status"><strong>{chosenForRequirement}/{requirement.minimum} toward entry minimum</strong><p>{castMessage}</p></div><p>Supporting characters use a cast slot but do not count toward the entry minimum. Assigning every act does not replace this requirement.</p></div></div>
       <div className="chosen-filters">
         <input aria-label="Search chosen characters" placeholder="Search characters…" value={chosenSearch} onChange={event=>setChosenSearch(event.target.value)}/>
         <label className="chosen-sort-control">Sort <select aria-label="Sort planner characters" value={plannerCharacterOrder} onChange={event=>setPlannerCharacterOrder(event.target.value as CharacterSortOrder)}><option value="name">Name</option><option value="game">In-game order</option></select></label>

@@ -18,13 +18,13 @@ export function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpe
   const filtered=characters.filter(character=>character.name.toLowerCase().includes(query.toLowerCase()));
   return <div className="borrowed-picker" ref={container}>
     <button className="borrowed-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} onClick={()=>onOpenChange(!open)}>
-      {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span>{selectedCharacter.name}</span><ElementBadge element={selectedCharacter.element}/></>:<span>No borrowed character</span>}
+      {selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span>{selectedCharacter.name}</span><ElementBadge element={selectedCharacter.element}/></>:<span>No supporting character</span>}
       <span className="borrowed-chevron" aria-hidden="true">▾</span>
     </button>
     {open&&<div className="borrowed-menu">
-      <input className="borrowed-search" aria-label="Search borrowed characters" placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
-      <div className="borrowed-options" role="listbox" aria-label="Borrowed character options">
-        <button type="button" role="option" aria-selected={!selected} className="borrowed-option" onClick={()=>{onSelect('');onOpenChange(false);}}>No borrowed character</button>
+      <input className="borrowed-search" aria-label="Search supporting characters" placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
+      <div className="borrowed-options" role="listbox" aria-label="Supporting character options">
+        <button type="button" role="option" aria-selected={!selected} className="borrowed-option" onClick={()=>{onSelect('');onOpenChange(false);}}>No supporting character</button>
         {filtered.map(character=><button type="button" role="option" aria-selected={character.name===selected} disabled={!canSelect(character.name)} className="borrowed-option" key={character.name} onClick={()=>{onSelect(character.name);onOpenChange(false);}}>
           <CharacterIcon name={character.name}/><span>{character.name}</span><ElementBadge element={character.element}/>
         </button>)}
@@ -34,7 +34,7 @@ export function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpe
   </div>;
 }
 export function ActAssignmentPicker({act,slot,characters,chosenNames,selected,borrowed,opening,guests,canSelect,isExhausted,onSelect,open,onOpenChange}:{act:number;slot:number;characters:Character[];chosenNames:Set<string>;selected:string;borrowed:string;opening:Set<string>;guests:Set<string>;canSelect:(name:string)=>boolean;isExhausted:(name:string)=>boolean;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void}){
-  const characterLabel=(name:string)=>name===borrowed?'Borrowed':opening.has(name)?'Opening':guests.has(name)?'Guest':'';
+  const characterLabel=(name:string)=>name===borrowed?'Supporting':opening.has(name)?'Opening':guests.has(name)?'Guest':'';
   const container=useRef<HTMLDivElement>(null);
   const [query,setQuery]=useState('');
   useEffect(()=>{if(!open)setQuery('');},[open]);

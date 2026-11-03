@@ -167,11 +167,13 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
         const actKey=`${season.season}-${difficulty}-${number}`;
         const actLabel=number>10?`Lunar Act ${number-10} · Arcanum Challenge`:`Act ${number}`;
         const actCollapsed=!editing&&Boolean(collapsedActs[actKey]);
+        const sharedThunder=season.season===29&&[1,2].includes(number)&&act.encounters.length>0&&act.encounters.every(encounter=>/Treacherous Thunder/.test(encounter.stageEffects??''));
         return <article id={`act-details-act-${number}`} tabIndex={-1} className={`act-detail-card${actCollapsed?' is-collapsed':''}`} key={actKey}>
           <div className="act-detail-heading"><button type="button" className="details-toggle" disabled={editing} aria-label={`${actCollapsed?'Expand':'Collapse'} ${actLabel}`} aria-expanded={!actCollapsed} aria-controls={`act-content-${actKey}`} onClick={()=>setCollapsedActs(current=>({...current,[actKey]:!actCollapsed}))}><span aria-hidden="true">{actCollapsed?'▸':'▾'}</span></button><h3>{actLabel}</h3>{headingBosses.length>0&&<span className="act-objective">Boss</span>}{act.level!==undefined&&<span className="act-level">Level {act.level}</span>}</div>
           <div id={`act-content-${actKey}`}>
           {!actCollapsed&&bosses.length>0&&!act.encounters.some(encounter=>encounterEnemyIds(encounter).length)&&<div><strong>Bosses</strong>{bosses.map((boss,index)=><a className="boss-preview-entry" key={index} href={`https://genshin-impact.fandom.com/wiki/${encodeURIComponent(boss.name.replaceAll(' ','_'))}`} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>}<span>{boss.name}</span></a>)}</div>}
           {!actCollapsed&&field('Act Requirements',editing?act.requirements:playerActRequirements(act.requirements),value=>update(number,{...act,requirements:value}))}
+          {!actCollapsed&&!editing&&sharedThunder&&<div className="act-detail-field act-shared-stage-effect"><strong>Stage Effect · All Choices</strong><p><strong>Treacherous Thunder:</strong> Thunder starts roughly {number===1?10:5}s after the star time limit, then escalates about every 15s up to Level V.</p></div>}
           {!actCollapsed&&!!act.keyRecommendations?.length&&<div className="act-recommended-elements"><strong>Key Recommendation</strong><KeyRecommendations items={act.keyRecommendations}/></div>}
           {!actCollapsed&&!!act.notableCharacters?.length&&<NotableCharacters characters={act.notableCharacters}/>}
           {!act.encounters.length&&<p>No encounter choices recorded yet.</p>}
@@ -195,6 +197,11 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
               </div>}
             </div>;
             const eliteAssault=/\bElite Assault\b/i.test(encounter.name);
+            const stageEffects=playerDetailText(encounter.stageEffects??'');
+            const choiceStageEffects=sharedThunder?stageEffects
+              .replace(/Treacherous Thunder: After a delay, thunder strikes characters\.\s*/g,'')
+              .replace(/Treacherous Thunder periodically strikes characters\.\s*/g,'')
+              .replace(/^Treacherous Thunder plus /,'').trim():stageEffects;
             return <div className={`act-encounter${compact?' is-collapsed':''}${eliteAssault?' is-elite-assault':''}`} key={index}>
               {hasChoices&&<div className="act-choice-heading"><button type="button" className="details-toggle" disabled={editing} aria-label={`${compact?'Expand':'Collapse'} ${actLabel}, choice ${index+1}`} aria-expanded={!compact} aria-controls={`choice-content-${choiceKey}`} onClick={()=>{
                 if(actCollapsed)setCollapsedActs(current=>({...current,[actKey]:false}));
@@ -209,7 +216,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
               {editing?field('Enemies / waves',encounter.enemies,value=>change('enemies',value)):<><ChallengeRequirements value={encounter.requirements}/><EnemyDetails value={encounter.enemies} requirements={encounter.requirements}/></>}
               {field(editing?'Resistances / immunities':'Resistance notes',editing?encounter.resistances:lineup.length?resistanceDetails.notes:resistanceExceptions(encounter.resistances),value=>change('resistances',value))}
               {editing&&field('Challenge Requirements',encounter.requirements,value=>change('requirements',value))}
-              {(editing||((eliteAssault||number>10)&&encounter.stageEffects))&&field('Stage Effects',editing?encounter.stageEffects??'':playerDetailText(encounter.stageEffects??''),value=>change('stageEffects',value))}
+              {(editing||((eliteAssault||number>10)&&choiceStageEffects))&&field('Stage Effects',editing?encounter.stageEffects??'':choiceStageEffects,value=>change('stageEffects',value))}
               <div className={encounter.notableCharacters?.length?'act-mechanics-layout':undefined}>
               {editing?field('Mechanics',encounter.mechanics??'',value=>change('mechanics',value)):<MechanicsDetails value={encounter.mechanics??''} enemyIds={encounterEnemyIds(encounter)}/>}
               {!!encounter.notableCharacters?.length&&<NotableCharacters characters={encounter.notableCharacters}/>}

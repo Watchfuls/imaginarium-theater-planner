@@ -286,6 +286,27 @@ try{
     assert.match(await gauges.nth(1).textContent(),/30U.*Geo/);
     assert.match(await gauges.nth(1).locator('img').getAttribute('src'),/icons\/elements\/Geo_Icon.png/);
   });
+  await check('Acts 1 and 2 show delayed thunder once above all choices and retain elite-specific hazards',async()=>{
+    await nav('Act Details').click();
+    for(const number of [1,2]){
+      const shared=page.locator(`#act-details-act-${number} .act-shared-stage-effect`);
+      assert.equal(await shared.count(),1);
+      assert.equal(await shared.isVisible(),true);
+      assert.match(await shared.textContent(),new RegExp(`All Choices.*Treacherous Thunder: Thunder starts roughly ${number===1?10:5}s after the star time limit`));
+      assert.match(await shared.textContent(),/escalates about every 15s up to Level V/);
+      const choices=page.locator(`#act-details-act-${number} .act-encounter:not(.is-elite-assault)`);
+      assert.equal(await choices.count(),2);
+      for(const choice of await choices.all()){
+        const toggle=choice.getByRole('button',{name:new RegExp(`^Expand Act ${number}, choice`)});
+        if(await toggle.count())await toggle.click();
+        const effects=choice.locator('.act-detail-field').filter({has:page.getByText('Stage Effects',{exact:true})});
+        assert.equal(await effects.count(),0,'normal choices do not repeat the shared effect');
+      }
+      const elite=page.locator(`#act-details-act-${number} .act-encounter.is-elite-assault .act-detail-field`).filter({has:page.getByText('Stage Effects',{exact:true})});
+      assert.match(await elite.textContent(),number===1?/Desolation/:/Horrific Explosion/);
+      assert.doesNotMatch(await elite.textContent(),/Treacherous Thunder/);
+    }
+  });
   await check('video chapter links update and restart the embedded player',async()=>{
     await nav('Video Guide').click();
     assert.match(await page.locator('iframe').getAttribute('src'),/YqUCsZDrdZQ/);

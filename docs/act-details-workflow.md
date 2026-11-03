@@ -170,6 +170,9 @@ icons (icon links only, with names available on hover). Use a star icon for the
 Star Challenge objective. Do not display “estimated” labels or run-confirmation
 boilerplate; retain provenance and uncertainty in the repository research.
 Only show additional Stage Effects for Elite Assault and Lunar challenge stages.
+When Treacherous Thunder is recorded for all choices in Acts 1 and 2, show it
+once as a shared act-level effect, explicitly stating that it begins after a
+delay. Keep additional elite hazards within the corresponding choice.
 Do not invent missing counts or wave orders to fill the compact summary.
 
 Do not display enemy HP values in Act Details, including boss cards or clear

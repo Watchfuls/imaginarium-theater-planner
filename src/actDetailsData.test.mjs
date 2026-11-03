@@ -5,6 +5,66 @@ import {mergeActDetailsDraft} from './actDetailsData.ts';
 import published from './data/theater-act-details.json' with {type:'json'};
 import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
 
+test('old Act 9 elite draft timings upgrade without dropping authored text or changing other encounters',()=>{
+  for(const mode of ['Visionary','Lunar']){
+    const draft=structuredClone(published);
+    const encounter=draft.seasons[29][mode][9].encounters.find(entry=>entry.name.startsWith('Elite Assault'));
+    encounter.requirements='Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.\nMy extra requirement note.';
+    encounter.stageEffects='Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside.';
+    encounter.notes='Keep my bounty team';
+    const merged=mergeActDetailsDraft(published,draft).seasons[29][mode][9];
+    const updated=merged.encounters.find(entry=>entry.name.startsWith('Elite Assault'));
+    assert.match(updated.requirements,/within 1m 40s/);
+    assert.match(updated.requirements,/within 1m 5s/);
+    assert.match(updated.requirements,/My extra requirement note/);
+    assert.match(updated.stageEffects,/every 2s/);
+    assert.equal(updated.notes,'Keep my bounty team');
+    assert.deepEqual(merged.encounters[0],draft.seasons[29][mode][9].encounters[0]);
+    assert.match(encounter.requirements,/within 2m/,'does not mutate draft input');
+    encounter.requirements='My custom challenge requirements';encounter.stageEffects='My custom stage effects';
+    const custom=mergeActDetailsDraft(published,draft).seasons[29][mode][9].encounters.find(entry=>entry.name.startsWith('Elite Assault'));
+    assert.equal(custom.requirements,encounter.requirements);assert.equal(custom.stageEffects,encounter.stageEffects);
+  }
+});
+
+test('old Act 1 and 2 elite draft effects inherit current hazards while preserving notes and custom effects',()=>{
+  for(const mode of ['Easy','Normal','Hard','Visionary','Lunar']){
+    const draft=structuredClone(published);
+    const elite=act=>draft.seasons[29][mode][act].encounters.find(entry=>entry.name.startsWith('Elite Assault'));
+    elite(1).stageEffects='';
+    elite(2).stageEffects='Inferred stage effects: Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies.';
+    elite(1).notes='My Act 1 team';elite(2).notes='My Act 2 team';
+    const merged=mergeActDetailsDraft(published,draft);
+    for(const act of [1,2]){
+      const updated=merged.seasons[29][mode][act].encounters.find(entry=>entry.name.startsWith('Elite Assault'));
+      assert.equal(updated.stageEffects,published.seasons[29][mode][act].encounters.find(entry=>entry.name.startsWith('Elite Assault')).stageEffects);
+      assert.equal(updated.notes,`My Act ${act} team`);
+      assert.equal(updated.requirements,elite(act).requirements);
+      assert.deepEqual(updated.enemyIds,elite(act).enemyIds);
+      elite(act).stageEffects=`My custom Act ${act} effect`;
+    }
+    assert.equal(elite(1).notes,'My Act 1 team');
+    const custom=mergeActDetailsDraft(published,draft);
+    for(const act of [1,2])assert.equal(custom.seasons[29][mode][act].encounters.find(entry=>entry.name.startsWith('Elite Assault')).stageEffects,`My custom Act ${act} effect`);
+  }
+});
+
+test('old Act 1 Geovishap draft wording upgrades to Pyro without losing personal edits',()=>{
+  const draft=structuredClone(published);
+  const encounter=draft.seasons[29].Lunar[1].encounters.find(entry=>entry.enemyIds.includes('60401'));
+  const oldNote="The Geovishap's transformations adds 20% RES to the respective element.";
+  encounter.resistances=`My resistance observation.\n${oldNote}`;
+  encounter.enemies='Wave 1: 1 Geovishap.\nWave 2: 1 Primordial Bathysmal Vishap.';
+  encounter.notes='Keep my team note';
+  const result=mergeActDetailsDraft(published,draft).seasons[29].Lunar[1].encounters.find(entry=>entry.enemyIds.includes('60401'));
+  assert.equal(result.resistances,"My resistance observation.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.");
+  assert.match(result.enemies,/Geovishap \(Pyro\)/);
+  assert.equal(result.notes,'Keep my team note');
+  assert.ok(encounter.resistances.includes(oldNote),'migration does not mutate the saved draft');
+  encounter.resistances='My own custom resistance wording';
+  assert.equal(mergeActDetailsDraft(published,draft).seasons[29].Lunar[1].encounters.find(entry=>entry.enemyIds.includes('60401')).resistances,'My own custom resistance wording');
+});
+
 test('the original Protection Spirit healer list upgrades without losing personal notes',()=>{
   const draft=structuredClone(published);
   const encounter=draft.seasons[29].Lunar[12].encounters[0];
@@ -192,8 +252,8 @@ test('provided act graphics supply counts and resolve the recorded timer gaps',(
   assert.match(acts[11].encounters[0].requirements,/360 s/);
   assert.match(acts[1].encounters[2].requirements,/75 s/);
   assert.match(acts[1].encounters[2].enemies,/6 enemies total/);
-  assert.match(acts[9].encounters[2].requirements,/3 bounty opponents within 120 s/);
-  assert.match(acts[9].encounters[2].requirements,/within 80 s/);
+  assert.match(acts[9].encounters[2].requirements,/3 bounty opponents within 100 s/);
+  assert.match(acts[9].encounters[2].requirements,/within 65 s/);
   assert.match(acts[6].encounters[0].requirements,/110 s/);
   assert.match(acts[8].encounters[0].requirements,/110 s/);
   assert.match(acts[12].encounters[0].requirements,/125 s/);

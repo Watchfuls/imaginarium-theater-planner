@@ -27,8 +27,8 @@
                 "60401",
                 "60506"
               ],
-              "enemies": "2 enemies total.\nWave 1: 1 Geovishap.\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
@@ -52,7 +52,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": ""
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters."
             }
           ]
         },
@@ -111,7 +111,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks."
             }
           ]
         },
@@ -167,8 +167,8 @@
                 "60401",
                 "60506"
               ],
-              "enemies": "2 enemies total.\nWave 1: 1 Geovishap.\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
@@ -192,7 +192,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": ""
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters."
             }
           ]
         },
@@ -251,7 +251,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks."
             }
           ]
         },
@@ -511,8 +511,8 @@
                 "60401",
                 "60506"
               ],
-              "enemies": "2 enemies total.\nWave 1: 1 Geovishap.\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
@@ -536,7 +536,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": ""
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters."
             }
           ]
         },
@@ -595,7 +595,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks."
             }
           ]
         },
@@ -982,8 +982,8 @@
                 "60401",
                 "60506"
               ],
-              "enemies": "2 enemies total.\nWave 1: 1 Geovishap.\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nGeovishap conversion adds 20% of resistance to its absorbed element; the current infusion is unverified.",
+              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
@@ -1007,7 +1007,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": ""
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters."
             }
           ]
         },
@@ -1066,7 +1066,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks."
             }
           ]
         },
@@ -1492,10 +1492,10 @@
                 "40101"
               ],
               "resistances": "Ruin Grader: Physical 70%.\nRuin Guard: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
-              "requirements": "Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.",
+              "requirements": "Clear: defeat 3 bounty opponents within 1m 40s.\nStar Challenge: complete the bounty objective within 1m 5s.\nActive enemies: 1.",
               "notes": "",
               "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
-              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
+              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy?s Duel Zone and inflicts damage every 2s outside."
             }
           ]
         },
@@ -1564,8 +1564,8 @@
                 "60401",
                 "60506"
               ],
-              "enemies": "2 enemies total.\nWave 1: 1 Geovishap.\nWave 2: 1 Primordial Bathysmal Vishap.",
-              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nThe Geovishap's transformations adds 20% RES to the respective element.",
+              "enemies": "2 enemies total.\nWave 1: 1 Geovishap (Pyro).\nWave 2: 1 Primordial Bathysmal Vishap.",
+              "resistances": "Geovishap: Physical 30%; Geo 50%.\nPrimordial Bathysmal Vishap: Physical, Hydro 30%.\nThe Geovishap's Pyro transformation adds 20% Pyro RES.",
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 25s.",
               "notes": "",
               "mechanics": "Primordial Bathysmal Vishap: Cleansing Shower drains 10 Energy from the active character. If they have less than 10 Energy, it also causes HP loss.",
@@ -1589,7 +1589,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 15s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": ""
+              "stageEffects": "Desolation: A Dendro cluster chases characters. On contact it damages characters or opponents and disappears if it hits a character. Over time, it becomes smaller and deals less damage, but moves faster.\nTreacherous Thunder: After a delay, thunder strikes characters."
             }
           ]
         },
@@ -1648,7 +1648,7 @@
               "requirements": "Clear: defeat all opponents.\nStar Challenge: finish within 1m 5s.",
               "notes": "",
               "mechanics": "",
-              "stageEffects": "Treacherous Thunder plus Horrific Explosion, a timed bomb that transfers between enemies."
+              "stageEffects": "Treacherous Thunder: After a delay, thunder strikes characters.\nHorrific Explosion: A timed bomb on an opponent explodes after a delay, damaging nearby characters, then transfers to the nearest opponent and resets its timer. Defeating the carrier also transfers the bomb. Each transfer shortens the bomb timer and increases its damage, up to 4 stacks."
             }
           ]
         },
@@ -2074,10 +2074,10 @@
                 "40101"
               ],
               "resistances": "Ruin Grader: Physical 70%.\nRuin Guard: Physical 70%.\nRuin Scout: Physical 50%.\nRuin Destroyer: Physical 30%.\nRuin Defender: Physical 50%.\nRuin Cruiser: Physical 30%.",
-              "requirements": "Clear: defeat 3 bounty opponents within 2m.\nStar Challenge: complete the bounty objective within 1m 20s.\nActive enemies: 1.",
+              "requirements": "Clear: defeat 3 bounty opponents within 1m 40s.\nStar Challenge: complete the bounty objective within 1m 5s.\nActive enemies: 1.",
               "notes": "",
               "mechanics": "Bounty Priority: Ruin Guards and Ruin Graders are the targets. Supporting Sentinels do not advance the bounty requirement, so focus damage on the marked large machines.\nRuin Guard: Hit its exposed eye or rear core twice in quick succession to paralyze it for roughly 15s.\nRuin Grader: Strike glowing ankle and eye weak points during its attacks. Each weak-point system stays disabled for roughly 20s. Disabling both fully paralyzes it until one system recovers; the remaining paralysis time depends on when each was disabled.",
-              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy’s Duel Zone and inflicts periodic damage outside."
+              "stageEffects": "Thrilling Duel gives 40% increased damage inside an elite enemy?s Duel Zone and inflicts damage every 2s outside."
             }
           ]
         },
