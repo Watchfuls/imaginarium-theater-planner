@@ -24,6 +24,60 @@ try{
   async function check(label,run){await run();console.log(`PASS ${label}`);}
 
   await page.goto(base,{waitUntil:'domcontentloaded'});
+  await check('feedback opens on demand and returns focus when closed',async()=>{
+    // Keep the UI check independent of Tally availability; never submit feedback.
+    await page.route('https://tally.so/**',route=>route.fulfill(route.request().url().endsWith('/embed.js')
+      ?{contentType:'application/javascript',body:'window.Tally={loadEmbeds(){}};'}
+      :{contentType:'text/html',body:'<p>Feedback form</p>'}));
+    const trigger=page.getByRole('button',{name:'Send feedback',exact:true});
+    assert.equal(await page.locator('iframe').count(),0);
+    await trigger.click();
+    const dialog=page.getByRole('dialog',{name:'Send feedback'});
+    await dialog.waitFor();
+    assert.match(await dialog.locator('iframe').getAttribute('src'),/tally\.so\/embed\/jeZg4J/);
+    await page.getByRole('button',{name:'Close feedback'}).click();
+    assert.equal(await dialog.isVisible(),false);
+    assert.equal(await trigger.evaluate(element=>document.activeElement===element),true);
+    await page.setViewportSize({width:390,height:844});
+    await trigger.click();
+    const bounds=await dialog.boundingBox();
+    assert.ok(bounds.x>=0&&bounds.x+bounds.width<=390);
+    await page.keyboard.press('Escape');
+    assert.equal(await dialog.isVisible(),false);
+    await page.setViewportSize({width:1440,height:1000});
+  });
+  await check('mobile feedback supports touch scrolling and text entry inside the form',async()=>{
+    const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    try{
+      const mobilePage=await mobile.newPage();
+      await mobilePage.route('https://tally.so/**',route=>route.fulfill(route.request().url().endsWith('/embed.js')
+        ?{contentType:'application/javascript',body:'window.Tally={loadEmbeds(){document.querySelector(".feedback-dialog iframe").style.height="1200px";}};'}
+        :{contentType:'text/html',body:'<label><input type="radio" name="type">Bug report</label><label>Message<textarea></textarea></label><div style="height:900px"></div><label>Contact<input></label>'}));
+      await mobilePage.goto(base,{waitUntil:'domcontentloaded'});
+      await mobilePage.getByRole('button',{name:'Send feedback',exact:true}).click();
+      const frame=mobilePage.locator('.feedback-dialog iframe').contentFrame();
+      await frame.getByRole('radio',{name:'Bug report'}).tap();
+      assert.equal(await frame.getByRole('radio',{name:'Bug report'}).isChecked(),true);
+      await frame.getByRole('textbox',{name:'Message'}).tap();
+      await mobilePage.keyboard.type('A mobile feedback report');
+      const touch=await mobile.newCDPSession(mobilePage);
+      await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:195,y:650}]});
+      for(let y=630;y>=250;y-=20)await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:195,y}]});
+      await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      assert.ok(await mobilePage.locator('.feedback-body').evaluate(element=>element.scrollTop>0),'swiping inside the iframe scrolls the popup');
+      await mobilePage.locator('.feedback-body').evaluate(element=>new Promise(resolve=>{
+        let previous=element.scrollTop,stable=0;
+        const settled=()=>{const current=element.scrollTop;stable=current===previous?stable+1:0;previous=current;if(stable>=10)resolve();else requestAnimationFrame(settled);};
+        requestAnimationFrame(settled);
+      }));
+      await frame.getByRole('textbox',{name:'Contact'}).tap();
+      await mobilePage.keyboard.type('Optional contact');
+      assert.equal(await frame.getByRole('textbox',{name:'Contact'}).inputValue(),'Optional contact');
+      assert.equal(await frame.getByRole('textbox',{name:'Message'}).inputValue(),'A mobile feedback report');
+      await mobilePage.getByRole('button',{name:'Close feedback'}).click();
+      assert.equal(await mobilePage.getByRole('dialog').count(),0);
+    }finally{await mobile.close();}
+  });
   await check('planner stays locked until the account is eligible',async()=>{
     await nav('Your Characters').waitFor();
     assert.equal(await nav('Theater Planner').isDisabled(),true);
@@ -108,7 +162,27 @@ try{
     await page.locator('#act-details-act-3').waitFor();
     assert.equal(await nav('Act Details').getAttribute('class'),'active');
     const top=await page.locator('#act-details-act-3').evaluate(element=>element.getBoundingClientRect().top);
-    assert.ok(top>=0);
+    const navigation=await page.locator('.app-navigation').boundingBox();
+    assert.ok(top>=navigation.y+navigation.height,'act heading is below the sticky navigation');
+  });
+  await check('Act Details keeps only compact navigation visible while scrolling',async()=>{
+    for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){
+      await page.setViewportSize(viewport);
+      await page.evaluate(()=>window.scrollTo(0,800));
+      const navigation=await page.locator('.app-navigation').boundingBox();
+      const header=await page.locator('.app-header').boundingBox();
+      assert.ok(Math.abs(navigation.y)<1,'navigation stays at the top');
+      assert.ok(navigation.height<100,'navigation leaves room for act content');
+      assert.ok(header.y+header.height<0,'large header scrolls away');
+      for(const button of await page.locator('.app-navigation nav button').all()){
+        const bounds=await button.boundingBox();
+        assert.ok(bounds.x>=0&&bounds.x+bounds.width<=viewport.width,'all five buttons fit');
+      }
+    }
+    await nav('Video Guide').click();
+    await page.getByRole('heading',{name:'Video Guide',exact:true}).waitFor();
+    await nav('Act Details').click();
+    await page.setViewportSize({width:1440,height:1000});
   });
   await check('mechanics show colored gauge badges with local element icons',async()=>{
     const gauges=page.locator('#act-details-act-8 .mechanics-element.is-gauge');
@@ -135,6 +209,10 @@ try{
     await check(`mobile layout: ${label}`,async()=>{
       await page.setViewportSize({width:390,height:844});await nav(label).click();
       const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll('main *')].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,15).map(el=>({tag:el.tagName,class:el.className,right:el.getBoundingClientRect().right,text:el.textContent.slice(0,60)}))}));
+      await page.evaluate(()=>window.scrollTo(0,800));
+      const navigation=await page.locator('.app-navigation').boundingBox();
+      assert.ok(Math.abs(navigation.y)<1,'navigation stays pinned on every tab');
+      assert.ok(navigation.height<100,'navigation stays compact on every tab');
       if(overflow.scroll>overflow.width+1)console.log('overflow',label,JSON.stringify(overflow));
       assert.ok(overflow.scroll<=overflow.width+1,'horizontal page overflow');
     });

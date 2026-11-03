@@ -30,10 +30,10 @@ export function parseGoodOwnership(value:unknown):{characters:Map<string,number>
   for(const entry of data.characters){
     if(!entry||typeof entry!=='object'||Array.isArray(entry))throw new Error('A character entry is invalid.');
     const character=entry as Record<string,unknown>;
-    if(typeof character.key!=='string'||typeof character.level!=='number'||!Number.isInteger(character.level)||character.level<1||character.level>90)throw new Error('Every character must have a key and a level from 1 to 90.');
+    if(typeof character.key!=='string'||typeof character.level!=='number'||!Number.isInteger(character.level)||character.level<1||character.level>100)throw new Error('Every character must have a key and a level from 1 to 100.');
     const names=keyToNames.get(character.key.replace(/[^a-z0-9]/gi,'').toLocaleLowerCase());
     if(!names){unknownKeys.push(character.key);continue;}
-    const level=Math.max(10,Math.floor(character.level/10)*10);
+    const level=character.level>=95&&character.level<100?95:Math.max(10,Math.floor(character.level/10)*10);
     for(const name of names)characters.set(name,Math.max(characters.get(name)??0,level));
   }
   if(characters.size===0)throw new Error('No characters in the file match this planner roster.');

@@ -17,7 +17,30 @@ test('GOOD imports resolve full character names, Traveler variants, and unknown 
 test('invalid GOOD imports are rejected before replacing ownership',()=>{
   assert.throws(()=>parseGoodOwnership({characters:[]}),/GOOD/);
   assert.throws(()=>parseGoodOwnership({format:'GOOD',characters:[{key:'Aino',level:0}]}),/level/);
+  for(const level of [101,95.5,'100',null]){
+    assert.throws(()=>parseGoodOwnership({format:'GOOD',characters:[{key:'Aino',level}]}),/level from 1 to 100/);
+  }
   assert.throws(()=>parseGoodOwnership({format:'GOOD',characters:[]}),/No characters/);
+});
+
+test('character-only and full inventory GOOD exports retain levels 95 and 100 after saving',()=>{
+  for(const inventory of [{},{weapons:[],artifacts:[],materials:{}}]){
+    const parsed=parseGoodOwnership({format:'GOOD',...inventory,characters:[
+      {key:'Aino',level:95},{key:'SangonomiyaKokomi',level:100},{key:'Traveler',level:100},
+    ]});
+    const saved=Object.fromEntries([...parsed.characters].map(([name,level])=>[name,{owned:true,level}]));
+    const restored=normalizeOwnership(JSON.parse(JSON.stringify(saved)));
+    assert.deepEqual(restored.Aino,{owned:true,level:95});
+    assert.deepEqual(restored.Kokomi,{owned:true,level:100});
+    assert.equal(restored['Hydro Traveler'].level,100);
+    assert.equal(restored['Geo Traveler'].level,100);
+  }
+});
+
+test('GOOD imports round intermediate levels down to supported level options',()=>{
+  for(const [level,expected] of [[1,10],[94,90],[96,95],[99,95]]){
+    assert.equal(parseGoodOwnership({format:'GOOD',characters:[{key:'Aino',level}]}).characters.get('Aino'),expected);
+  }
 });
 
 test('legacy ownership saves keep levels and synchronize Traveler without mutating input',()=>{

@@ -1,4 +1,5 @@
 import {SiteHeader} from './SiteHeader';
+import {Feedback} from './Feedback';
 import {BossPreview} from './BossPreview';
 import type {Ownership,Setup,Plan,TheaterBossData,BossOverrideSlot} from './plannerTypes';
 import {LEVEL_OPTIONS,travelerNames,difficulties,stageObjectives,isTraveler,enemyWikiUrl} from './plannerConfig';
@@ -45,12 +46,12 @@ const stickyHeaderRef=useRef<HTMLDivElement>(null);
 useLayoutEffect(()=>{
   const header=stickyHeaderRef.current;
   if(!header)return;
-  const measure=()=>header.parentElement?.style.setProperty('--app-header-height',step===4?header.getBoundingClientRect().height+'px':'0px');
+  const measure=()=>header.parentElement?.style.setProperty('--app-header-height',header.getBoundingClientRect().height+'px');
   measure();
   const observer=new ResizeObserver(measure);
   observer.observe(header);
   return ()=>observer.disconnect();
-},[step]);
+},[]);
 const [actDetailsTarget,setActDetailsTarget]=useState<{act:number;season:number}|null>(null);
 const [ownership,setOwnership]=useState<Ownership>(()=>normalizeOwnership(stored<unknown>('itp-ownership-v1',{})));
 const [setup,setSetup]=useState<Setup>(()=>stored('itp-setup-v1',defaultSetup(),validSetup));
@@ -532,6 +533,6 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   <div className="bottom"><button onClick={()=>setStep(2)}>← Challenge Setup</button><button onClick={()=>{setPlan({roster:[],acts:{},borrowed:''});setCopiedTeam(null);}}>Reset Plan</button></div>
 </section>}
 {assignmentNotice&&<div key={assignmentNotice.id} className="assignment-notice" role="status">{assignmentNotice.message}</div>}
-<footer>Unofficial fan-made planning tool. {storageUnavailable?<span role="status">Browser saving is unavailable. Changes will last only until this page closes.</span>:'All settings are saved in this browser.'}</footer></main>
+<footer><span>Unofficial fan-made planning tool. {storageUnavailable?<span role="status">Browser saving is unavailable. Changes will last only until this page closes.</span>:'All settings are saved in this browser.'}</span><Feedback/></footer></main>
 }
 
