@@ -66,15 +66,31 @@
     "sourceUrl": "https://genshin-impact.fandom.com/wiki/Imaginarium_Theater%2FSeasons%2F2026-11-01"
   },
   "next": {
+    "bossStages": [],
+    "sourceUrl": "",
     "id": "2026-12-01",
     "season": 30,
     "startsAt": "2026-12-01T04:00:00.000Z",
     "endsAt": "2027-01-01T03:59:59.000Z",
-    "elements": ["Pyro", "Hydro", "Geo"],
-    "openingCharacters": ["Arlecchino", "Bennett", "Furina", "Xingqiu", "Navia", "Illuga"],
-    "specialGuests": ["Chasca", "Varesa", "Kinich", "Iansan"],
-    "bossStages": [],
-    "sourceUrl": ""
+    "elements": [
+      "Pyro",
+      "Hydro",
+      "Geo"
+    ],
+    "openingCharacters": [
+      "Arlecchino",
+      "Bennett",
+      "Furina",
+      "Xingqiu",
+      "Navia",
+      "Illuga"
+    ],
+    "specialGuests": [
+      "Chasca",
+      "Varesa",
+      "Kinich",
+      "Iansan"
+    ]
   },
   "bossCatalog": [
     {
@@ -510,7 +526,7 @@
     {
       "name": "Wavebinder",
       "type": "Boss",
-      "iconUrl": null
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/32/Wavebinder_Icon.png/revision/latest?cb=20261104063219"
     },
     {
       "name": "Wayward Hermetic Spiritspeaker",
