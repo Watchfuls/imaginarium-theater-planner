@@ -2,7 +2,7 @@ import type {Element} from './characters';
 import type {TravelerElement} from './travelerSelection';
 
 export type Ownership = Record<string,{owned:boolean;level:number}>;
-export type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number};
+export type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number;customSeasonSelected?:boolean;privateSeasonSelected?:boolean};
 export type Plan = {encounterChoices?:Record<string,string>;roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
 export type TheaterBoss = {name:string;iconUrl:string|null};
 export type BossCatalogEntry = TheaterBoss & {type:'Boss'|'Local Legend'};

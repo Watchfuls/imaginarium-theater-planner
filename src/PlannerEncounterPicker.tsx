@@ -7,7 +7,7 @@ import {encounterEnemyIds} from './actDetailsPresentation';
 import {KeyRecommendations} from './KeyRecommendations';
 
 const icons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
-type EnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+type EnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 type Enemy={name:string;icon?:string;iconUrl?:string;wikiUrl?:string};
 const enemies=catalog as Record<string,Enemy>;
 

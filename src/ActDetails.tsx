@@ -14,7 +14,7 @@ import {storedText} from './browserStorage';
 
 const enemyIcons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const abilityIcons=import.meta.glob('./assets/abilities/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
-type EnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+type EnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 type Enemy={name:string;icon?:string;iconUrl?:string;wikiUrl:string;baseResistances?:Record<string,number>};
 const enemiesById=enemyCatalog as Record<string,Enemy>;
 
@@ -115,7 +115,7 @@ function initialData():Data {
   }catch{/* Use published details if the browser draft is unavailable. */}
   return published as Data;
 }
-export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChange,target,privateEnemies={},localCustomData}:{target?:{act:number;season:number}|null;seasons:Season[];now:number;bossesForAct:(season:number,difficulty:string,act:number)=>{name:string;iconUrl:string|null}[];difficulty:string;onDifficultyChange:(difficulty:string)=>void;privateEnemies?:Record<string,EnemyPreview>;localCustomData?:Data}) {
+export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChange,target,preferredSeason,privateEnemies={},privatePreviewSelected=false,localCustomData}:{target?:{act:number;season:number}|null;preferredSeason?:number;seasons:Season[];now:number;bossesForAct:(season:number,difficulty:string,act:number)=>{name:string;iconUrl:string|null}[];difficulty:string;onDifficultyChange:(difficulty:string)=>void;privateEnemies?:Record<string,EnemyPreview>;privatePreviewSelected?:boolean;localCustomData?:Data}) {
   const [data,setData]=useState<Data>(initialData);
   const [editing,setEditing]=useState(false);
   const [saveStatus,setSaveStatus]=useState('');
@@ -127,12 +127,17 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
     const status=seasonStatus(season,now);
     return status==='Current'||(import.meta.env.DEV&&status==='Upcoming')||Boolean(localCustomData?.seasons[String(season.season)]);
   });
-  const [selected,setSelected]=useState<number|undefined>(target?.season??selectableSeasons.find(candidate=>localOnlySeasons.has(candidate.season))?.season??selectableSeasons.find(candidate=>seasonStatus(candidate,now)==='Current')?.season??selectableSeasons[0]?.season);
+  const [selected,setSelected]=useState<number|undefined>(target?.season??preferredSeason??(privatePreviewSelected?selectableSeasons.find(candidate=>localOnlySeasons.has(candidate.season))?.season:undefined)??selectableSeasons.find(candidate=>seasonStatus(candidate,now)==='Current')?.season??selectableSeasons[0]?.season);
   const season=selectableSeasons.find(candidate=>candidate.season===selected)??selectableSeasons.find(candidate=>seasonStatus(candidate,now)==='Current')??selectableSeasons[0];
   const localCustomSelection=Boolean(season&&localCustomData?.seasons[String(season.season)]);
-  const localOnlySelection=Boolean(season&&(localOnlySeasons.has(season.season)||localCustomSelection));
-  const visibleData=localCustomSelection&&localCustomData?localCustomData:data;
-  const visibleEnemiesById:Record<string,Enemy>={...enemiesById,...privateEnemies};
+  const localOnlySelection=Boolean(season&&(localCustomSelection||privatePreviewSelected&&localOnlySeasons.has(season.season)));
+  const visibleData=localCustomSelection&&localCustomData?localCustomData:!privatePreviewSelected&&season&&localOnlySeasons.has(season.season)
+    ?{...data,seasons:{...data.seasons,[String(season.season)]:(published as Data).seasons[String(season.season)]??{}}}
+    :data;
+  const visibleEnemiesById:Record<string,Enemy>={...enemiesById};
+  for(const [id,enemy] of Object.entries(privateEnemies)){
+    visibleEnemiesById[id]={...enemiesById[id],...enemy,baseResistances:enemy.baseResistances??enemiesById[id]?.baseResistances};
+  }
   useEffect(()=>{
     if(!import.meta.env.DEV)return;
     try{localStorage.setItem(storageKey,JSON.stringify(data));setSaveStatus('Draft saved in this browser.');}
@@ -151,7 +156,6 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
       setLocalOnlySeasons(localOnly);
       localStorage.setItem(localOnlySeasonsKey,[...localOnly].join(','));
       setData(current=>mergeActDetailsDraft(current,value));
-      setSelected(30);
       setPrivateDraftStatus('Private local Season 30 draft loaded; it is excluded from downloads.');
       return null;
     }).catch(error=>{

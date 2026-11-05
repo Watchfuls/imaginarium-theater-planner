@@ -14,35 +14,37 @@ app's rule that only the currently active theater is displayed.
 
 ### Source priority
 
-Use this order when sources disagree about the same mechanic or value:
+For public Act Details, use this order when sources disagree about the same
+mechanic or value:
 
 1. The user's notes, Markdown guides, and explicit corrections in conversation.
 2. Genshin Impact Fandom wiki.
-3. Alioth.
-4. Other sources.
+3. Other official game sources.
 
-Lower-priority sources fill gaps; they must not override applicable user notes.
-Missing values and requests to verify in the user's notes are gaps to research,
-not a reason to stop at those notes. Continue through Fandom, Alioth, then other
-sources. Use supported intrinsic enemy mechanics as fallbacks and record any
-variant inference in the research record; do not label it direct Theater verification.
-Record conflicting evidence in repository research without duplicating it in
-the player UI. Preserve qualifications in the user's notes: a question,
-placeholder, or instruction to confirm a value is not a confirmed observation.
-Continue checking the exact enemy variant and encounter context; this priority
-does not permit transferring stage timings or objectives between different acts.
+Do not use Alioth or any other unofficial source to fill gaps in public data.
+If official Fandom information is missing, keep the public field blank or
+unknown and put any unofficial preparation in ignored `private-local/` files.
+Use supported intrinsic enemy mechanics from official references as fallbacks
+and record any variant inference in the research record; do not label it direct
+Theater verification. Record conflicting evidence in repository research
+without duplicating it in the player UI. Preserve qualifications in the user's
+notes: a question, placeholder, or instruction to confirm a value is not a
+confirmed observation. Continue checking the exact enemy variant and encounter
+context; this priority does not permit transferring stage timings or objectives
+between different acts.
 
 Before external research, consult `docs/act-details-archive` and prior local
 research records for details we have collected ourselves, including information
-missing from external sites. Apply the historical matching rules below to these records.
-Keep original provenance and confidence; archived estimates remain estimates.
+missing from external sites. Apply the historical matching rules below to these
+records. Keep original provenance and confidence; archived estimates remain
+estimates.
 
 For mechanics explanations, prioritize the user's Theater and Abyss Markdown
 guides in `C:/Users/gregh/Documents/Genshin/Abyss Guides`, especially the guide
 for the current theater. Cross-check intrinsic enemy behavior against exact
-enemy wiki pages and Alioth. Transfer no Abyss chamber or different Theater
-act objectives, spawn orders, or timers. Keep variant-specific mechanics
-separate, and record conflicts without inventing a resolution.
+Fandom enemy pages or other official references. Transfer no Abyss chamber or
+different Theater act objectives, spawn orders, or timers. Keep variant-specific
+mechanics separate, and record conflicts without inventing a resolution.
 
 Populate the fourth section with the selectable enemy encounters for every act
 and applicable difficulty, including the two Lunar challenges. Include enemy
@@ -57,7 +59,7 @@ them as **graphic-sourced**, not as independently verified official game data.
 Use each act graphic only for that act and each Arcana graphic only for the same
 Lunar challenge. Respect the depicted difficulty/profile; any use for another
 difficulty remains an explicit inference. Retain conflicting names or generic
-icons in the audit rather than silently replacing an exact Alioth variant.
+icons in the audit rather than silently replacing an exact Fandom variant.
 
 The supplied Season 29 graphics are in `F:/GenshinTemp/Graphics/IT/72` (Act1–10
 and Arcana1–2 JPG exports). Do not assume the same folder applies to a future
@@ -67,28 +69,28 @@ season. Reading the exports does not require modifying or importing PSD files.
    `src/data/theater-lineups.json`. Use release timestamps and the current date,
    not the JSON field named `current`, to identify the active season. Report if
    the bundled data needs refreshing. Do not substitute an older season.
-2. Read the current lineup at `https://alioth.wiki/en/gi/theater?id={season}`.
-   Record all choices per act/difficulty, including normal, defense, elite, boss,
-   and Lunar encounters where present. Distinguish selectable alternatives from
-   successive waves of one encounter. Preserve displayed names and variants.
-3. Read `https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/{YYYY-MM-DD}`
-   for current-season objectives, timing, stage effects, and mechanics.
-4. Use `https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons`
+2. Read the official current-season page at
+   `https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons/{YYYY-MM-DD}`
+   for the lineup, objectives, timing, stage effects, and mechanics. Consult
+   official version patch notes when they announce lineup details not yet in
+   the Theater page. Keep anything found only on an unofficial source in the
+   ignored local preview; do not use it to complete the public record.
+3. Use `https://genshin-impact.fandom.com/wiki/Imaginarium_Theater/Seasons`
    to research **many previous seasons**: inspect at least 12 available prior
    season battle pages, newest first, or all available if fewer exist. Expand
    further when current encounters remain unmatched. Count only pages whose
    battle content was actually read, not search snippets or index links.
-5. **Historical regular-act references must stay within the same act number.**
-Act 6 may reference only prior Act 6 encounters, never Act 8 or another act
-even if the boss is identical. Lunar challenges I and II may be compared
-across challenge numbers when their enemy lineup, battle format, and
-objectives are compatible; enemy identity alone is not enough to transfer
-objectives, timers, or effects. Normal acts and Lunar challenges are not
-interchangeable. A final boss moving between Hard Act 8 and Visionary Act 10
-does not permit transferring historical deadlines across those acts. Apply
-these rules to app source links, evidence tables, timing, quotas, waves, and
-stage-effect inferences. General enemy reference pages may still supply
-intrinsic resistances and mechanics; they are not lineup matches.
+4. **Historical regular-act references must stay within the same act number.**
+   Act 6 may reference only prior Act 6 encounters, never Act 8 or another act
+   even if the boss is identical. Lunar challenges I and II may be compared
+   across challenge numbers when their enemy lineup, battle format, and
+   objectives are compatible; enemy identity alone is not enough to transfer
+   objectives, timers, or effects. Normal acts and Lunar challenges are not
+   interchangeable. A final boss moving between Hard Act 8 and Visionary Act 10
+   does not permit transferring historical deadlines across those acts. Apply
+   these rules to app source links, evidence tables, timing, quotas, waves, and
+   stage-effect inferences. General enemy reference pages may still supply
+   intrinsic resistances and mechanics; they are not lineup matches.
    Within that act, match encounters using enemy variants, wave composition, battle
    type, difficulty, objectives, and stage effects. A shared enemy or act number
    alone is insufficient. Use well-matched historical encounters to populate
@@ -96,17 +98,18 @@ intrinsic resistances and mechanics; they are not lineup matches.
    the current Fandom battle table is absent. Record the season and exact act,
    explain the match, and label the transferred fields **inferred**, rather than
    leaving supported fields unknown until a current-season page exists.
-   Repeated agreement and a matching Alioth target increase confidence. Require
-   the same act and compatible battle type; label partial-variant matches lower
-   confidence. If no same-act match exists, leave unsupported values unknown
-   and retain details supplied directly by current or general enemy sources.
+   Repeated agreement and a matching official current-season target increase
+   confidence. Require the same act and compatible battle type; label
+   partial-variant matches lower confidence. If no same-act match exists, leave
+   unsupported values unknown and retain details supplied directly by current
+   or general official enemy sources.
    Conflicting timers remain unresolved unless current
    evidence distinguishes them; do not silently pick one.
-6. Check relevant enemy reference pages for resistance values and mechanics.
+5. Check relevant enemy reference pages for resistance values and mechanics.
    Distinguish base resistance from shields, transformations, buffs, and other
    conditional changes. Record physical and elemental values with conditions;
    do not assume universal 10% resistance. Avoid uncited tactical guesses.
-7. Resolve discrepancies using current-season evidence for the field concerned.
+6. Resolve discrepancies using current-season evidence for the field concerned.
    Keep a record of conflicts and uncertainty. If a source cannot be accessed,
    report the limitation; do not invent choices or claim historical research
    was completed. Ask for missing source content only when available tools and
@@ -122,10 +125,12 @@ lineup source. Keep unofficial enemies, encounter details, and their source
 audit in the Git-ignored `private-local/` directory; never add them to tracked
 act or lineup JSON, research files, archives, or any deployed/editor export.
 The development server loads private previews for Act Details, Challenge Setup,
-and the planner. Custom-season JSON files can be imported by selecting them in
-Challenge Setup; the browser validates and stores the file in local storage,
-without uploading it. Verify that every private data file remains ignored
-before publishing or committing.
+and the planner only after the user selects the separate **Private local
+preview** entry in Challenge Setup. It must not overlay an official season,
+even when both use the same season number. Custom-season JSON files can also be
+imported by selecting them in Challenge Setup; the browser validates and stores
+the file in local storage, without uploading it. Verify that every private data
+file remains ignored before publishing or committing.
 
 Mark protected season numbers in the comma-separated
 `itp-act-details-local-only-seasons-v1` browser-storage key; Act Details JSON
@@ -216,10 +221,10 @@ and verified Fandom `wikiUrl` destinations. Link the enemy portrait/name card to
 that page; these player-facing enemy links are allowed, unlike research-source
 links and historical cross-references. Resolve alternate names through wiki
 redirects or the appropriate enemy page rather than linking to missing pages.
-Enemy icons live
-in `src/assets/enemies`. Include an icon for each newly introduced enemy type;
-reuse source icons for forms that share one. These icons were downloaded from
-the Alioth image CDN (`/gi/MonsterIcon/{icon}.png`).
+Enemy icons live in `src/assets/enemies`. Include an icon for each newly
+introduced enemy type and use official game or Fandom-hosted assets for the
+public dataset; reuse source icons for forms that share one. Unofficial preview
+assets belong only in the ignored local preview.
 
 Curate the full evidence-bearing dataset in
 `docs/act-details-research/{YYYY-MM-DD}.json`, alongside its Markdown audit.
@@ -305,7 +310,7 @@ Paraphrase source descriptions; avoid copying long wiki passages.
 
 The research record must contain:
 
-- Alioth season number and Fandom date mapping, plus actual access dates.
+- Season number, Fandom date mapping, official sources, and actual access dates.
 - Every prior season inspected, with URL and a brief relevant finding or
   explicit no-match result. Do not stop at an arbitrary count if gaps remain
   and more useful history is available.

@@ -7,9 +7,9 @@ Research date: [actual date]
 
 | Source | URL | Access date | Coverage / access limitations |
 | --- | --- | --- | --- |
-| Alioth lineup | | | |
 | Fandom season | | | |
 | Fandom season index | | | |
+| Official version patch notes | | | |
 
 ## Previous seasons inspected
 
@@ -39,7 +39,7 @@ cover an explicitly listed set of difficulties only when checked.
 
 ## Coverage
 
-| Difficulty | Acts checked | Choices checked against Alioth | Missing details |
+| Difficulty | Acts checked | Choices checked against official sources | Missing details |
 | --- | --- | --- | --- |
 | Easy | | | |
 | Normal | | | |

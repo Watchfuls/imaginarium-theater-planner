@@ -7,7 +7,7 @@ import type {ActDetailsData} from './actDetailsData';
 
 const LunarActOnePreview=React.lazy(()=>import('./PlannerEncounterPicker').then(module=>({default:module.LunarActOnePreview})));
 
-export function BossPreview({season,bossData,difficulty,privatePreview=false,actDetailsData,privateEnemies}:{season:TheaterSeason;bossData:TheaterBossData;difficulty:string;privatePreview?:boolean;actDetailsData?:ActDetailsData;privateEnemies?:Record<string,{name:string;iconUrl:string;wikiUrl:string}>}){
+export function BossPreview({season,bossData,difficulty,privatePreview=false,actDetailsData,privateEnemies}:{season:TheaterSeason;bossData:TheaterBossData;difficulty:string;privatePreview?:boolean;actDetailsData?:ActDetailsData;privateEnemies?:Record<string,{name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>}>}){
   const stages=privatePreview
     ? [3,6,8,10].map(act=>season.bossStages.find(stage=>stage.act===act)?.bosses??[])
     : (['boss1','boss2','boss3','boss4'] as const).map(slot=>getBossesForSlot(season,bossData,slot));

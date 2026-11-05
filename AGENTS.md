@@ -7,9 +7,11 @@ read and follow [docs/act-details-workflow.md](docs/act-details-workflow.md).
 That document is the standing brief: do not ask the user to repeat the sources,
 format, coverage, or historical cross-reference requirements.
 
-Source priority: the user's notes/guides and explicit corrections > Fandom >
-Alioth > other sources. Lower-priority sources fill gaps, not override applicable
-user notes. Respect the exact variant and preserve uncertainty in the notes.
+For public Act Details, use the user's notes/guides and explicit corrections,
+then official Fandom records and other official sources. Do not use Alioth or
+other unofficial sources to fill gaps in public data. Keep unofficial preview
+research in ignored `private-local/` files only. Respect the exact variant and
+preserve uncertainty in the notes.
 
 Historical lineup references must be within the same act number. Match each
 Lunar challenge only to that same Lunar challenge. Do not borrow objectives,

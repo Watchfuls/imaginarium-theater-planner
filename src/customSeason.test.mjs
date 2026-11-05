@@ -27,7 +27,8 @@ const validPackage=()=>({
   enemies:{'123':{
     name:'Test Enemy',
     iconUrl:'https://transform.alioth.wiki/i/gi/MonsterIcon/test.png',
-    wikiUrl:'https://genshin-impact.fandom.com/wiki/Test_Enemy'
+    wikiUrl:'https://genshin-impact.fandom.com/wiki/Test_Enemy',
+    baseResistances:{Physical:70,Pyro:10}
   }}
 });
 
@@ -37,6 +38,7 @@ test('custom season package validates and normalizes its season and enemy data',
   assert.equal(parseCustomSeasonPackage(JSON.parse(JSON.stringify(parsed))).season.season,99);
   assert.equal(parsed.actDetails.seasons['99'].Hard['1'].encounters[0].enemyIds[0],'123');
   assert.equal(parsed.enemies['123'].name,'Test Enemy');
+  assert.deepEqual(parsed.enemies['123'].baseResistances,{Physical:70,Pyro:10});
 });
 
 test('custom season package rejects unsupported versions, mismatched act details, and untrusted image hosts',()=>{
@@ -48,4 +50,7 @@ test('custom season package rejects unsupported versions, mismatched act details
   const untrusted=validPackage();
   untrusted.enemies['123'].iconUrl='https://example.com/image.png';
   assert.throws(()=>parseCustomSeasonPackage(untrusted),/unsupported image host/);
+  const invalidResistances=validPackage();
+  invalidResistances.enemies['123'].baseResistances={Dendro:'10'};
+  assert.throws(()=>parseCustomSeasonPackage(invalidResistances),/invalid base resistances/);
 });

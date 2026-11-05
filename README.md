@@ -89,10 +89,15 @@ historical research, data format, preservation of your notes, and validation.
 Repository instructions direct coding agents to follow it automatically.
 This is an on-demand update; it does not add scheduled automation.
 
-Season 29's [research record](docs/act-details-research/2026-11-01.md) documents
-the Alioth enemy choices, resistance references, and comparisons across 28 prior
-Fandom seasons. The app distinguishes current enemy types from historical
-timers, waves, and stage effects; incomplete difficulty variants remain labelled.
+Season 29's [historical research record](docs/act-details-research/2026-11-01.md)
+retains its source audit, including prior Alioth comparisons and research across
+28 Fandom seasons. For public updates, the current workflow uses Fandom and other
+official sources only; unofficial gaps belong in the ignored local preview.
+In development, **Private local preview** is a separate season-lineup choice and
+never replaces an official season with the same number. An imported custom
+season is also listed separately and stays in this browser.
+The app distinguishes current enemy types from historical timers, waves, and
+stage effects; incomplete difficulty variants remain labelled.
 
 Act Details shows enemy portraits with locally bundled icons and only resistance
 exceptions to the standard 10%. Cross-references, graphic credits, confidence,

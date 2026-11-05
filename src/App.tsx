@@ -30,9 +30,9 @@ const PlannerEncounterPicker=React.lazy(()=>import('./PlannerEncounterPicker').t
 const ActDetails=React.lazy(()=>import('./ActDetails').then(module=>({default:module.ActDetails})));
 const isRecord=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const isStringArray=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==='string');
-const validSetup=(value:unknown)=>isRecord(value)&&typeof value.difficulty==='string'&&Object.hasOwn(difficulties,value.difficulty)&&isStringArray(value.elements)&&isStringArray(value.opening)&&isStringArray(value.guests);
+const validSetup=(value:unknown)=>isRecord(value)&&typeof value.difficulty==='string'&&Object.hasOwn(difficulties,value.difficulty)&&isStringArray(value.elements)&&isStringArray(value.opening)&&isStringArray(value.guests)&&(value.customSeasonSelected===undefined||typeof value.customSeasonSelected==='boolean')&&(value.privateSeasonSelected===undefined||typeof value.privateSeasonSelected==='boolean');
 const validPlan=(value:unknown)=>isRecord(value)&&isStringArray(value.roster)&&isRecord(value.acts)&&Object.values(value.acts).every(isStringArray);
-type PrivateEnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+type PrivateEnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 type PrivateTheaterPreview={season:TheaterSeason;enemies:Record<string,PrivateEnemyPreview>};
 const customSeasonStorageKey='itp-custom-season-v1';
 function storedCustomSeason():{value:CustomSeasonPackage|null;status:string} {
@@ -101,10 +101,16 @@ const [chosenElements,setChosenElements]=useState<Element[]>([]);
 const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
 const [plannerCharacterOrder,setPlannerCharacterOrder]=useState<CharacterSortOrder>(()=>storedText('itp-planner-sort-v1','name')==='game'?'game':'name');
 const [storageUnavailable,setStorageUnavailable]=useState(false);
-const appSeasons=availableSeasons.map(season=>season.season===30&&privatePreview
+const appSeasons=availableSeasons.map(season=>season.season===30&&privatePreview&&setup.privateSeasonSelected
   ? {...season,bossStages:privatePreview.season.bossStages}
-  : season).filter(season=>season.season!==customSeasonPackage?.season.season);
-if(customSeasonPackage)appSeasons.push(customSeasonPackage.season);
+  : season);
+if(customSeasonPackage&&setup.customSeasonSelected){
+  const existingIndex=appSeasons.findIndex(season=>season.season===customSeasonPackage.season.season);
+  if(existingIndex>=0)appSeasons.splice(existingIndex,1,customSeasonPackage.season);
+  else appSeasons.push(customSeasonPackage.season);
+}else if(customSeasonPackage&&!appSeasons.some(season=>season.season===customSeasonPackage.season.season)){
+  appSeasons.push(customSeasonPackage.season);
+}
 useEffect(()=>{
   const writes=[
     saveText('itp-planner-sort-v1',plannerCharacterOrder),
@@ -113,7 +119,7 @@ useEffect(()=>{
     saveText('itp-plan-v1',JSON.stringify(plan)),
     saveText('itp-plan-history-v1',JSON.stringify(planHistory)),
   ];
-  if(customSeasonDirty)writes.push(saveText(customSeasonStorageKey,JSON.stringify(customSeasonPackage)));
+  if(customSeasonDirty)writes.push(saveText(customSeasonStorageKey,customSeasonPackage?JSON.stringify(customSeasonPackage):''));
   setStorageUnavailable(writes.some(saved=>!saved));
 },[plannerCharacterOrder,ownership,setup,plan,planHistory,customSeasonPackage,customSeasonDirty]);
 useEffect(()=>{
@@ -138,7 +144,10 @@ useEffect(()=>{
       const iconUrl=new URL(value.iconUrl);
       const wikiUrl=new URL(value.wikiUrl);
       if(iconUrl.protocol!=='https:'||iconUrl.hostname!=='transform.alioth.wiki'||wikiUrl.protocol!=='https:'||wikiUrl.hostname!=='genshin-impact.fandom.com')throw new Error(`Private enemy preview ${id} has an unexpected URL.`);
-      enemies[id]={name:value.name,iconUrl:iconUrl.href,wikiUrl:wikiUrl.href};
+      const baseResistances=isRecord(value.baseResistances)&&Object.entries(value.baseResistances).every(([element,resistance])=>['Physical','Pyro','Hydro','Electro','Cryo','Dendro','Anemo','Geo'].includes(element)&&typeof resistance==='number'&&Number.isFinite(resistance))
+        ?value.baseResistances as Record<string,number>
+        :undefined;
+      enemies[id]={name:value.name,iconUrl:iconUrl.href,wikiUrl:wikiUrl.href,...(baseResistances?{baseResistances}: {})};
     }
     if(cancelled)return;
     setPrivatePreview({season,enemies});
@@ -174,23 +183,26 @@ useEffect(()=>{
   return ()=>window.clearTimeout(timeout);
 },[assignmentNotice]);
 useEffect(()=>{
-  if(setup.seasonId===undefined)return;
+  if(setup.seasonId===undefined||(setup.privateSeasonSelected&&!privatePreview))return;
   const season=appSeasons.find(candidate=>candidate.season===setup.seasonId)??currentSeason(appSeasons);
   if(!season)return;
-  setSetup(current=>current.seasonId===season.season?{...current,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests}:{...current,seasonId:season.season,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests});
-},[setup.seasonId]);
-const selectedSeason=appSeasons.find(season=>season.season===setup.seasonId)??null;
+  setSetup(current=>current.seasonId===season.season?{...current,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests}:{...current,seasonId:season.season,customSeasonSelected:false,privateSeasonSelected:false,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests});
+},[setup.seasonId,setup.customSeasonSelected,setup.privateSeasonSelected,privatePreview]);
+const selectedSeason=setup.customSeasonSelected&&customSeasonPackage
+  ?customSeasonPackage.season
+  :setup.privateSeasonSelected?privatePreview?.season??null
+  :availableSeasons.find(season=>season.season===setup.seasonId)??null;
 const bossesForAct=(seasonNumber:number,difficulty:string,act:number)=>{
   const season=appSeasons.find(candidate=>candidate.season===seasonNumber);
   if(!season)return [];
-  if(customSeasonPackage?.season.season===seasonNumber||privatePreview&&seasonNumber===privatePreview.season.season)return season.bossStages.find(stage=>stage.act===act)?.bosses??[];
+  if(selectedCustomSeason&&customSeasonPackage?.season.season===seasonNumber||selectedPrivatePreview&&privatePreview?.season.season===seasonNumber)return season.bossStages.find(stage=>stage.act===act)?.bosses??[];
   const slot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12?'lunar2':undefined;
   return slot?getBossesForSlot(season,bossData,slot):season.bossStages.find(stage=>stage.act===act)?.bosses??[];
 };
-const selectedCustomSeason=Boolean(selectedSeason&&customSeasonPackage?.season.season===selectedSeason.season);
-const selectedPrivatePreview=Boolean(selectedSeason&&privatePreview?.season.season===selectedSeason.season);
-const activeActDetails=selectedCustomSeason?customSeasonPackage?.actDetails:privateActDetails;
-const activeEnemyPreviews=selectedCustomSeason?customSeasonPackage?.enemies:privatePreview?.enemies;
+const selectedCustomSeason=Boolean(selectedSeason&&setup.customSeasonSelected&&customSeasonPackage?.season.season===selectedSeason.season);
+const selectedPrivatePreview=Boolean(selectedSeason&&setup.privateSeasonSelected&&privatePreview?.season.season===selectedSeason.season);
+const activeActDetails=selectedCustomSeason?customSeasonPackage?.actDetails:selectedPrivatePreview?privateActDetails:undefined;
+const activeEnemyPreviews=selectedCustomSeason?customSeasonPackage?.enemies:selectedPrivatePreview?privatePreview?.enemies:undefined;
 const selectedElements=setup.elements.filter((element):element is Element=>ELEMENTS.includes(element));
 const hasThreeElements=selectedElements.length===3;
 const openingOptions=hasThreeElements?CHARACTERS.filter(c=>selectedElements.includes(c.element)):[];
@@ -247,7 +259,7 @@ const setCharacterLevel=(name:string,level:number)=>setOwnership(current=>{
   return updated;
 });
 const toggleArray=(values:string[],name:string,limit:number)=>values.includes(name)?values.filter(v=>v!==name):values.length<limit?[...values,name]:values;
-const updateCustomSetup=(update:(current:Setup)=>Setup)=>setSetup(current=>({...update(current),seasonId:undefined}));
+const updateCustomSetup=(update:(current:Setup)=>Setup)=>setSetup(current=>({...update(current),seasonId:undefined,customSeasonSelected:false,privateSeasonSelected:false}));
 const toggleRoster=(name:string)=>setPlan(current=>{
   const currentCast=new Set(castForPlan(current));
   const roster=current.roster.filter(value=>currentCast.has(value)&&rosterCandidateNames.has(value)&&value!==(current.borrowed??''));
@@ -389,7 +401,7 @@ const importCustomSeason=async(file:File)=>{
     setCustomSeasonPackage(imported);
     setCustomSeasonDirty(true);
     setCustomSeasonStatus(`Custom Season ${imported.season.season} loaded in this browser. The file is not uploaded.`);
-    setSetup(current=>({...current,seasonId:imported.season.season,elements:imported.season.elements,opening:imported.season.openingCharacters,guests:imported.season.specialGuests}));
+    setSetup(current=>({...current,seasonId:imported.season.season,customSeasonSelected:true,privateSeasonSelected:false,elements:imported.season.elements,opening:imported.season.openingCharacters,guests:imported.season.specialGuests}));
   }catch(error){
     setCustomSeasonStatus(`Custom season import failed: ${error instanceof Error?error.message:'Unable to read this file.'}`);
   }finally{
@@ -403,9 +415,9 @@ const removeCustomSeason=()=>{
   setCustomSeasonDirty(true);
   setCustomSeasonStatus(`Custom Season ${removedSeason} removed from this browser.`);
   setSetup(current=>{
-    if(current.seasonId!==removedSeason)return current;
+    if(current.seasonId!==removedSeason||!current.customSeasonSelected)return current;
     const fallback=availableSeasons.find(season=>season.season===removedSeason)??currentSeason(availableSeasons);
-    return fallback?{...current,seasonId:fallback.season,elements:fallback.elements,opening:fallback.openingCharacters,guests:fallback.specialGuests}:{...current,seasonId:undefined};
+    return fallback?{...current,seasonId:fallback.season,customSeasonSelected:false,privateSeasonSelected:false,elements:fallback.elements,opening:fallback.openingCharacters,guests:fallback.specialGuests}:{...current,seasonId:undefined,customSeasonSelected:false,privateSeasonSelected:false};
   });
 };
 const renderPlannerCharacter=(character:Character)=>{
@@ -483,14 +495,14 @@ const renderAct=(act:number,label:string)=>{
 };
 return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContinueToPlanner={canContinueToPlanner} setStep={setStep}/>
 <BackupControls save={{ownership,setup,plan,sort:plannerCharacterOrder,history:planHistory}} onRestore={save=>{
-  const unavailable=save.setup.seasonId!==undefined&&!appSeasons.some(season=>season.season===save.setup.seasonId);
+  const unavailable=save.setup.seasonId!==undefined&&(save.setup.customSeasonSelected?!customSeasonPackage:save.setup.privateSeasonSelected?!privatePreview:!availableSeasons.some(season=>season.season===save.setup.seasonId));
   setOwnership(normalizeOwnership(save.ownership));setPlannerCharacterOrder(save.sort);
   setPlanHistory(current=>mergePlanHistory(current,save.history??[],unavailable?[{setup:save.setup,plan:save.plan}]:[]));
   if(!unavailable){setSetup(save.setup);setPlan(save.plan);}
   setCopiedTeam(null);setOpenCharacterPicker('');setActDetailsTarget(null);setStep(1);
   return unavailable?`Characters restored. Season ${save.setup.seasonId} is no longer available, so its plan was kept under Historical plans. Your current challenge setup and plan were left in place.`:'Backup restored.';
 }}/>
-{step===4&&<React.Suspense fallback={<section><h2>Act Details</h2><p>Loading act details…</p></section>}><ActDetails target={actDetailsTarget} difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={appSeasons} now={seasonTime} privateEnemies={activeEnemyPreviews} localCustomData={selectedCustomSeason?customSeasonPackage?.actDetails:undefined} bossesForAct={bossesForAct}/></React.Suspense>}
+{step===4&&<React.Suspense fallback={<section><h2>Act Details</h2><p>Loading act details…</p></section>}><ActDetails target={actDetailsTarget} preferredSeason={selectedSeason?.season} difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={appSeasons} now={seasonTime} privateEnemies={activeEnemyPreviews} privatePreviewSelected={selectedPrivatePreview} localCustomData={selectedCustomSeason?customSeasonPackage?.actDetails:undefined} bossesForAct={bossesForAct}/></React.Suspense>}
 {step===5&&<VideoGuide/>}
 {step===1&&<section>
   <div className="sectionhead">
@@ -517,19 +529,37 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   <p>Configure the current rotation. You can edit these settings at any time. Only one elemental Traveler version can be used per Theater run.</p>
   <div className="lineup-source">
     <label htmlFor="theater-season">Season lineup</label>
-    <select id="theater-season" value={selectedSeason?.season??''} onChange={event=>{
-      const season=appSeasons.find(candidate=>candidate.season===Number(event.target.value));
-      if(season)setSetup(current=>({...current,seasonId:season.season}));
-      else setSetup(current=>({...current,seasonId:undefined}));
+    <select id="theater-season" value={selectedSeason?(selectedCustomSeason?'uploaded':selectedPrivatePreview?'private:30':`official:${selectedSeason.season}`):''} onChange={event=>{
+      const selectedValue=event.target.value;
+      if(selectedValue==='import-custom-season'){customSeasonFileInput.current?.click();return;}
+      if(selectedValue==='remove-custom-season'){removeCustomSeason();return;}
+      if(selectedValue==='uploaded'&&customSeasonPackage){
+        const season=customSeasonPackage.season;
+        setSetup(current=>({...current,seasonId:season.season,customSeasonSelected:true,privateSeasonSelected:false,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests}));
+        return;
+      }
+      if(selectedValue==='private:30'&&privatePreview){
+        const season=privatePreview.season;
+        setSetup(current=>({...current,seasonId:season.season,customSeasonSelected:false,privateSeasonSelected:true,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests}));
+        return;
+      }
+      if(selectedValue.startsWith('official:')){
+        const season=availableSeasons.find(candidate=>candidate.season===Number(selectedValue.slice('official:'.length)));
+        if(season)setSetup(current=>({...current,seasonId:season.season,customSeasonSelected:false,privateSeasonSelected:false,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests}));
+      }else setSetup(current=>({...current,seasonId:undefined,customSeasonSelected:false,privateSeasonSelected:false}));
     }}>
       <option value="">Custom settings</option>
-      {appSeasons.map(season=><option key={season.id} value={season.season}>{customSeasonPackage?.season.season===season.season?'Custom':seasonStatus(season,seasonTime)} · Season {season.season} ({season.id})</option>)}
+      {availableSeasons.map(season=><option key={`official-${season.season}`} value={`official:${season.season}`}>{seasonStatus(season,seasonTime)} · Season {season.season} ({season.id})</option>)}
+      {import.meta.env.DEV&&privatePreview&&<option value="private:30">Private local preview · Season 30</option>}
+      {customSeasonPackage&&<option value="uploaded">Uploaded · Season {customSeasonPackage.season.season} ({customSeasonPackage.season.id})</option>}
+      <optgroup label="Local custom season">
+        <option value="import-custom-season">Import custom season JSON…</option>
+        {customSeasonPackage&&<option value="remove-custom-season">Remove uploaded season…</option>}
+      </optgroup>
     </select>
-    <div className="actions">
-      <button type="button" onClick={()=>customSeasonFileInput.current?.click()}>Import custom season JSON</button>
-      {customSeasonPackage&&<button type="button" onClick={removeCustomSeason}>Remove custom season</button>}
+    <>
       <input ref={customSeasonFileInput} type="file" accept=".json,application/json" hidden aria-label="Import a custom season JSON file" onChange={event=>{const file=event.target.files?.[0];if(file)void importCustomSeason(file);}}/>
-    </div>
+    </>
     {selectedSeason&&<p>
       {new Date(selectedSeason.startsAt).toLocaleDateString()} – {new Date(selectedSeason.endsAt).toLocaleDateString()} {selectedSeason.sourceUrl&&<>· <a href={selectedSeason.sourceUrl} target="_blank" rel="noreferrer">Fandom source</a></>}
       {theaterLineups.generatedAt&&<> · source updated {new Date(theaterLineups.generatedAt).toLocaleDateString()}</>}

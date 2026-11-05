@@ -2,10 +2,11 @@ import {isActDetailsDataForSeason,type ActDetailsData} from './actDetailsData.ts
 import {parseSeason} from './theaterData.ts';
 import type {TheaterSeason} from './plannerTypes';
 
-export type CustomEnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+export type CustomEnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 export type CustomSeasonPackage={format:'imaginarium-theater-custom-season';version:1;season:TheaterSeason;actDetails:ActDetailsData;enemies:Record<string,CustomEnemyPreview>};
 
 const isRecord=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
+const isResistanceMap=(value:unknown):value is Record<string,number>=>isRecord(value)&&Object.entries(value).every(([element,resistance])=>['Physical','Pyro','Hydro','Electro','Cryo','Dendro','Anemo','Geo'].includes(element)&&typeof resistance==='number'&&Number.isFinite(resistance));
 const allowedHost=(value:string,hosts:string[])=>{
   try{
     const url=new URL(value);
@@ -28,9 +29,11 @@ export function parseCustomSeasonPackage(value:unknown):CustomSeasonPackage {
   const enemies:Record<string,CustomEnemyPreview>={};
   for(const [id,enemy] of Object.entries(value.enemies)){
     if(!/^\d+$/.test(id)||!isRecord(enemy)||typeof enemy.name!=='string'||typeof enemy.iconUrl!=='string'||typeof enemy.wikiUrl!=='string')throw new Error(`Custom enemy preview ${id} is invalid.`);
+    const baseResistances=enemy.baseResistances;
+    if(baseResistances!==undefined&&!isResistanceMap(baseResistances))throw new Error(`Custom enemy preview ${id} has invalid base resistances.`);
     if(!allowedHost(enemy.iconUrl,['transform.alioth.wiki','static.wikia.nocookie.net']))throw new Error(`Custom enemy ${id} has an unsupported image host.`);
     if(!allowedHost(enemy.wikiUrl,['genshin-impact.fandom.com']))throw new Error(`Custom enemy ${id} has an unsupported wiki URL.`);
-    enemies[id]={name:enemy.name,iconUrl:enemy.iconUrl,wikiUrl:enemy.wikiUrl};
+    enemies[id]={name:enemy.name,iconUrl:enemy.iconUrl,wikiUrl:enemy.wikiUrl,...(baseResistances?{baseResistances}: {})};
   }
   return {format:'imaginarium-theater-custom-season',version:1,season,actDetails:value.actDetails,enemies};
 }
