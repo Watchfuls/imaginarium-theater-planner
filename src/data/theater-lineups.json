@@ -104,6 +104,11 @@
       "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/3b/Algorithm_of_Semi-Intransient_Matrix_of_Overseer_Network_Icon.png/revision/latest?cb=20220928021458"
     },
     {
+      "name": "Ancient Ironquill",
+      "type": "Local Legend",
+      "iconUrl": null
+    },
+    {
       "name": "Anemo Hypostasis",
       "type": "Boss",
       "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e6/Anemo_Hypostasis_Icon.png/revision/latest?cb=20201122050141"
@@ -197,6 +202,11 @@
       "name": "Dendro Hypostasis",
       "type": "Boss",
       "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/9c/Dendro_Hypostasis_Icon.png/revision/latest?cb=20221102024609"
+    },
+    {
+      "name": "Elder Blighttree",
+      "type": "Local Legend",
+      "iconUrl": null
     },
     {
       "name": "Electro Hypostasis",
