@@ -59,13 +59,16 @@ function MechanicStateTerm({text,enemyIds}:{text:string;enemyIds:string[]}){
   return <span className="mechanic-state-hint" tabIndex={0} aria-describedby={id}>{text}<span className="mechanic-state-tooltip" role="tooltip" id={id}>{mechanicStateDescription(text,enemyIds)}</span></span>;
 }
 
-function MechanicsDetails({value,enemyIds}:{value:string;enemyIds:string[]}){
+function MechanicsDetails({value,enemyIds,enemyNames}:{value:string;enemyIds:string[];enemyNames:string[]}){
   const text=playerDetailText(value);
   if(!text)return null;
   const explain=(value:string)=><ElementalText text={value} values renderState={text=><MechanicStateTerm text={text} enemyIds={enemyIds}/>}/>;
   return <div className="act-detail-field"><strong>Mechanics</strong><div className="act-mechanics-sections">{text.split('\n').filter(Boolean).map((line,index)=>{
-    const section=line.match(/^([^:]{1,60}):\s*(.+)$/);
-    return <div className="act-mechanics-subsection" key={index}>{section?<><h5>{explain(section[1])}</h5><p>{explain(section[2])}</p></>:<p>{explain(line)}</p>}</div>;
+    const enemyName=[...enemyNames].sort((a,b)=>b.length-a.length).find(name=>line.startsWith(`${name}: `));
+    const fallback=line.match(/^([^:]{1,60}):\s*(.+)$/);
+    const heading=enemyName??fallback?.[1];
+    const body=enemyName?line.slice(enemyName.length+2):fallback?.[2];
+    return <div className="act-mechanics-subsection" key={index}>{heading&&body?<><h5>{explain(heading)}</h5><p>{explain(body)}</p></>:<p>{explain(line)}</p>}</div>;
   })}</div></div>;
 }
 
@@ -266,7 +269,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
               {editing&&field('Challenge Requirements',encounter.requirements,value=>change('requirements',value))}
               {(editing||((eliteAssault||number>10)&&choiceStageEffects))&&field('Stage Effects',editing?encounter.stageEffects??'':choiceStageEffects,value=>change('stageEffects',value))}
               <div className={encounter.notableCharacters?.length?'act-mechanics-layout':undefined}>
-              {editing?field('Mechanics',encounter.mechanics??'',value=>change('mechanics',value)):<MechanicsDetails value={encounter.mechanics??''} enemyIds={encounterEnemyIds(encounter)}/>}
+              {editing?field('Mechanics',encounter.mechanics??'',value=>change('mechanics',value)):<MechanicsDetails value={encounter.mechanics??''} enemyIds={encounterEnemyIds(encounter)} enemyNames={lineup.map(enemy=>enemy.name)}/>}
               {!!encounter.notableCharacters?.length&&<NotableCharacters characters={encounter.notableCharacters}/>}
               </div>
               {field('Challenge Notes',encounter.notes,value=>change('notes',value))}
