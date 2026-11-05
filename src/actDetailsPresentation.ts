@@ -39,6 +39,7 @@ export function playerDetailText(value:string):string {
     .replace(/(\d)[ \t]+(s|ms|min)\b/g,'$1$2')
     .replace(/\b(\d+)s\b/g,(text,seconds)=>Number(seconds)>60?`${Math.floor(Number(seconds)/60)}m${Number(seconds)%60?` ${Number(seconds)%60}s`:''}`:text)
     .replace(/^Current enemy types \(Alioth:?\)?\s*:\s*/gm,'')
+    .replace(/^.*\bgroup (\d+)$/gm,'Enemy lineup $1')
     .replace(/^Current enemy types \(Alioth:\s*/gm,'')
     .replace(/^.*(?:The graphic says only|The graphic does not explicitly|The graphic depicts this|Artwork groups|These higher-level graphic counts).*$/gm,'')
     .replace(/^Alioth lists enemy types[^\n]*$/gm,'')

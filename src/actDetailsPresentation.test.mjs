@@ -132,6 +132,7 @@ test('shipped act data contains gameplay and enemy IDs without source links or r
   }
   assert.doesNotMatch(JSON.stringify(prepared),/alioth|fandom|https?:|graphicSources|confidence|"sources"|"research"/i);
   assert.deepEqual(siteActDetails(data),data);
+  assert.equal(playerDetailText('Enemy group 1'),'Enemy lineup 1');
   assert.doesNotMatch(JSON.stringify(data),/alioth|fandom|https?:|graphicSources|confidence|"sources"|"research"/i);
   const draft=structuredClone(research);
   draft.seasons[29].Lunar[3].notes='My team note';

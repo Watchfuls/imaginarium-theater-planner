@@ -261,11 +261,15 @@ test('provided act graphics supply counts and resolve the recorded timer gaps',(
   assert.match(acts[11].encounters[0].requirements,/each defeat removes 30 s/);
 });
 
-test('historical lineup references never cross act or Lunar challenge boundaries',()=>{
+test('historical lineup references stay within regular acts and Lunar references stay within Lunar challenges',()=>{
   for(const modes of Object.values(data.seasons))for(const acts of Object.values(modes))for(const [act,record]of Object.entries(acts)){
     const anchor=act==='11'?'Arcana_Challenge_I':act==='12'?'Arcana_Challenge_II':`Act_${act}`;
     for(const encounter of record.encounters)for(const source of encounter.sources??[]){
-      if(source.url.includes('/Seasons/'))assert.equal(new URL(source.url).hash,`#${anchor}`,`${encounter.name}: ${source.url}`);
+      if(source.url.includes('/Seasons/')){
+        const sourceAnchor=new URL(source.url).hash;
+        if(Number(act)>10)assert.ok(['#Arcana_Challenge_I','#Arcana_Challenge_II'].includes(sourceAnchor),`${encounter.name}: ${source.url}`);
+        else assert.equal(sourceAnchor,`#${anchor}`,`${encounter.name}: ${source.url}`);
+      }
     }
   }
   for(const acts of Object.values(data.seasons[29]))for(const [act,record]of Object.entries(acts))for(const encounter of record.encounters){

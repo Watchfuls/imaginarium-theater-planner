@@ -31,8 +31,9 @@ cover an explicitly listed set of difficulties only when checked.
 - Star objective and target timer; source:
 - Stage effects and mechanics; source:
 - Base and conditional resistances; enemy reference URLs:
-- Historical matches (season, same act only, URL, matching characteristics;
-  Lunar challenges must match the same challenge number):
+- Historical matches (season, act number for regular Acts 1–10; Lunar I and II
+  may cross-match when lineup, format, and objectives are compatible; URL and
+  matching characteristics):
 - Verification: [confirmed current / historical only / unknown]
 - Discrepancies or missing evidence:
 

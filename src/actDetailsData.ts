@@ -7,6 +7,21 @@ export type ActDetailsData = {
   research?:Record<string,{checkedOn:string;summary:string;sources:DetailSource[]}>;
 };
 
+export function isActDetailsDataForSeason(value:unknown,seasonNumber:number):value is ActDetailsData {
+  if(!value||typeof value!=='object'||!('seasons' in value)||!value.seasons||typeof value.seasons!=='object'||Array.isArray(value.seasons))return false;
+  const seasons=value.seasons as Record<string,unknown>;
+  const season=seasons[String(seasonNumber)];
+  return Boolean(season&&typeof season==='object'&&!Array.isArray(season)&&Object.values(season).every(mode=>
+    Boolean(mode&&typeof mode==='object'&&!Array.isArray(mode)&&Object.values(mode).every(act=>
+      Boolean(act&&typeof act==='object'&&!Array.isArray(act)&&Array.isArray((act as ActDetailsRecord).encounters)&&(act as ActDetailsRecord).encounters.every(encounter=>
+        Boolean(encounter&&typeof encounter.name==='string'&&typeof encounter.enemies==='string'&&typeof encounter.resistances==='string'&&typeof encounter.requirements==='string'&&typeof encounter.notes==='string')
+      ))
+    ))
+  ));
+}
+
+export const isActDetailsData=(value:unknown):value is ActDetailsData=>isActDetailsDataForSeason(value,30);
+
 // An older browser draft must not hide newly researched seasons or acts.
 export function mergeActDetailsDraft(published:ActDetailsData,draft:ActDetailsData):ActDetailsData {
   const seasons={...published.seasons};

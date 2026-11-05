@@ -4,16 +4,19 @@ import {DifficultySelect} from './DifficultySelect';
 import React, {useEffect, useState} from 'react';
 import published from './data/theater-act-details.json';
 import {seasonStatus} from './seasonTiming';
-import {mergeActDetailsDraft,type ActDetailsData as Data,type ActDetailsRecord as Act,type EncounterDetails as Encounter} from './actDetailsData';
+import {isActDetailsData,mergeActDetailsDraft,type ActDetailsData as Data,type ActDetailsRecord as Act,type EncounterDetails as Encounter} from './actDetailsData';
 import enemyCatalog from './data/theater-enemies.json' with {type:'json'};
 import physicalIcon from './assets/elements/Physical_Icon.png';
 import {KeyRecommendations} from './KeyRecommendations';
 import {mechanicStateDescription} from './mechanicStates';
 import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation';
+import {storedText} from './browserStorage';
 
 const enemyIcons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const abilityIcons=import.meta.glob('./assets/abilities/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
-const enemiesById=enemyCatalog as Record<string,{name:string;icon:string;wikiUrl:string;baseResistances:Record<string,number>}>;
+type EnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+type Enemy={name:string;icon?:string;iconUrl?:string;wikiUrl:string;baseResistances?:Record<string,number>};
+const enemiesById=enemyCatalog as Record<string,Enemy>;
 
 function ResistanceLabels({value}:{value:string}){
   const tooltipId=React.useId();
@@ -23,10 +26,8 @@ function ResistanceLabels({value}:{value:string}){
     : <React.Fragment key={index}>{part}</React.Fragment>)}</span><span className="resistance-tooltip" role="tooltip" id={tooltipId}>Resistances</span></span>;
 }
 
-type Enemy = {name:string;iconUrl:string|null};
-
-function EnemyWaveText({value}:{value:string}){
-  const enemies=Object.values(enemiesById).sort((a,b)=>b.name.length-a.name.length);
+function EnemyWaveText({value,enemiesByIdMap=enemiesById}:{value:string;enemiesByIdMap:Record<string,Enemy>}){
+  const enemies=Object.values(enemiesByIdMap).sort((a,b)=>b.name.length-a.name.length);
   const parts:React.ReactNode[]=[];
   let remaining=value;
   while(remaining){
@@ -35,7 +36,7 @@ function EnemyWaveText({value}:{value:string}){
     if(!match){parts.push(remaining);break;}
     if(match.index)parts.push(remaining.slice(0,match.index));
     const {enemy}=match;
-    parts.push(<React.Fragment key={parts.length}><a className="act-wave-enemy" href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name} on Fandom`} title={enemy.name}><img src={enemyIcons[`./assets/enemies/${enemy.icon}`]} alt="" width="24" height="24" loading="lazy"/></a></React.Fragment>);
+    parts.push(<React.Fragment key={parts.length}><a className="act-wave-enemy" href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name} on Fandom`} title={enemy.name}><img src={enemy.icon?enemyIcons[`./assets/enemies/${enemy.icon}`]:enemy.iconUrl} alt="" width="24" height="24" loading="lazy"/></a></React.Fragment>);
     remaining=remaining.slice(match.index+enemy.name.length);
   }
   return <>{parts}</>;
@@ -59,7 +60,8 @@ function MechanicStateTerm({text,enemyIds}:{text:string;enemyIds:string[]}){
 }
 
 function MechanicsDetails({value,enemyIds}:{value:string;enemyIds:string[]}){
-  const text=playerDetailText(value)||'None';
+  const text=playerDetailText(value);
+  if(!text)return null;
   const explain=(value:string)=><ElementalText text={value} values renderState={text=><MechanicStateTerm text={text} enemyIds={enemyIds}/>}/>;
   return <div className="act-detail-field"><strong>Mechanics</strong><div className="act-mechanics-sections">{text.split('\n').filter(Boolean).map((line,index)=>{
     const section=line.match(/^([^:]{1,60}):\s*(.+)$/);
@@ -83,7 +85,7 @@ function ChallengeRequirements({value}:{value:string}){
   </div>{other.length>0&&<div className="act-requirements-lines">{other.map((line,index)=><div key={index}>{content(line)}</div>)}</div>}</div>;
 }
 
-function EnemyDetails({value,requirements}:{value:string;requirements:string}){
+function EnemyDetails({value,requirements,enemiesByIdMap}:{value:string;requirements:string;enemiesByIdMap:Record<string,Enemy>}){
   const lines=playerEnemyNotes(value).split('\n').filter(Boolean).map(line=>line
     .replace(/^\d+ enem(?:y|ies) in (?:one|1) wave[^:]*:\s*/i,'Wave 1: ')
     .replace(/^Wave 1: the Consecrated Red Vulture and Consecrated Scorpion\.?$/i,'Wave 1: 1 Consecrated Red Vulture + 1 Consecrated Scorpion.')
@@ -94,13 +96,18 @@ function EnemyDetails({value,requirements}:{value:string;requirements:string}){
   const summary=[total?total+' '+(total==='1'?'Enemy':'Enemies'):null,waveCount?waveCount+' '+(waveCount===1?'Wave':'Waves'):null].filter(Boolean).join(' | ');
   const details=[...lines.filter(line=>!/^\d+ enemies total\.?$/i.test(line)),...splitChallengeRequirements(requirements).details];
   if(!summary&&!details.length)return null;
-  return <div className="act-detail-field act-enemy-details"><strong>Details</strong>{summary&&<div className="act-wave-summary">{summary}</div>}{details.map((line,index)=><div key={index} className="act-wave-row"><EnemyWaveText value={line.replace(/^\d+ enemies in (?:one|1) wave[^:]*:\s*/i,'Wave 1: ').replace(/\.$/,'')}/></div>)}</div>;
+  return <div className="act-detail-field act-enemy-details"><strong>Details</strong>{summary&&<div className="act-wave-summary">{summary}</div>}{details.map((line,index)=><div key={index} className="act-wave-row"><EnemyWaveText value={line.replace(/^\d+ enemies in (?:one|1) wave[^:]*:\s*/i,'Wave 1: ').replace(/\.$/,'')} enemiesByIdMap={enemiesByIdMap}/></div>)}</div>;
 }
 
 type Season = {season:number;id:string;startsAt:string;endsAt:string;sourceUrl:string};
 const emptyAct = ():Act=>({requirements:'',notes:'',encounters:[]});
 const modes:Record<string,number>={Easy:3,Normal:6,Hard:8,Visionary:10,Lunar:12};
 const storageKey='itp-act-details-draft-v1';
+const localOnlySeasonsKey='itp-act-details-local-only-seasons-v1';
+function localOnlySeasonNumbers():Set<number> {
+  if(!import.meta.env.DEV)return new Set();
+  return new Set(storedText(localOnlySeasonsKey,'').split(',').map(value=>Number(value.trim())).filter(value=>Number.isInteger(value)&&value>0));
+}
 function initialData():Data {
   if(import.meta.env.DEV)try {
     const saved=localStorage.getItem(storageKey);
@@ -108,20 +115,54 @@ function initialData():Data {
   }catch{/* Use published details if the browser draft is unavailable. */}
   return published as Data;
 }
-export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChange,target}:{target?:{act:number;season:number}|null;seasons:Season[];now:number;bossesForAct:(season:number,difficulty:string,act:number)=>Enemy[];difficulty:string;onDifficultyChange:(difficulty:string)=>void}) {
+export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChange,target,privateEnemies={},localCustomData}:{target?:{act:number;season:number}|null;seasons:Season[];now:number;bossesForAct:(season:number,difficulty:string,act:number)=>{name:string;iconUrl:string|null}[];difficulty:string;onDifficultyChange:(difficulty:string)=>void;privateEnemies?:Record<string,EnemyPreview>;localCustomData?:Data}) {
   const [data,setData]=useState<Data>(initialData);
   const [editing,setEditing]=useState(false);
   const [saveStatus,setSaveStatus]=useState('');
+  const [privateDraftStatus,setPrivateDraftStatus]=useState('');
+  const [localOnlySeasons,setLocalOnlySeasons]=useState(localOnlySeasonNumbers);
   const [collapsedActs,setCollapsedActs]=useState<Record<string,boolean>>({});
   const [collapsedChoices,setCollapsedChoices]=useState<Record<string,boolean>>({});
-  const released=seasons.filter(season=>seasonStatus(season,now)==='Current');
-  const [selected,setSelected]=useState<number|undefined>(target?.season??released[0]?.season);
-  const season=released.find(candidate=>candidate.season===selected)??released[0];
+  const selectableSeasons=seasons.filter(season=>{
+    const status=seasonStatus(season,now);
+    return status==='Current'||(import.meta.env.DEV&&status==='Upcoming')||Boolean(localCustomData?.seasons[String(season.season)]);
+  });
+  const [selected,setSelected]=useState<number|undefined>(target?.season??selectableSeasons.find(candidate=>localOnlySeasons.has(candidate.season))?.season??selectableSeasons.find(candidate=>seasonStatus(candidate,now)==='Current')?.season??selectableSeasons[0]?.season);
+  const season=selectableSeasons.find(candidate=>candidate.season===selected)??selectableSeasons.find(candidate=>seasonStatus(candidate,now)==='Current')??selectableSeasons[0];
+  const localCustomSelection=Boolean(season&&localCustomData?.seasons[String(season.season)]);
+  const localOnlySelection=Boolean(season&&(localOnlySeasons.has(season.season)||localCustomSelection));
+  const visibleData=localCustomSelection&&localCustomData?localCustomData:data;
+  const visibleEnemiesById:Record<string,Enemy>={...enemiesById,...privateEnemies};
   useEffect(()=>{
     if(!import.meta.env.DEV)return;
     try{localStorage.setItem(storageKey,JSON.stringify(data));setSaveStatus('Draft saved in this browser.');}
     catch{setSaveStatus('Browser save unavailable. Download the JSON to keep your changes.');}
   },[data]);
+  useEffect(()=>{
+    if(!import.meta.env.DEV)return;
+    let cancelled=false;
+    fetch('/private-local/season30-act-details.json',{cache:'no-store'}).then(async response=>{
+      if(response.status===404){if(!cancelled)setPrivateDraftStatus('No private Season 30 draft file found.');return null;}
+      if(!response.ok)throw new Error(`Private draft request failed (${response.status}).`);
+      const value:unknown=await response.json();
+      if(!isActDetailsData(value))throw new Error('Private draft file has an invalid Act Details shape.');
+      if(cancelled)return null;
+      const localOnly=new Set(localOnlySeasons);localOnly.add(30);
+      setLocalOnlySeasons(localOnly);
+      localStorage.setItem(localOnlySeasonsKey,[...localOnly].join(','));
+      setData(current=>mergeActDetailsDraft(current,value));
+      setSelected(30);
+      setPrivateDraftStatus('Private local Season 30 draft loaded; it is excluded from downloads.');
+      return null;
+    }).catch(error=>{
+      if(!cancelled){
+        const message=error instanceof Error?error.message:'Unknown private draft loading error.';
+        setPrivateDraftStatus(`Unable to load private Season 30 draft: ${message}`);
+        console.error('Unable to load the private Season 30 Act Details draft.',error);
+      }
+    });
+    return ()=>{cancelled=true;};
+  },[]);
   useEffect(()=>{
     if(!target||!season||target.season!==season.season)return;
     const key=`${season.season}-${difficulty}-${target.act}`;
@@ -139,29 +180,30 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
     setData(current=>({...current,seasons:{...current.seasons,[key]:{...current.seasons[key],[difficulty]:{...current.seasons[key]?.[difficulty],[act]:value}}}}));
   }
   function download(){
-    const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}));
+    const exportData={...data,seasons:Object.fromEntries(Object.entries(data.seasons).filter(([number])=>!localOnlySeasons.has(Number(number))))};
+    const url=URL.createObjectURL(new Blob([JSON.stringify(exportData,null,2)+'\n'],{type:'application/json'}));
     const link=document.createElement('a');link.href=url;link.download='theater-act-details.json';link.click();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
   const field=(label:string,value:string,onChange:(value:string)=>void)=>editing
     ? <label className="act-detail-field">{label}<textarea value={value} onChange={event=>onChange(event.target.value)} rows={3}/></label>
-    : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value}/>:label==='Challenge'?value:<ElementalText text={value}/>}</p></div>:null;
+    : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value} enemiesByIdMap={visibleEnemiesById}/>:label==='Challenge'?value:<ElementalText text={value}/>}</p></div>:null;
   const actOrder=difficulty==='Lunar'?[1,2,3,11,4,5,6,12,7,8,9,10]:Array.from({length:modes[difficulty]},(_,index)=>index+1);
   return <section className="act-details">
-    <div className="sectionhead"><div><h2>Act Details</h2><p>Enemy choices, resistances, clear requirements, and notes for the currently released theater.</p></div>
-      {import.meta.env.DEV&&<div className="actions"><button onClick={()=>setEditing(!editing)}>{editing?'Finish editing':'Edit act details'}</button><button onClick={download}>Download act details JSON</button></div>}
+    <div className="sectionhead"><div><h2>Act Details</h2><p>{localOnlySelection?'Private local preview; this season is excluded from downloads.':'Enemy choices, resistances, clear requirements, and notes for the currently released theater.'}</p>{import.meta.env.DEV&&privateDraftStatus&&<p role="status">{privateDraftStatus}</p>}</div>
+      {import.meta.env.DEV&&!localCustomSelection&&<div className="actions"><button onClick={()=>setEditing(!editing)}>{editing?'Finish editing':'Edit act details'}</button><button disabled={localOnlySelection} title={localOnlySelection?'This season is marked local-only and cannot be exported.':''} onClick={download}>Download act details JSON</button></div>}
     </div>
-    {!season?<p role="status">No currently released theater is available in the bundled data.</p>:<>
+    {!season?<p role="status">No current or upcoming theater is available in the bundled data.</p>:<>
       <div className="boss-editor-controls">
-        <label>Theater<select value={season.season} onChange={event=>setSelected(Number(event.target.value))}>{released.map(candidate=><option key={candidate.season} value={candidate.season}>Season {candidate.season} · {candidate.id}</option>)}</select></label>
+        <label>Theater<select value={season.season} onChange={event=>setSelected(Number(event.target.value))}>{selectableSeasons.map(candidate=><option key={candidate.season} value={candidate.season}>Season {candidate.season} · {candidate.id}</option>)}</select></label>
         <label>Difficulty<DifficultySelect value={difficulty} onChange={onDifficultyChange}/></label>
       </div>
-      {editing&&<p className="note" role="status">{saveStatus} Replace src/data/theater-act-details.json with the download and redeploy to publish. Each encounter represents one selectable challenge; list its enemies and resistance exceptions together.</p>}
+      {editing&&!localCustomSelection&&<p className="note" role="status">{saveStatus} {localOnlySelection?'This season is saved only in this browser and omitted from JSON downloads. Keep it marked local-only until its official Fandom information is available.':'Replace src/data/theater-act-details.json with the download and redeploy to publish. Each encounter represents one selectable challenge; list its enemies and resistance exceptions together.'}</p>}
       <div className="act-details-grid">{actOrder.map(number=>{
-        const act=data.seasons[String(season.season)]?.[difficulty]?.[number]??emptyAct();
+        const act=visibleData.seasons[String(season.season)]?.[difficulty]?.[number]??emptyAct();
         const bosses=bossesForAct(season.season,difficulty,number);
-        const bossNames=[3,6,8,10,12].includes(number)
-          ? [...new Set(act.encounters.flatMap(encounter=>encounterEnemyIds(encounter).map(id=>enemiesById[id]?.name).filter(Boolean))) ]
+        const bossNames=bosses.length
+          ? [...new Set(act.encounters.flatMap(encounter=>encounterEnemyIds(encounter).map(id=>visibleEnemiesById[id]?.name).filter(Boolean))) ]
           : [];
         const headingBosses=bossNames.length?bossNames:bosses.map(boss=>boss.name);
         const actKey=`${season.season}-${difficulty}-${number}`;
@@ -179,18 +221,20 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
           {!act.encounters.length&&<p>No encounter choices recorded yet.</p>}
           {act.encounters.map((encounter,index)=>{
             const change=(key:keyof Encounter,value:string)=>update(number,{...act,encounters:act.encounters.map((item,i)=>i===index?{...item,[key]:value}:item)});
-            const lineup=encounterEnemyIds(encounter).map(id=>enemiesById[id]).filter(Boolean);
+            const lineup=encounterEnemyIds(encounter).map(id=>visibleEnemiesById[id]).filter(Boolean);
             const choiceKey=`${actKey}-${index}`;
-            const isBoss=[3,6,8,10,12].includes(number)&&lineup.length===1;
+            const isBoss=bosses.length>0&&lineup.length===1;
             const hasChoices=act.encounters.length>1;
             const compact=actCollapsed||(hasChoices&&!editing&&Boolean(collapsedChoices[choiceKey]));
-            const bountyNames=new Set((encounter.bountyEnemyIds??[]).map(id=>enemiesById[id]?.name));
+            const bountyNames=new Set((encounter.bountyEnemyIds??[]).map(id=>visibleEnemiesById[id]?.name));
             const resistanceDetails=enemyResistanceDetails(encounter.resistances,lineup.map(enemy=>enemy.name));
-            const resistances=groupedResistances(resistanceDetails.byEnemy,lineup.map(enemy=>enemy.name),Object.fromEntries(lineup.map(enemy=>[enemy.name,enemy.baseResistances])));
+            const baseResistances:Record<string,Record<string,number>>={};
+            for(const enemy of lineup)if(enemy.baseResistances)baseResistances[enemy.name]=enemy.baseResistances;
+            const resistances=groupedResistances(resistanceDetails.byEnemy,lineup.map(enemy=>enemy.name),baseResistances);
             const hasIndividual=!resistances.shared&&lineup.length>0;
             const hasResistances=Boolean(resistances.shared)||hasIndividual;
             const columnStyle=(position:number)=>({'--enemy-column':position+1,'--mobile-column':position%2+1,'--mobile-row':Math.floor(position/2)+1,'--mobile-resistance-row':Math.floor(position/2)+(resistances.shared?2:1)} as React.CSSProperties);
-            const portraits=<div className={`act-enemy-lineup${hasIndividual?' has-resistances':''}${compact?' is-compact':''}`} style={{'--enemy-count':Math.max(1,lineup.length),'--mobile-count':Math.max(1,Math.min(2,lineup.length))} as React.CSSProperties} aria-label={hasChoices?`Choice ${index+1} enemy lineup`:`${actLabel} enemy lineup`}>{lineup.map((enemy,position)=><div className={`act-enemy-link${bountyNames.has(enemy.name)?' is-bounty':''}`} style={columnStyle(position)} key={enemy.name}><figure className={`act-enemy-portrait${compact&&isBoss?' is-compact-boss':''}`}>{!compact&&isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a></figcaption>}<a href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name}${bountyNames.has(enemy.name)?' (Bounty)':''} on Fandom`} title={`View ${enemy.name} on Fandom`}><img src={enemyIcons[`./assets/enemies/${enemy.icon}`]} alt="" width="72" height="72" loading="lazy"/></a>{compact&&isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a></figcaption>}{!compact&&!isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a>{bountyNames.has(enemy.name)&&<span className="act-bounty-badge">Bounty</span>}</figcaption>}</figure></div>)}
+            const portraits=<div className={`act-enemy-lineup${hasIndividual?' has-resistances':''}${compact?' is-compact':''}`} style={{'--enemy-count':Math.max(1,lineup.length),'--mobile-count':Math.max(1,Math.min(2,lineup.length))} as React.CSSProperties} aria-label={hasChoices?`Choice ${index+1} enemy lineup`:`${actLabel} enemy lineup`}>{lineup.map((enemy,position)=><div className={`act-enemy-link${bountyNames.has(enemy.name)?' is-bounty':''}`} style={columnStyle(position)} key={enemy.name}><figure className={`act-enemy-portrait${compact&&isBoss?' is-compact-boss':''}`}>{!compact&&isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a></figcaption>}<a href={enemy.wikiUrl} target="_blank" rel="noreferrer" aria-label={`View ${enemy.name}${bountyNames.has(enemy.name)?' (Bounty)':''} on Fandom`} title={`View ${enemy.name} on Fandom`}><img src={enemy.icon?enemyIcons[`./assets/enemies/${enemy.icon}`]:enemy.iconUrl} alt="" width="72" height="72" loading="lazy"/></a>{compact&&isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a></figcaption>}{!compact&&!isBoss&&<figcaption><a href={enemy.wikiUrl} target="_blank" rel="noreferrer">{enemy.name}</a>{bountyNames.has(enemy.name)&&<span className="act-bounty-badge">Bounty</span>}</figcaption>}</figure></div>)}
               {!compact&&hasResistances&&<div className={`act-resistance-section${resistances.shared?' has-shared':''}${hasIndividual?' has-individual':''}`} aria-label="Resistance exceptions">
                 {resistances.shared&&<div className="act-resistance-shared" aria-label="Resistances shared by all enemies"><span className="resistance-scope">{lineup.length===2?'Both enemies':'All enemies'}</span><ResistanceLabels value={resistances.shared}/></div>}
                 {hasIndividual&&lineup.map((enemy,position)=><div className="act-resistance-enemy" style={columnStyle(position)} key={enemy.name} aria-label={resistances.individual[enemy.name]?`${enemy.name} resistance exceptions`:undefined}>{resistances.individual[enemy.name]&&<ResistanceLabels value={resistances.individual[enemy.name]}/>}</div>)}
@@ -213,7 +257,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
               {!!encounter.keyRecommendations?.length&&<div className="act-recommended-elements"><strong>Key Recommendation{encounter.keyRecommendations.length>1?'s':''}</strong><KeyRecommendations items={encounter.keyRecommendations}/></div>}
               {!!encounter.recommendedElements?.length&&<div className="act-recommended-elements"><strong>Recommended Element{encounter.recommendedElements.length>1?'s':''}</strong>{encounter.recommendedElements.map(element=><span className={`element ${element}`} key={element}><img className="element-icon" src={`${import.meta.env.BASE_URL}icons/elements/${element}_Icon.png`} alt="" width="16" height="16"/>{element}</span>)}</div>}
               {!compact&&!!lineup.length&&portraits}
-              {editing?field('Enemies / waves',encounter.enemies,value=>change('enemies',value)):<><ChallengeRequirements value={encounter.requirements}/><EnemyDetails value={encounter.enemies} requirements={encounter.requirements}/></>}
+              {editing?field('Enemies / waves',encounter.enemies,value=>change('enemies',value)):<><ChallengeRequirements value={encounter.requirements}/><EnemyDetails value={encounter.enemies} requirements={encounter.requirements} enemiesByIdMap={visibleEnemiesById}/></>}
               {field(editing?'Resistances / immunities':'Resistance notes',editing?encounter.resistances:lineup.length?resistanceDetails.notes:resistanceExceptions(encounter.resistances),value=>change('resistances',value))}
               {editing&&field('Challenge Requirements',encounter.requirements,value=>change('requirements',value))}
               {(editing||((eliteAssault||number>10)&&choiceStageEffects))&&field('Stage Effects',editing?encounter.stageEffects??'':choiceStageEffects,value=>change('stageEffects',value))}

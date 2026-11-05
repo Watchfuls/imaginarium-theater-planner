@@ -7,15 +7,18 @@ import {encounterEnemyIds} from './actDetailsPresentation';
 import {KeyRecommendations} from './KeyRecommendations';
 
 const icons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
-const enemies=catalog as Record<string,{name:string;icon:string}>;
+type EnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+type Enemy={name:string;icon?:string;iconUrl?:string;wikiUrl?:string};
+const enemies=catalog as Record<string,Enemy>;
 
-export function LunarActOnePreview({season}:{season:number}){
-  const choices=(published as ActDetailsData).seasons[season]?.Lunar?.[11]?.encounters??[];
+export function LunarActOnePreview({season,act=11,data=published as ActDetailsData,privateEnemies={}}:{season:number;act?:11|12;data?:ActDetailsData;privateEnemies?:Record<string,EnemyPreview>}){
+  const choices=data.seasons[season]?.Lunar?.[act]?.encounters??[];
   const ids=[...new Set(choices.flatMap(encounterEnemyIds))];
   if(!ids.length)return null;
-  return <div className="boss-preview-card"><strong>Arcana 1</strong><div className="lunar-act-enemy-icons">{ids.map(id=>{
-    const enemy=catalog[id as keyof typeof catalog];
-    return enemy?<a key={id} href={enemy.wikiUrl} target="_blank" rel="noreferrer" title={enemy.name} aria-label={enemy.name}><img src={icons[`./assets/enemies/${enemy.icon}`]} alt="" width="38" height="38" loading="lazy"/></a>:null;
+  const enemyCatalog:Record<string,Enemy>={...enemies,...privateEnemies};
+  return <div className="boss-preview-card"><strong>Arcana {act-10}</strong><div className="lunar-act-enemy-icons">{ids.map(id=>{
+    const enemy=enemyCatalog[id];
+    return enemy?<a key={id} href={enemy.wikiUrl} target="_blank" rel="noreferrer" title={enemy.name} aria-label={enemy.name}><img src={enemy.icon?icons[`./assets/enemies/${enemy.icon}`]:enemy.iconUrl} alt="" width="38" height="38" loading="lazy"/></a>:null;
   })}</div></div>;
 }
 
@@ -33,22 +36,24 @@ function Recommendations({choice,compact=false}:{choice:Pick<EncounterDetails,'r
     </span>;
 }
 
-export function PlannerKeyRecommendations({season,difficulty,act,bossNames}:{season:number;difficulty:string;act:number;bossNames:string[]}){
-  const stage=(published as ActDetailsData).seasons[season]?.[difficulty]?.[act];
+export function PlannerKeyRecommendations({season,difficulty,act,bossNames,data=published as ActDetailsData,privateEnemies={}}:{season:number;difficulty:string;act:number;bossNames:string[];data?:ActDetailsData;privateEnemies?:Record<string,EnemyPreview>}){
+  const stage=data.seasons[season]?.[difficulty]?.[act];
   const encounters=stage?.encounters??[];
   const canonicalNames=bossNames.map(canonicalEnemyName);
-  const matched=encounters.filter(encounter=>encounterEnemyIds(encounter).some(id=>canonicalNames.includes(enemies[id]?.name)));
+  const enemyCatalog:Record<string,Enemy>={...enemies,...privateEnemies};
+  const matched=encounters.filter(encounter=>encounterEnemyIds(encounter).some(id=>canonicalNames.includes(enemyCatalog[id]?.name)));
   return <><Recommendations compact choice={stage??{}}/>{matched.map(encounter=><Recommendations compact key={encounter.name} choice={encounter}/>)}</>;
 }
 
-export function PlannerEncounterPicker({season,difficulty,act,value,onChange}:{season:number;difficulty:string;act:number;value?:string;onChange:(value:string)=>void}){
-  const stage=(published as ActDetailsData).seasons[season]?.[difficulty]?.[act];
+export function PlannerEncounterPicker({season,difficulty,act,value,onChange,data=published as ActDetailsData,privateEnemies={}}:{season:number;difficulty:string;act:number;value?:string;onChange:(value:string)=>void;data?:ActDetailsData;privateEnemies?:Record<string,EnemyPreview>}){
+  const stage=data.seasons[season]?.[difficulty]?.[act];
   const choices=stage?.encounters??[];
   const dropdown=React.useRef<HTMLDetailsElement>(null);
   const lunarPreview=difficulty==='Lunar'&&act===11&&choices.length===1;
+  const enemyCatalog:Record<string,Enemy>={...enemies,...privateEnemies};
 
   const selected=choices.find(choice=>choice.name===value);
-  const portraits=(choice:typeof choices[number])=><span className="planner-encounter-icons">{encounterEnemyIds(choice).map(id=>enemies[id]&&<img key={id} src={icons[`./assets/enemies/${enemies[id].icon}`]} alt={enemies[id].name} title={enemies[id].name} width="28" height="28" draggable={false}/>)}</span>;
+  const portraits=(choice:typeof choices[number])=><span className="planner-encounter-icons">{encounterEnemyIds(choice).map(id=>enemyCatalog[id]&&<img key={id} src={enemyCatalog[id].icon?icons[`./assets/enemies/${enemyCatalog[id].icon}`]:enemyCatalog[id].iconUrl} alt={enemyCatalog[id].name} title={enemyCatalog[id].name} width="28" height="28" draggable={false}/>)}</span>;
   if(choices.length<2&&!lunarPreview){
     if(!stage)return null;
     return <div className="planner-encounter-picker planner-fixed-recommendations" aria-label={`Act ${act} recommendations`}><Recommendations compact choice={stage}/>{choices.map(choice=><Recommendations compact key={choice.name} choice={choice}/>)}</div>;

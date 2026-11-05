@@ -3,9 +3,12 @@ import {Feedback} from './Feedback';
 import {BackupControls} from './BackupControls';
 import {mergePlanHistory,type HistoricalPlan} from './plannerBackup';
 import {BossPreview} from './BossPreview';
-import type {Ownership,Setup,Plan,TheaterBossData,BossOverrideSlot} from './plannerTypes';
+import type {Ownership,Setup,Plan,TheaterBossData,BossOverrideSlot,TheaterSeason} from './plannerTypes';
 import {LEVEL_OPTIONS,travelerNames,difficulties,stageObjectives,isTraveler,enemyWikiUrl} from './plannerConfig';
-import {availableSeasons,theaterLineups,theaterBosses,getBossesForSlot} from './theaterData';
+import {availableSeasons,theaterLineups,theaterBosses,getBossesForSlot,parseSeason} from './theaterData';
+import {isActDetailsData,type ActDetailsData} from './actDetailsData';
+import {parseCustomSeasonPackage,type CustomSeasonPackage} from './customSeason';
+import {siteActDetails} from './actDetailsPresentation';
 import {parseGoodOwnership,normalizeOwnership} from './ownership';
 import {CharacterIcon,ElementBadge} from './CharacterVisuals';
 import {BorrowedCharacterPicker,ActAssignmentPicker,CharacterSelectionGrid} from './CharacterPickers';
@@ -29,6 +32,20 @@ const isRecord=(value:unknown):value is Record<string,unknown>=>!!value&&typeof 
 const isStringArray=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==='string');
 const validSetup=(value:unknown)=>isRecord(value)&&typeof value.difficulty==='string'&&Object.hasOwn(difficulties,value.difficulty)&&isStringArray(value.elements)&&isStringArray(value.opening)&&isStringArray(value.guests);
 const validPlan=(value:unknown)=>isRecord(value)&&isStringArray(value.roster)&&isRecord(value.acts)&&Object.values(value.acts).every(isStringArray);
+type PrivateEnemyPreview={name:string;iconUrl:string;wikiUrl:string};
+type PrivateTheaterPreview={season:TheaterSeason;enemies:Record<string,PrivateEnemyPreview>};
+const customSeasonStorageKey='itp-custom-season-v1';
+function storedCustomSeason():{value:CustomSeasonPackage|null;status:string} {
+  const saved=storedText(customSeasonStorageKey,'');
+  if(!saved)return {value:null,status:''};
+  try{
+    const value=parseCustomSeasonPackage(JSON.parse(saved));
+    return {value,status:`Custom Season ${value.season.season} loaded from this browser's local storage.`};
+  }catch(error){
+    const message=error instanceof Error?error.message:'Invalid saved custom season.';
+    return {value:null,status:`Unable to load saved custom season: ${message}`};
+  }
+}
 function defaultSetup():Setup {
   const season=currentSeason(availableSeasons);
   return season
@@ -58,6 +75,13 @@ const [actDetailsTarget,setActDetailsTarget]=useState<{act:number;season:number}
 const [ownership,setOwnership]=useState<Ownership>(()=>normalizeOwnership(stored<unknown>('itp-ownership-v1',{})));
 const [setup,setSetup]=useState<Setup>(()=>stored('itp-setup-v1',defaultSetup(),validSetup));
 const [bossData,setBossData]=useState<TheaterBossData>(theaterBosses);
+const [privatePreview,setPrivatePreview]=useState<PrivateTheaterPreview|null>(null);
+const [privateActDetails,setPrivateActDetails]=useState<ActDetailsData|null>(null);
+const [privatePreviewStatus,setPrivatePreviewStatus]=useState('');
+const [initialCustomSeason]=useState(storedCustomSeason);
+const [customSeasonPackage,setCustomSeasonPackage]=useState(initialCustomSeason.value);
+const [customSeasonStatus,setCustomSeasonStatus]=useState(initialCustomSeason.status);
+const [customSeasonDirty,setCustomSeasonDirty]=useState(false);
 const [plan,setPlan]=useState<Plan>(()=>stored('itp-plan-v1',{roster:[],acts:{},borrowed:''},validPlan));
 const [planHistory,setPlanHistory]=useState<HistoricalPlan[]>(()=>stored('itp-plan-history-v1',[],Array.isArray));
 const [dropTarget,setDropTarget]=useState('');
@@ -71,11 +95,16 @@ const [ownedElements,setOwnedElements]=useState<Element[]>([]);
 const [ownedRarities,setOwnedRarities]=useState<(4|5)[]>([]);
 const [importMessage,setImportMessage]=useState('');
 const importFileInput=useRef<HTMLInputElement>(null);
+const customSeasonFileInput=useRef<HTMLInputElement>(null);
 const [chosenSearch,setChosenSearch]=useState('');
 const [chosenElements,setChosenElements]=useState<Element[]>([]);
 const [chosenRarities,setChosenRarities]=useState<(4|5)[]>([]);
 const [plannerCharacterOrder,setPlannerCharacterOrder]=useState<CharacterSortOrder>(()=>storedText('itp-planner-sort-v1','name')==='game'?'game':'name');
 const [storageUnavailable,setStorageUnavailable]=useState(false);
+const appSeasons=availableSeasons.map(season=>season.season===30&&privatePreview
+  ? {...season,bossStages:privatePreview.season.bossStages}
+  : season).filter(season=>season.season!==customSeasonPackage?.season.season);
+if(customSeasonPackage)appSeasons.push(customSeasonPackage.season);
 useEffect(()=>{
   const writes=[
     saveText('itp-planner-sort-v1',plannerCharacterOrder),
@@ -84,8 +113,46 @@ useEffect(()=>{
     saveText('itp-plan-v1',JSON.stringify(plan)),
     saveText('itp-plan-history-v1',JSON.stringify(planHistory)),
   ];
+  if(customSeasonDirty)writes.push(saveText(customSeasonStorageKey,JSON.stringify(customSeasonPackage)));
   setStorageUnavailable(writes.some(saved=>!saved));
-},[plannerCharacterOrder,ownership,setup,plan,planHistory]);
+},[plannerCharacterOrder,ownership,setup,plan,planHistory,customSeasonPackage,customSeasonDirty]);
+useEffect(()=>{
+  if(!import.meta.env.DEV)return;
+  let cancelled=false;
+  Promise.all([
+    fetch('/private-local/season30-theater-preview.json',{cache:'no-store'}),
+    fetch('/private-local/season30-act-details.json',{cache:'no-store'})
+  ]).then(async([previewResponse,detailsResponse])=>{
+    if(!previewResponse.ok)throw new Error(`Private theater preview request failed (${previewResponse.status}).`);
+    if(!detailsResponse.ok)throw new Error(`Private Act Details request failed (${detailsResponse.status}).`);
+    const previewValue:unknown=await previewResponse.json();
+    const detailsValue:unknown=await detailsResponse.json();
+    if(!isRecord(previewValue)||previewValue.season!==30||!Array.isArray(previewValue.bossStages)||!isRecord(previewValue.enemies))throw new Error('Private Season 30 preview file has an invalid shape.');
+    const officialSeason=availableSeasons.find(season=>season.season===30);
+    if(!officialSeason)throw new Error('The official Season 30 lineup is unavailable.');
+    const season=parseSeason({...officialSeason,bossStages:previewValue.bossStages});
+    if(!season||!isActDetailsData(detailsValue))throw new Error('Private Season 30 Act Details data has an invalid shape.');
+    const enemies:Record<string,PrivateEnemyPreview>={};
+    for(const [id,value] of Object.entries(previewValue.enemies)){
+      if(!/^\d+$/.test(id)||!isRecord(value)||typeof value.name!=='string'||typeof value.iconUrl!=='string'||typeof value.wikiUrl!=='string')throw new Error(`Private enemy preview ${id} has an invalid shape.`);
+      const iconUrl=new URL(value.iconUrl);
+      const wikiUrl=new URL(value.wikiUrl);
+      if(iconUrl.protocol!=='https:'||iconUrl.hostname!=='transform.alioth.wiki'||wikiUrl.protocol!=='https:'||wikiUrl.hostname!=='genshin-impact.fandom.com')throw new Error(`Private enemy preview ${id} has an unexpected URL.`);
+      enemies[id]={name:value.name,iconUrl:iconUrl.href,wikiUrl:wikiUrl.href};
+    }
+    if(cancelled)return;
+    setPrivatePreview({season,enemies});
+    setPrivateActDetails(siteActDetails(detailsValue));
+    setPrivatePreviewStatus('Local Season 30 battle preview loaded for development; it is not included in production data.');
+  }).catch(error=>{
+    if(!cancelled){
+      const message=error instanceof Error?error.message:'Unknown private preview loading error.';
+      setPrivatePreviewStatus(`Unable to load private Season 30 preview: ${message}`);
+      console.error('Unable to load the private Season 30 theater preview.',error);
+    }
+  });
+  return ()=>{cancelled=true;};
+},[]);
 useEffect(()=>{
   if(!copiedTeam)return;
   const cancelOnInteraction=(event:Event)=>{
@@ -108,11 +175,22 @@ useEffect(()=>{
 },[assignmentNotice]);
 useEffect(()=>{
   if(setup.seasonId===undefined)return;
-  const season=availableSeasons.find(candidate=>candidate.season===setup.seasonId)??currentSeason(availableSeasons);
+  const season=appSeasons.find(candidate=>candidate.season===setup.seasonId)??currentSeason(appSeasons);
   if(!season)return;
   setSetup(current=>current.seasonId===season.season?{...current,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests}:{...current,seasonId:season.season,elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests});
 },[setup.seasonId]);
-const selectedSeason=availableSeasons.find(season=>season.season===setup.seasonId)??null;
+const selectedSeason=appSeasons.find(season=>season.season===setup.seasonId)??null;
+const bossesForAct=(seasonNumber:number,difficulty:string,act:number)=>{
+  const season=appSeasons.find(candidate=>candidate.season===seasonNumber);
+  if(!season)return [];
+  if(customSeasonPackage?.season.season===seasonNumber||privatePreview&&seasonNumber===privatePreview.season.season)return season.bossStages.find(stage=>stage.act===act)?.bosses??[];
+  const slot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12?'lunar2':undefined;
+  return slot?getBossesForSlot(season,bossData,slot):season.bossStages.find(stage=>stage.act===act)?.bosses??[];
+};
+const selectedCustomSeason=Boolean(selectedSeason&&customSeasonPackage?.season.season===selectedSeason.season);
+const selectedPrivatePreview=Boolean(selectedSeason&&privatePreview?.season.season===selectedSeason.season);
+const activeActDetails=selectedCustomSeason?customSeasonPackage?.actDetails:privateActDetails;
+const activeEnemyPreviews=selectedCustomSeason?customSeasonPackage?.enemies:privatePreview?.enemies;
 const selectedElements=setup.elements.filter((element):element is Element=>ELEMENTS.includes(element));
 const hasThreeElements=selectedElements.length===3;
 const openingOptions=hasThreeElements?CHARACTERS.filter(c=>selectedElements.includes(c.element)):[];
@@ -303,6 +381,33 @@ const importOwnership=async(file:File)=>{
     if(importFileInput.current)importFileInput.current.value='';
   }
 };
+const importCustomSeason=async(file:File)=>{
+  try{
+    if(file.size>5_000_000)throw new Error('Custom season files must be smaller than 5 MB.');
+    const imported=parseCustomSeasonPackage(JSON.parse(await file.text()));
+    if(customSeasonPackage&&!window.confirm(`Replace the locally saved custom season with Season ${imported.season.season}?`))return;
+    setCustomSeasonPackage(imported);
+    setCustomSeasonDirty(true);
+    setCustomSeasonStatus(`Custom Season ${imported.season.season} loaded in this browser. The file is not uploaded.`);
+    setSetup(current=>({...current,seasonId:imported.season.season,elements:imported.season.elements,opening:imported.season.openingCharacters,guests:imported.season.specialGuests}));
+  }catch(error){
+    setCustomSeasonStatus(`Custom season import failed: ${error instanceof Error?error.message:'Unable to read this file.'}`);
+  }finally{
+    if(customSeasonFileInput.current)customSeasonFileInput.current.value='';
+  }
+};
+const removeCustomSeason=()=>{
+  if(!customSeasonPackage)return;
+  const removedSeason=customSeasonPackage.season.season;
+  setCustomSeasonPackage(null);
+  setCustomSeasonDirty(true);
+  setCustomSeasonStatus(`Custom Season ${removedSeason} removed from this browser.`);
+  setSetup(current=>{
+    if(current.seasonId!==removedSeason)return current;
+    const fallback=availableSeasons.find(season=>season.season===removedSeason)??currentSeason(availableSeasons);
+    return fallback?{...current,seasonId:fallback.season,elements:fallback.elements,opening:fallback.openingCharacters,guests:fallback.specialGuests}:{...current,seasonId:undefined};
+  });
+};
 const renderPlannerCharacter=(character:Character)=>{
   const name=character.name;
   const chosenNumber=chosen.indexOf(name)+1;
@@ -334,9 +439,7 @@ const renderAct=(act:number,label:string)=>{
     setPlan(current=>teamPasteError(copiedTeam.team,act,activeActs(current.acts),chosen)?current:{...current,acts:{...current.acts,[act]:[...copiedTeam.team]}});
     setCopiedTeam(null);
   };
-  const overrideSlot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(setup.difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12&&setup.difficulty==='Lunar'?'lunar2':undefined;
-  const bossStage=selectedSeason?.bossStages.find(stage=>stage.act===act);
-  const bosses=selectedSeason&&overrideSlot?getBossesForSlot(selectedSeason,bossData,overrideSlot):bossStage?.bosses??[];
+  const bosses=selectedSeason?bossesForAct(selectedSeason.season,setup.difficulty,act):[];
   const objective=bosses.length?'Boss':stageObjectives[setup.difficulty]?.[act];
   const encounterKey=`${selectedSeason?.season}-${setup.difficulty}-${act}`;
   return <div className={`act ${teamDropTarget===act?'team-drop-target':''}`} key={act} onDragOverCapture={event=>{
@@ -351,7 +454,7 @@ const renderAct=(act:number,label:string)=>{
     if(setup.difficulty==='Lunar'){activeActs.add(11);activeActs.add(12);}
     if(raw&&Number.isInteger(source)&&activeActs.has(source))setPlan(current=>({...current,acts:swapTeams(current.acts,source,act)}));
     setTeamDropTarget(null);setCopiedTeam(null);
-  }}><div className="act-heading"><div className="act-heading-content"><strong>{selectedSeason&&seasonStatus(selectedSeason,seasonTime)==='Current'?<a className="act-details-link" href={`#act-details-act-${act}`} title={`View ${label} details`} onClick={event=>{event.preventDefault();setActDetailsTarget({act,season:selectedSeason.season});setStep(4);}}>{label}</a>:label}</strong>{objective&&<span className="act-objective">{objective==='Monolith Defense'?'Monolith':objective==='Defeat Bounties'?'Bounties':objective}</span>}</div>{bosses.length>0&&<div className="planner-encounter-picker planner-boss-preview"><span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>}<span>{boss.name.replace(/^Lord of the Hidden Depths:\s*/,'')}</span></a>)}</span>{selectedSeason&&<React.Suspense fallback={null}><PlannerKeyRecommendations season={selectedSeason.season} difficulty={setup.difficulty} act={act} bossNames={bosses.map(boss=>boss.name)}/></React.Suspense>}</div>}{!bosses.length&&selectedSeason&&<React.Suspense fallback={null}><PlannerEncounterPicker season={selectedSeason.season} difficulty={setup.difficulty} act={act} value={plan.encounterChoices?.[encounterKey]} onChange={value=>setPlan(current=>({...current,encounterChoices:{...current.encounterChoices,[encounterKey]:value}}))}/></React.Suspense>}<div className="act-team-tools">
+  }}><div className="act-heading"><div className="act-heading-content"><strong>{selectedSeason&&(seasonStatus(selectedSeason,seasonTime)==='Current'||selectedPrivatePreview||selectedCustomSeason)?<a className="act-details-link" href={`#act-details-act-${act}`} title={`View ${label} details`} onClick={event=>{event.preventDefault();setActDetailsTarget({act,season:selectedSeason.season});setStep(4);}}>{label}</a>:label}</strong>{objective&&<span className="act-objective">{objective==='Monolith Defense'?'Monolith':objective==='Defeat Bounties'?'Bounties':objective}</span>}</div>{bosses.length>0&&<div className="planner-encounter-picker planner-boss-preview"><span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>}<span>{boss.name.replace(/^Lord of the Hidden Depths:\s*/,'')}</span></a>)}</span>{selectedSeason&&<React.Suspense fallback={null}><PlannerKeyRecommendations season={selectedSeason.season} difficulty={setup.difficulty} act={act} bossNames={bosses.map(boss=>boss.name)} data={activeActDetails??undefined} privateEnemies={activeEnemyPreviews}/></React.Suspense>}</div>}{!bosses.length&&selectedSeason&&<React.Suspense fallback={null}><PlannerEncounterPicker season={selectedSeason.season} difficulty={setup.difficulty} act={act} value={plan.encounterChoices?.[encounterKey]} data={activeActDetails??undefined} privateEnemies={activeEnemyPreviews} onChange={value=>setPlan(current=>({...current,encounterChoices:{...current.encounterChoices,[encounterKey]:value}}))}/></React.Suspense>}<div className="act-team-tools">
     <button type="button" className={`team-icon paste-team ${copiedTeam?'':'clipboard-empty'}`} disabled={!copiedTeam} aria-label={`Paste copied team into ${label}`} title={`Paste copied team into ${label} (replaces this team)`} onClick={pasteTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M8 13h8M8 17h6"/></svg></button>
     <button type="button" className={`team-icon copy-team ${copyActive?'copied':''} ${hasTeam?'':'clipboard-empty'}`} aria-pressed={copyActive} disabled={!hasTeam} aria-label={copyActive?`Clear copied team from ${label}`:`Copy team from ${label}`} title={copyActive?'Team copied — click again to clear':`Copy team from ${label}`} onClick={copyTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg></button>
     <button type="button" className={`team-icon clear-team ${hasTeam?'':'clipboard-empty'}`} disabled={!hasTeam} aria-label={`Clear whole team from ${label}`} title="Clear whole team" onClick={()=>{setPlan(current=>({...current,acts:{...current.acts,[act]:[]}}));setCopiedTeam(null);setAssignmentNotice(null);}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
@@ -380,19 +483,14 @@ const renderAct=(act:number,label:string)=>{
 };
 return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContinueToPlanner={canContinueToPlanner} setStep={setStep}/>
 <BackupControls save={{ownership,setup,plan,sort:plannerCharacterOrder,history:planHistory}} onRestore={save=>{
-  const unavailable=save.setup.seasonId!==undefined&&!availableSeasons.some(season=>season.season===save.setup.seasonId);
+  const unavailable=save.setup.seasonId!==undefined&&!appSeasons.some(season=>season.season===save.setup.seasonId);
   setOwnership(normalizeOwnership(save.ownership));setPlannerCharacterOrder(save.sort);
   setPlanHistory(current=>mergePlanHistory(current,save.history??[],unavailable?[{setup:save.setup,plan:save.plan}]:[]));
   if(!unavailable){setSetup(save.setup);setPlan(save.plan);}
   setCopiedTeam(null);setOpenCharacterPicker('');setActDetailsTarget(null);setStep(1);
   return unavailable?`Characters restored. Season ${save.setup.seasonId} is no longer available, so its plan was kept under Historical plans. Your current challenge setup and plan were left in place.`:'Backup restored.';
 }}/>
-{step===4&&<React.Suspense fallback={<section><h2>Act Details</h2><p>Loading act details…</p></section>}><ActDetails target={actDetailsTarget} difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={availableSeasons} now={seasonTime} bossesForAct={(seasonNumber,difficulty,act)=>{
-  const season=availableSeasons.find(candidate=>candidate.season===seasonNumber);
-  if(!season)return [];
-  const slot:BossOverrideSlot|undefined=act===3?'boss1':act===6?'boss2':act===8?(difficulty==='Hard'?'boss4':'boss3'):act===10?'boss4':act===12?'lunar2':undefined;
-  return slot?getBossesForSlot(season,bossData,slot):season.bossStages.find(stage=>stage.act===act)?.bosses??[];
-}}/></React.Suspense>}
+{step===4&&<React.Suspense fallback={<section><h2>Act Details</h2><p>Loading act details…</p></section>}><ActDetails target={actDetailsTarget} difficulty={setup.difficulty} onDifficultyChange={difficulty=>setSetup(current=>({...current,difficulty}))} seasons={appSeasons} now={seasonTime} privateEnemies={activeEnemyPreviews} localCustomData={selectedCustomSeason?customSeasonPackage?.actDetails:undefined} bossesForAct={bossesForAct}/></React.Suspense>}
 {step===5&&<VideoGuide/>}
 {step===1&&<section>
   <div className="sectionhead">
@@ -420,13 +518,18 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   <div className="lineup-source">
     <label htmlFor="theater-season">Season lineup</label>
     <select id="theater-season" value={selectedSeason?.season??''} onChange={event=>{
-      const season=availableSeasons.find(candidate=>candidate.season===Number(event.target.value));
+      const season=appSeasons.find(candidate=>candidate.season===Number(event.target.value));
       if(season)setSetup(current=>({...current,seasonId:season.season}));
       else setSetup(current=>({...current,seasonId:undefined}));
     }}>
       <option value="">Custom settings</option>
-      {availableSeasons.map(season=><option key={season.id} value={season.season}>{seasonStatus(season,seasonTime)} · Season {season.season} ({season.id})</option>)}
+      {appSeasons.map(season=><option key={season.id} value={season.season}>{customSeasonPackage?.season.season===season.season?'Custom':seasonStatus(season,seasonTime)} · Season {season.season} ({season.id})</option>)}
     </select>
+    <div className="actions">
+      <button type="button" onClick={()=>customSeasonFileInput.current?.click()}>Import custom season JSON</button>
+      {customSeasonPackage&&<button type="button" onClick={removeCustomSeason}>Remove custom season</button>}
+      <input ref={customSeasonFileInput} type="file" accept=".json,application/json" hidden aria-label="Import a custom season JSON file" onChange={event=>{const file=event.target.files?.[0];if(file)void importCustomSeason(file);}}/>
+    </div>
     {selectedSeason&&<p>
       {new Date(selectedSeason.startsAt).toLocaleDateString()} – {new Date(selectedSeason.endsAt).toLocaleDateString()} {selectedSeason.sourceUrl&&<>· <a href={selectedSeason.sourceUrl} target="_blank" rel="noreferrer">Fandom source</a></>}
       {theaterLineups.generatedAt&&<> · source updated {new Date(theaterLineups.generatedAt).toLocaleDateString()}</>}
@@ -434,7 +537,9 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     {selectedSeason&&selectedSeason.charactersMissingFromRoster.length>0&&<p className="lineup-warning">Not in the local character roster: {selectedSeason.charactersMissingFromRoster.join(', ')}</p>}
     {!selectedSeason&&theaterLineups.nextUnavailableReason&&<p className="lineup-warning">{theaterLineups.nextUnavailableReason}</p>}
   </div>
-  {selectedSeason&&<BossPreview season={selectedSeason} bossData={bossData} difficulty={setup.difficulty}/>}
+  {import.meta.env.DEV&&privatePreviewStatus&&<p role="status">{privatePreviewStatus}</p>}
+  {customSeasonStatus&&<p role="status">{customSeasonStatus}</p>}
+  {selectedSeason&&<BossPreview season={selectedSeason} bossData={bossData} difficulty={setup.difficulty} privatePreview={selectedCustomSeason||selectedPrivatePreview} actDetailsData={activeActDetails??undefined} privateEnemies={activeEnemyPreviews}/>}
   <div className="settings">
     <div>
       <h3>Difficulty</h3>
@@ -463,7 +568,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
       <CharacterSelectionGrid characters={guestOptions} selected={selectedGuests} limit={4} disabled={!hasThreeElements} unavailableNames={unavailableTravelers} onToggle={name=>updateCustomSetup(current=>({...current,guests:toggleArray(current.guests,name,4)}))}/>
     </div>
   </div>
-  {import.meta.env.DEV&&<BossOverrideEditor data={bossData} seasons={availableSeasons} bossCatalog={theaterLineups.bossCatalog} onChange={setBossData}/>}
+  {import.meta.env.DEV&&<BossOverrideEditor data={bossData} seasons={appSeasons} bossCatalog={theaterLineups.bossCatalog} onChange={setBossData}/>}
   <div className="bottom"><button onClick={()=>setStep(1)}>← Characters</button><div className="continue-control">{!canContinueToPlanner&&<p className="selection-help" role="status">{!hasThreeElements?'Select all three featured elements first.':`You need at least ${requirement.minimum} eligible characters at Level ${requirement.minimumLevel}+; currently ${eligibleCount} qualify.`}</p>}<button className="primary" disabled={!canContinueToPlanner} onClick={()=>{if(canContinueToPlanner)setStep(3);}}>Continue to Planner →</button></div></div>
 </section>}
 {step===3&&<section>
@@ -548,4 +653,3 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
 {assignmentNotice&&<div key={assignmentNotice.id} className="assignment-notice" role="status">{assignmentNotice.message}</div>}
 <footer><span>Unofficial fan-made planning tool. {storageUnavailable?<span role="status">Browser saving is unavailable. Changes will last only until this page closes.</span>:'All settings are saved in this browser.'} <a href="./privacy.html">Privacy policy</a></span><Feedback/></footer></main>
 }
-

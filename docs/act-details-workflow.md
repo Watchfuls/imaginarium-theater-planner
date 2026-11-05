@@ -34,7 +34,7 @@ does not permit transferring stage timings or objectives between different acts.
 
 Before external research, consult `docs/act-details-archive` and prior local
 research records for details we have collected ourselves, including information
-missing from external sites. Apply the same-act matching rule to these records.
+missing from external sites. Apply the historical matching rules below to these records.
 Keep original provenance and confidence; archived estimates remain estimates.
 
 For mechanics explanations, prioritize the user's Theater and Abyss Markdown
@@ -78,15 +78,17 @@ season. Reading the exports does not require modifying or importing PSD files.
    season battle pages, newest first, or all available if fewer exist. Expand
    further when current encounters remain unmatched. Count only pages whose
    battle content was actually read, not search snippets or index links.
-5. **Historical lineup references must stay within the same act.** Act 6 may
-   reference only prior Act 6 encounters, never Act 8 or another act even if the
-   boss is identical. Match Lunar challenge 1 only to prior Lunar challenge 1,
-   and challenge 2 only to prior challenge 2; normal acts and Lunar challenges
-   are not interchangeable. A final boss moving between Hard Act 8 and Visionary
-   Act 10 does not permit transferring historical deadlines across those acts.
-   Apply this restriction to app source links, evidence tables, timing, quotas,
-   waves, and stage-effect inferences. General enemy reference pages may still
-   supply intrinsic resistances and mechanics; they are not lineup matches.
+5. **Historical regular-act references must stay within the same act number.**
+Act 6 may reference only prior Act 6 encounters, never Act 8 or another act
+even if the boss is identical. Lunar challenges I and II may be compared
+across challenge numbers when their enemy lineup, battle format, and
+objectives are compatible; enemy identity alone is not enough to transfer
+objectives, timers, or effects. Normal acts and Lunar challenges are not
+interchangeable. A final boss moving between Hard Act 8 and Visionary Act 10
+does not permit transferring historical deadlines across those acts. Apply
+these rules to app source links, evidence tables, timing, quotas, waves, and
+stage-effect inferences. General enemy reference pages may still supply
+intrinsic resistances and mechanics; they are not lineup matches.
    Within that act, match encounters using enemy variants, wave composition, battle
    type, difficulty, objectives, and stage effects. A shared enemy or act number
    alone is insufficient. Use well-matched historical encounters to populate
@@ -111,6 +113,26 @@ season. Reading the exports does not require modifying or importing PSD files.
    authorized access cannot provide it. Respect declined permissions.
 
 ## App data format
+
+### Unofficial future-season preparation
+
+Separate officially announced lineup information from unofficial encounter
+research. Official patch-note lineup data may remain in the regular season
+lineup source. Keep unofficial enemies, encounter details, and their source
+audit in the Git-ignored `private-local/` directory; never add them to tracked
+act or lineup JSON, research files, archives, or any deployed/editor export.
+The development server loads private previews for Act Details, Challenge Setup,
+and the planner. Custom-season JSON files can be imported by selecting them in
+Challenge Setup; the browser validates and stores the file in local storage,
+without uploading it. Verify that every private data file remains ignored
+before publishing or committing.
+
+Mark protected season numbers in the comma-separated
+`itp-act-details-local-only-seasons-v1` browser-storage key; Act Details JSON
+downloads omit those seasons. Keep the source audit separate from the app draft.
+Keep the local-only mark until the relevant battle information has been
+officially published and checked. Only then may verified details be promoted
+through the normal curated-data workflow.
 
 ### Visitor presentation
 
