@@ -195,7 +195,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
   }
   const field=(label:string,value:string,onChange:(value:string)=>void)=>editing
     ? <label className="act-detail-field">{label}<textarea value={value} onChange={event=>onChange(event.target.value)} rows={3}/></label>
-    : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value} enemiesByIdMap={visibleEnemiesById}/>:label==='Challenge'?value:<ElementalText text={value}/>}</p></div>:null;
+    : value?<div className="act-detail-field"><strong>{label}</strong><p>{label==='Enemies / waves'?<EnemyWaveText value={value} enemiesByIdMap={visibleEnemiesById}/>:label==='Challenge'?value:<ElementalText text={value} values={label==='Resistance notes'}/>}</p></div>:null;
   const actOrder=difficulty==='Lunar'?[1,2,3,11,4,5,6,12,7,8,9,10]:Array.from({length:modes[difficulty]},(_,index)=>index+1);
   return <section className="act-details">
     <div className="sectionhead"><div><h2>Act Details</h2><p>{localOnlySelection?'Private local preview; this season is excluded from downloads.':'Enemy choices, resistances, clear requirements, and notes for the currently released theater.'}</p>{import.meta.env.DEV&&privateDraftStatus&&<p role="status">{privateDraftStatus}</p>}</div>

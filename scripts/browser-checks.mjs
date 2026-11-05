@@ -408,9 +408,12 @@ try{
         {name:'Elite choice',battleType:'Elite Assault',enemies:'',resistances:'',requirements:'',notes:'',stageEffects:'Treacherous Thunder: After a delay, thunder strikes characters.\nDistinct elite effect '+act+'.'}
       ]};
       custom.enemies['124']={...custom.enemies['123'],name:'Second Test Enemy'};
+      Object.assign(custom.actDetails.seasons[99].Visionary[9].encounters[0],{enemyIds:['123','124'],bountyEnemyIds:['123']});
+      custom.actDetails.seasons[99].Visionary[9].encounters.push({name:'Unmarked choice',enemies:'',resistances:'',requirements:'',notes:'',enemyIds:['123','124']});
       custom.actDetails.seasons[99].Lunar=Object.fromEntries([11,12].map(act=>[act,{requirements:'',notes:'',encounters:[{
         name:`Arcana ${act-10}`,enemies:'',resistances:'',requirements:'',notes:'',enemyIds:act===11?['123']:['123','124'],keyRecommendations:[{label:'Healing'},{label:'Shielding'}]
       }]}]));
+      custom.actDetails.seasons[99].Lunar[9]=structuredClone(custom.actDetails.seasons[99].Visionary[9]);
       await isolated.addInitScript(data=>{
         localStorage.setItem('itp-custom-season-v1',JSON.stringify(data));
         if(!localStorage.getItem('itp-setup-v1'))localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Visionary',seasonId:99,customSeasonSelected:true,elements:['Pyro','Hydro','Geo'],opening:[],guests:[]}));
@@ -440,6 +443,18 @@ try{
       });
       await customPage.reload({waitUntil:'domcontentloaded'});
       await customPage.locator('nav button').filter({hasText:'Theater Planner'}).click();
+      const bountyPicker=customPage.locator('.planner-choice-dropdown').filter({has:customPage.locator('summary[aria-label^="Choose enemies for Act 9"]')});
+      const bountySummary=bountyPicker.locator(':scope > summary');
+      await bountySummary.click();
+      const bountyChoice=bountyPicker.locator('.planner-encounter-option').filter({hasText:'Enemy lineup 3'});
+      assert.equal(await bountyChoice.locator('.planner-encounter-icons img').count(),2);
+      await bountyChoice.click();
+      assert.equal(await bountySummary.locator('img').count(),1);
+      assert.equal(await bountySummary.locator('img').getAttribute('alt'),'Test Ruin Enemy');
+      await bountySummary.click();
+      assert.equal(await bountyChoice.locator('.planner-encounter-icons img').count(),2);
+      await bountyPicker.getByRole('button',{name:'Unmarked choice',exact:false}).click();
+      assert.equal(await bountySummary.locator('img').count(),2);
       for(const [arcana,count]of [[1,1],[2,2]]){
         const preview=customPage.getByLabel(`Arcana ${arcana} enemies`,{exact:true});
         await preview.waitFor();

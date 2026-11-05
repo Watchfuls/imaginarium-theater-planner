@@ -53,7 +53,12 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
   const enemyCatalog:Record<string,Enemy>={...enemies,...privateEnemies};
 
   const selected=choices.find(choice=>choice.name===value);
-  const portraits=(choice:typeof choices[number])=><span className="planner-encounter-icons">{encounterEnemyIds(choice).map(id=>enemyCatalog[id]&&<img key={id} src={enemyCatalog[id].icon?icons[`./assets/enemies/${enemyCatalog[id].icon}`]:enemyCatalog[id].iconUrl} alt={enemyCatalog[id].name} title={enemyCatalog[id].name} width="28" height="28" draggable={false}/>)}</span>;
+  const portraits=(choice:typeof choices[number],selectedPreview=false)=>{
+    const allIds=encounterEnemyIds(choice);
+    const bountyIds=act===9&&selectedPreview?allIds.filter(id=>choice.bountyEnemyIds?.includes(id)&&enemyCatalog[id]):[];
+    const ids=bountyIds.length?bountyIds:allIds;
+    return <span className="planner-encounter-icons">{ids.map(id=>enemyCatalog[id]&&<img key={id} src={enemyCatalog[id].icon?icons[`./assets/enemies/${enemyCatalog[id].icon}`]:enemyCatalog[id].iconUrl} alt={enemyCatalog[id].name} title={enemyCatalog[id].name} width="28" height="28" draggable={false}/>)}</span>;
+  };
   if(choices.length<2&&!lunarPreview){
     if(!stage)return null;
     return <div className="planner-encounter-picker planner-fixed-recommendations" aria-label={`Act ${act} recommendations`}><Recommendations compact choice={stage}/>{choices.map(choice=><Recommendations compact key={choice.name} choice={choice}/>)}</div>;
@@ -63,7 +68,7 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
   return <div className="planner-encounter-picker planner-stage-preview"><details className="planner-choice-dropdown" ref={dropdown} onKeyDown={event=>{
     if(event.key==='Escape'&&dropdown.current){dropdown.current.open=false;dropdown.current.querySelector('summary')?.focus();event.stopPropagation();}
   }} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null)&&dropdown.current)dropdown.current.open=false;}}>
-    <summary aria-label={`Choose enemies for Act ${act}${selected?`: ${selected.name}`:''}`} title={selected?.name??'Choose the enemies you plan to face'}>{selected?portraits(selected):<span>Choose Enemies</span>}<span className="planner-encounter-arrow" aria-hidden="true">▾</span></summary>
+    <summary aria-label={`Choose enemies for Act ${act}${selected?`: ${selected.name}`:''}`} title={selected?.name??'Choose the enemies you plan to face'}>{selected?portraits(selected,true):<span>Choose Enemies</span>}<span className="planner-encounter-arrow" aria-hidden="true">▾</span></summary>
     <div className="planner-encounter-options" aria-label={`Act ${act} encounter choices`}>
       <button type="button" className="planner-encounter-option" aria-pressed={!selected} onClick={()=>select('')}>No Preference</button>
       {choices.map((choice,index)=><button type="button" className="planner-encounter-option" key={choice.name} aria-pressed={choice.name===value} onClick={()=>select(choice.name)}><span className="planner-encounter-option-label">Choice {index+1}{isEliteAssault(choice)&&<span className="act-elite-badge">Elite Assault</span>}</span>{portraits(choice)}<span className="planner-encounter-description">{choice.name}</span><Recommendations choice={choice}/></button>)}

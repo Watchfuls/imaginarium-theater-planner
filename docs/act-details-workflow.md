@@ -215,6 +215,8 @@ expose research summaries or source-comparison explanations in the public view.
 Only display resistance values that differ from 10%, retaining immunities,
 weaknesses, zero resistance, and conditional state changes. Omit resistance-only
 sections when no exceptions exist. Do not erase the underlying research data.
+Keep Freeze resistance and other crowd-control modifiers in Mechanics, separate
+from Physical and elemental damage resistances.
 
 Enemy IDs are resolved through `src/data/theater-enemies.json` to bundled icons
 and verified Fandom `wikiUrl` destinations. Link the enemy portrait/name card to
