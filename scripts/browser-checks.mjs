@@ -403,6 +403,10 @@ try{
         actDetails:{seasons:{99:{Visionary:{9:{requirements:'',notes:'',encounters:[{name:'Enemy lineup 3',battleType:'Elite Assault',enemyIds:['123'],enemies:'Wave 1: 1 Test Ruin Enemy.',resistances:'Test Ruin Enemy: Physical 70%.',requirements:'Clear: Defeat 3 Bounties.',notes:'',stageEffects:'Thrilling Duel regression effect.'}]}}}}},
         enemies:{123:{name:'Test Ruin Enemy',iconUrl:'https://static.wikia.nocookie.net/gensin-impact/images/5/5b/Cryo_Slime_Icon.png',wikiUrl:'https://genshin-impact.fandom.com/wiki/Ruin_Guard'}}};
       custom.actDetails.seasons[99].Visionary[9].encounters.push({name:'Normal choice',enemies:'',resistances:'',requirements:'',notes:''});
+      for(const act of [1,2])custom.actDetails.seasons[99].Visionary[act]={requirements:'',notes:'',encounters:[
+        {name:'Normal choice',enemies:'',resistances:'',requirements:'',notes:'',stageEffects:'Treacherous Thunder: After a delay, thunder strikes characters.'},
+        {name:'Elite choice',battleType:'Elite Assault',enemies:'',resistances:'',requirements:'',notes:'',stageEffects:'Treacherous Thunder: After a delay, thunder strikes characters.\nDistinct elite effect '+act+'.'}
+      ]};
       await isolated.addInitScript(data=>{
         localStorage.setItem('itp-custom-season-v1',JSON.stringify(data));
         localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Visionary',seasonId:99,customSeasonSelected:true,elements:['Pyro','Hydro','Geo'],opening:[],guests:[]}));
@@ -418,6 +422,12 @@ try{
       assert.equal(await card.locator('.act-elite-badge').count(),1);
       assert.match(await card.locator('.act-enemy-resistances').innerText(),/70%/);
       assert.equal(await card.getByText('Resistance notes',{exact:true}).count(),0);
+      for(const act of [1,2]){
+        const stage=customPage.locator(`#act-details-act-${act}`);
+        assert.equal((await stage.innerText()).match(/Treacherous Thunder/g)?.length,1);
+        assert.match(await stage.innerText(),/Thunder starts.*after/i);
+        await stage.getByText(`Distinct elite effect ${act}.`,{exact:true}).waitFor();
+      }
       assert.deepEqual(customErrors,[]);
     }finally{await isolated.close();}
   });

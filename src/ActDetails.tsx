@@ -217,7 +217,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
         const actKey=`${season.season}-${difficulty}-${number}`;
         const actLabel=number>10?`Arcana ${number-10} · Arcanum Challenge`:`Act ${number}`;
         const actCollapsed=!editing&&Boolean(collapsedActs[actKey]);
-        const sharedThunder=season.season===29&&[1,2].includes(number)&&act.encounters.length>0&&act.encounters.every(encounter=>/Treacherous Thunder/.test(encounter.stageEffects??''));
+        const sharedThunder=[1,2].includes(number)&&act.encounters.length>0&&act.encounters.every(encounter=>/Treacherous Thunder/.test(encounter.stageEffects??''));
         return <article id={`act-details-act-${number}`} tabIndex={-1} className={`act-detail-card${actCollapsed?' is-collapsed':''}`} key={actKey}>
           <div className="act-detail-heading"><button type="button" className="details-toggle" disabled={editing} aria-label={`${actCollapsed?'Expand':'Collapse'} ${actLabel}`} aria-expanded={!actCollapsed} aria-controls={`act-content-${actKey}`} onClick={()=>setCollapsedActs(current=>({...current,[actKey]:!actCollapsed}))}><span aria-hidden="true">{actCollapsed?'▸':'▾'}</span></button><h3>{actLabel}</h3>{headingBosses.length>0&&<span className="act-objective">Boss</span>}{act.level!==undefined&&<span className="act-level">Level {act.level}</span>}</div>
           <div id={`act-content-${actKey}`}>
