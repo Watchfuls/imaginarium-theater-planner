@@ -1,23 +1,33 @@
 import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
 export type DetailSource = {label:string;url:string};
-export type EncounterDetails = {name:string;enemies:string;resistances:string;requirements:string;notes:string;enemyIds?:string[];recommendedElements?:string[];keyRecommendations?:{label:string;element?:string;avoid?:boolean;icon?:'moon'|'stellarGlimmer'}[];notableCharacters?:{name:string;reason:string;ability?:{name:string;icon:string}}[];bountyEnemyIds?:string[];mechanics?:string;stageEffects?:string;status?:string;sources?:DetailSource[];graphicSources?:string[];inference?:{confidence:'high'|'medium'|'low';basis:string}};
+export type EncounterDetails = {battleType?:'Normal'|'Elite Assault';name:string;enemies:string;resistances:string;requirements:string;notes:string;enemyIds?:string[];recommendedElements?:string[];keyRecommendations?:{label:string;element?:string;avoid?:boolean;icon?:'moon'|'stellarGlimmer'}[];notableCharacters?:{name:string;reason:string;ability?:{name:string;icon:string}}[];bountyEnemyIds?:string[];mechanics?:string;stageEffects?:string;status?:string;sources?:DetailSource[];graphicSources?:string[];inference?:{confidence:'high'|'medium'|'low';basis:string}};
 export type ActDetailsRecord = {requirements:string;notes:string;encounters:EncounterDetails[];level?:number;keyRecommendations?:EncounterDetails['keyRecommendations'];notableCharacters?:EncounterDetails['notableCharacters']};
 export type ActDetailsData = {
   seasons:Record<string,Record<string,Record<string,ActDetailsRecord>>>;
   research?:Record<string,{checkedOn:string;summary:string;sources:DetailSource[]}>;
 };
 
+const record=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
+const strings=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==='string');
+const optional=(value:Record<string,unknown>,key:string,check:(item:unknown)=>boolean)=>value[key]===undefined||check(value[key]);
+const text=(value:unknown)=>typeof value==='string';
+const recommendations=(value:unknown)=>Array.isArray(value)&&value.every(item=>record(item)&&text(item.label)&&optional(item,'element',text)&&optional(item,'avoid',value=>typeof value==='boolean')&&optional(item,'icon',value=>value==='moon'||value==='stellarGlimmer'));
+const characters=(value:unknown)=>Array.isArray(value)&&value.every(item=>record(item)&&text(item.name)&&text(item.reason)&&optional(item,'ability',value=>record(value)&&text(value.name)&&text(value.icon)));
+const sources=(value:unknown)=>Array.isArray(value)&&value.every(item=>record(item)&&text(item.label)&&text(item.url));
+const sharedFields=(value:Record<string,unknown>)=>optional(value,'keyRecommendations',recommendations)&&optional(value,'notableCharacters',characters);
+const encounter=(value:unknown)=>record(value)&&['name','enemies','resistances','requirements','notes'].every(key=>text(value[key]))&&sharedFields(value)
+  &&['mechanics','stageEffects','status'].every(key=>optional(value,key,text))
+  &&['enemyIds','bountyEnemyIds','recommendedElements','graphicSources'].every(key=>optional(value,key,strings))
+  &&optional(value,'battleType',value=>value==='Normal'||value==='Elite Assault')
+  &&optional(value,'sources',sources)
+  &&optional(value,'inference',value=>record(value)&&['high','medium','low'].includes(String(value.confidence))&&text(value.basis));
+
 export function isActDetailsDataForSeason(value:unknown,seasonNumber:number):value is ActDetailsData {
   if(!value||typeof value!=='object'||!('seasons' in value)||!value.seasons||typeof value.seasons!=='object'||Array.isArray(value.seasons))return false;
   const seasons=value.seasons as Record<string,unknown>;
-  const season=seasons[String(seasonNumber)];
-  return Boolean(season&&typeof season==='object'&&!Array.isArray(season)&&Object.values(season).every(mode=>
-    Boolean(mode&&typeof mode==='object'&&!Array.isArray(mode)&&Object.values(mode).every(act=>
-      Boolean(act&&typeof act==='object'&&!Array.isArray(act)&&Array.isArray((act as ActDetailsRecord).encounters)&&(act as ActDetailsRecord).encounters.every(encounter=>
-        Boolean(encounter&&typeof encounter.name==='string'&&typeof encounter.enemies==='string'&&typeof encounter.resistances==='string'&&typeof encounter.requirements==='string'&&typeof encounter.notes==='string')
-      ))
-    ))
-  ));
+  return record(seasons[String(seasonNumber)])&&Object.values(seasons).every(season=>record(season)&&Object.values(season).every(mode=>record(mode)&&Object.values(mode).every(act=>
+    record(act)&&text(act.requirements)&&text(act.notes)&&sharedFields(act)&&optional(act,'level',value=>typeof value==='number'&&Number.isFinite(value))&&Array.isArray(act.encounters)&&act.encounters.every(encounter)
+  )));
 }
 
 export const isActDetailsData=(value:unknown):value is ActDetailsData=>isActDetailsDataForSeason(value,30);

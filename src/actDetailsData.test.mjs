@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import data from '../docs/act-details-research/2026-11-01.json' with {type:'json'};
 import {mergeActDetailsDraft} from './actDetailsData.ts';
-import published from './data/theater-act-details.json' with {type:'json'};
+import published from './publishedActDetails.ts';
 import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
 
 test('old Act 9 elite draft timings upgrade without dropping authored text or changing other encounters',()=>{

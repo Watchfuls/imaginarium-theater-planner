@@ -16,7 +16,7 @@ export function createPlannerBackup(save:PlannerSave):Backup {
     ownership:Object.fromEntries(Object.entries(save.ownership)
       .filter(([,value])=>value.owned||value.level!==90)
       .map(([name,value])=>[name,{owned:value.owned,level:value.level}])),
-    setup:{difficulty:save.setup.difficulty,elements:save.setup.elements,opening:save.setup.opening,guests:save.setup.guests,...(save.setup.seasonId===undefined?{}:{seasonId:save.setup.seasonId})},
+    setup:{difficulty:save.setup.difficulty,elements:save.setup.elements,opening:save.setup.opening,guests:save.setup.guests,...(save.setup.seasonId===undefined?{}:{seasonId:save.setup.seasonId}),...(save.setup.customSeasonSelected===undefined?{}:{customSeasonSelected:save.setup.customSeasonSelected}),...(save.setup.privateSeasonSelected===undefined?{}:{privateSeasonSelected:save.setup.privateSeasonSelected})},
     plan:{roster:save.plan.roster,acts:Object.fromEntries(Object.entries(save.plan.acts).map(([act,team])=>[act,Array.from(team,name=>name??'')])),...(save.plan.borrowed?{borrowed:save.plan.borrowed}:{}),...(save.plan.travelerElement?{travelerElement:save.plan.travelerElement}:{}),...(Object.keys(save.plan.encounterChoices??{}).length?{encounterChoices:save.plan.encounterChoices}:{})},
     ...(save.sort==='name'?{}:{sort:save.sort}),
     ...(save.history?.length?{history:save.history.map(entry=>{const saved=createPlannerBackup({...entry,ownership:{},sort:'name'});return {setup:saved.setup,plan:saved.plan};})}:{}),
@@ -34,7 +34,11 @@ export function parsePlannerBackup(value:unknown):PlannerSave {
   if(typeof setup.difficulty!=='string'||!Object.hasOwn(difficulties,setup.difficulty)
     ||!strings(setup.elements)||!setup.elements.every(element=>ELEMENTS.includes(element as typeof ELEMENTS[number]))
     ||!strings(setup.opening)||!strings(setup.guests)
-    ||(setup.seasonId!==undefined&&(!Number.isInteger(setup.seasonId)||Number(setup.seasonId)<1)))return fail();
+    ||(setup.seasonId!==undefined&&(!Number.isInteger(setup.seasonId)||Number(setup.seasonId)<1))
+    ||(setup.customSeasonSelected!==undefined&&typeof setup.customSeasonSelected!=='boolean')
+    ||(setup.privateSeasonSelected!==undefined&&typeof setup.privateSeasonSelected!=='boolean')
+    ||(setup.customSeasonSelected&&setup.privateSeasonSelected)
+    ||((setup.customSeasonSelected||setup.privateSeasonSelected)&&setup.seasonId===undefined))return fail();
   if(!strings(plan.roster)||!record(plan.acts)||!Object.entries(plan.acts).every(([act,team])=>/^(?:[1-9]|1[0-2])$/.test(act)&&strings(team)&&team.length<=4)
     ||(plan.borrowed!==undefined&&typeof plan.borrowed!=='string')
     ||(plan.travelerElement!==undefined&&plan.travelerElement!=='None'&&!ELEMENTS.includes(plan.travelerElement as typeof ELEMENTS[number]))

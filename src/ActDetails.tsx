@@ -1,15 +1,16 @@
+import {compactActDetails,expandActDetails} from './actDetailsStorage';
 import {ElementalText} from './ElementalText';
 import {bossPortrait} from './bossPortraits';
 import {DifficultySelect} from './DifficultySelect';
 import React, {useEffect, useState} from 'react';
-import published from './data/theater-act-details.json';
+import published from './publishedActDetails';
 import {seasonStatus} from './seasonTiming';
 import {isActDetailsData,mergeActDetailsDraft,type ActDetailsData as Data,type ActDetailsRecord as Act,type EncounterDetails as Encounter} from './actDetailsData';
 import enemyCatalog from './data/theater-enemies.json' with {type:'json'};
 import physicalIcon from './assets/elements/Physical_Icon.png';
 import {KeyRecommendations} from './KeyRecommendations';
 import {mechanicStateDescription} from './mechanicStates';
-import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation';
+import {isEliteAssault,encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation';
 import {storedText} from './browserStorage';
 
 const enemyIcons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
@@ -114,7 +115,7 @@ function localOnlySeasonNumbers():Set<number> {
 function initialData():Data {
   if(import.meta.env.DEV)try {
     const saved=localStorage.getItem(storageKey);
-    if(saved){const data=JSON.parse(saved);if(data&&typeof data.seasons==='object'&&data.seasons!==null)return siteActDetails(mergeActDetailsDraft(published as Data,data));}
+    if(saved){const data=JSON.parse(saved);if(data&&typeof data.seasons==='object'&&data.seasons!==null)return siteActDetails(mergeActDetailsDraft(published as Data,expandActDetails(data)));}
   }catch{/* Use published details if the browser draft is unavailable. */}
   return published as Data;
 }
@@ -143,7 +144,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
   }
   useEffect(()=>{
     if(!import.meta.env.DEV)return;
-    try{localStorage.setItem(storageKey,JSON.stringify(data));setSaveStatus('Draft saved in this browser.');}
+    try{localStorage.setItem(storageKey,JSON.stringify(compactActDetails(data)));setSaveStatus('Draft saved in this browser.');}
     catch{setSaveStatus('Browser save unavailable. Download the JSON to keep your changes.');}
   },[data]);
   useEffect(()=>{
@@ -152,7 +153,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
     fetch('/private-local/season30-act-details.json',{cache:'no-store'}).then(async response=>{
       if(response.status===404){if(!cancelled)setPrivateDraftStatus('No private Season 30 draft file found.');return null;}
       if(!response.ok)throw new Error(`Private draft request failed (${response.status}).`);
-      const value:unknown=await response.json();
+      const value=expandActDetails(await response.json());
       if(!isActDetailsData(value))throw new Error('Private draft file has an invalid Act Details shape.');
       if(cancelled)return null;
       const localOnly=new Set(localOnlySeasons);localOnly.add(30);
@@ -188,7 +189,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
   }
   function download(){
     const exportData={...data,seasons:Object.fromEntries(Object.entries(data.seasons).filter(([number])=>!localOnlySeasons.has(Number(number))))};
-    const url=URL.createObjectURL(new Blob([JSON.stringify(exportData,null,2)+'\n'],{type:'application/json'}));
+    const url=URL.createObjectURL(new Blob([JSON.stringify(compactActDetails(exportData),null,2)+'\n'],{type:'application/json'}));
     const link=document.createElement('a');link.href=url;link.download='theater-act-details.json';link.click();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
@@ -247,7 +248,7 @@ export function ActDetails({seasons,now,bossesForAct,difficulty,onDifficultyChan
                 {hasIndividual&&lineup.map((enemy,position)=><div className="act-resistance-enemy" style={columnStyle(position)} key={enemy.name} aria-label={resistances.individual[enemy.name]?`${enemy.name} resistance exceptions`:undefined}>{resistances.individual[enemy.name]&&<ResistanceLabels value={resistances.individual[enemy.name]}/>}</div>)}
               </div>}
             </div>;
-            const eliteAssault=/\bElite Assault\b/i.test(encounter.name);
+            const eliteAssault=isEliteAssault(encounter);
             const stageEffects=playerDetailText(encounter.stageEffects??'');
             const choiceStageEffects=sharedThunder?stageEffects
               .replace(/Treacherous Thunder: After a delay, thunder strikes characters\.\s*/g,'')

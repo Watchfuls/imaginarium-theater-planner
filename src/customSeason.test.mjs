@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {parseCustomSeasonPackage} from './customSeason.ts';
+import {compactActDetails} from './actDetailsStorage.ts';
 
 const validPackage=()=>({
   format:'imaginarium-theater-custom-season',
@@ -16,7 +17,7 @@ const validPackage=()=>({
     bossStages:[],
     sourceUrl:''
   },
-  actDetails:{seasons:{'99':{Hard:{1:{encounters:[{
+  actDetails:{seasons:{'99':{Hard:{1:{requirements:'',notes:'',encounters:[{
     name:'Enemy lineup 1',
     enemies:'',
     resistances:'',
@@ -39,6 +40,32 @@ test('custom season package validates and normalizes its season and enemy data',
   assert.equal(parsed.actDetails.seasons['99'].Hard['1'].encounters[0].enemyIds[0],'123');
   assert.equal(parsed.enemies['123'].name,'Test Enemy');
   assert.deepEqual(parsed.enemies['123'].baseResistances,{Physical:70,Pyro:10});
+});
+
+test('custom season imports expand shared acts without coupling difficulty edits',()=>{
+  const data=validPackage();
+  data.actDetails.seasons['99'].Lunar=structuredClone(data.actDetails.seasons['99'].Hard);
+  data.actDetails=compactActDetails(data.actDetails);
+  assert.deepEqual(data.actDetails.seasons['99'].Lunar[1],{$ref:'Hard/1'});
+  const parsed=parseCustomSeasonPackage(data);
+  parsed.actDetails.seasons['99'].Lunar[1].encounters[0].notes='Personal Lunar note';
+  assert.equal(parsed.actDetails.seasons['99'].Hard[1].encounters[0].notes,'');
+});
+
+test('custom imports reject malformed optional encounter and act fields before rendering',()=>{
+  for(const [key,value] of Object.entries({enemyIds:42,bountyEnemyIds:[null],recommendedElements:'Pyro',keyRecommendations:[{label:'Healing',avoid:'yes'}],notableCharacters:[{name:'Barbara',reason:42}],mechanics:[],stageEffects:{},sources:[{label:'Reference'}],inference:{confidence:'unknown',basis:''},battleType:'invalid'})){
+    const data=validPackage();
+    data.actDetails.seasons['99'].Hard[1].encounters[0][key]=value;
+    assert.throws(()=>parseCustomSeasonPackage(data),/Act Details are invalid/,key);
+  }
+  for(const [key,value] of Object.entries({requirements:42,notes:null,level:'90',notableCharacters:[{}],keyRecommendations:'Healing'})){
+    const data=validPackage();
+    data.actDetails.seasons['99'].Hard[1][key]=value;
+    assert.throws(()=>parseCustomSeasonPackage(data),/Act Details are invalid/,key);
+  }
+  const otherSeason=validPackage();
+  otherSeason.actDetails.seasons['98']={Hard:{1:{requirements:'',notes:'',encounters:[{name:'Malformed'}]}}};
+  assert.throws(()=>parseCustomSeasonPackage(otherSeason),/Act Details are invalid/);
 });
 
 test('custom season package rejects unsupported versions, mismatched act details, and untrusted image hosts',()=>{

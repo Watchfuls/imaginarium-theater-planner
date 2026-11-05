@@ -1,3 +1,4 @@
+import {compactActDetails,expandActDetails} from './actDetailsStorage';
 import {SiteHeader} from './SiteHeader';
 import {Feedback} from './Feedback';
 import {BackupControls} from './BackupControls';
@@ -119,7 +120,7 @@ useEffect(()=>{
     saveText('itp-plan-v1',JSON.stringify(plan)),
     saveText('itp-plan-history-v1',JSON.stringify(planHistory)),
   ];
-  if(customSeasonDirty)writes.push(saveText(customSeasonStorageKey,customSeasonPackage?JSON.stringify(customSeasonPackage):''));
+  if(customSeasonDirty)writes.push(saveText(customSeasonStorageKey,customSeasonPackage?JSON.stringify({...customSeasonPackage,actDetails:compactActDetails(customSeasonPackage.actDetails)}):''));
   setStorageUnavailable(writes.some(saved=>!saved));
 },[plannerCharacterOrder,ownership,setup,plan,planHistory,customSeasonPackage,customSeasonDirty]);
 useEffect(()=>{
@@ -132,7 +133,7 @@ useEffect(()=>{
     if(!previewResponse.ok)throw new Error(`Private theater preview request failed (${previewResponse.status}).`);
     if(!detailsResponse.ok)throw new Error(`Private Act Details request failed (${detailsResponse.status}).`);
     const previewValue:unknown=await previewResponse.json();
-    const detailsValue:unknown=await detailsResponse.json();
+    const detailsValue=expandActDetails(await detailsResponse.json());
     if(!isRecord(previewValue)||previewValue.season!==30||!Array.isArray(previewValue.bossStages)||!isRecord(previewValue.enemies))throw new Error('Private Season 30 preview file has an invalid shape.');
     const officialSeason=availableSeasons.find(season=>season.season===30);
     if(!officialSeason)throw new Error('The official Season 30 lineup is unavailable.');
@@ -143,7 +144,7 @@ useEffect(()=>{
       if(!/^\d+$/.test(id)||!isRecord(value)||typeof value.name!=='string'||typeof value.iconUrl!=='string'||typeof value.wikiUrl!=='string')throw new Error(`Private enemy preview ${id} has an invalid shape.`);
       const iconUrl=new URL(value.iconUrl);
       const wikiUrl=new URL(value.wikiUrl);
-      if(iconUrl.protocol!=='https:'||iconUrl.hostname!=='transform.alioth.wiki'||wikiUrl.protocol!=='https:'||wikiUrl.hostname!=='genshin-impact.fandom.com')throw new Error(`Private enemy preview ${id} has an unexpected URL.`);
+      if(iconUrl.protocol!=='https:'||!['transform.alioth.wiki','static.wikia.nocookie.net'].includes(iconUrl.hostname)||wikiUrl.protocol!=='https:'||wikiUrl.hostname!=='genshin-impact.fandom.com')throw new Error(`Private enemy preview ${id} has an unexpected URL.`);
       const baseResistances=isRecord(value.baseResistances)&&Object.entries(value.baseResistances).every(([element,resistance])=>['Physical','Pyro','Hydro','Electro','Cryo','Dendro','Anemo','Geo'].includes(element)&&typeof resistance==='number'&&Number.isFinite(resistance))
         ?value.baseResistances as Record<string,number>
         :undefined;
@@ -495,7 +496,7 @@ const renderAct=(act:number,label:string)=>{
 };
 return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContinueToPlanner={canContinueToPlanner} setStep={setStep}/>
 <BackupControls save={{ownership,setup,plan,sort:plannerCharacterOrder,history:planHistory}} onRestore={save=>{
-  const unavailable=save.setup.seasonId!==undefined&&(save.setup.customSeasonSelected?!customSeasonPackage:save.setup.privateSeasonSelected?!privatePreview:!availableSeasons.some(season=>season.season===save.setup.seasonId));
+  const unavailable=save.setup.seasonId!==undefined&&(save.setup.customSeasonSelected?customSeasonPackage?.season.season!==save.setup.seasonId:save.setup.privateSeasonSelected?privatePreview?.season.season!==save.setup.seasonId:!availableSeasons.some(season=>season.season===save.setup.seasonId));
   setOwnership(normalizeOwnership(save.ownership));setPlannerCharacterOrder(save.sort);
   setPlanHistory(current=>mergePlanHistory(current,save.history??[],unavailable?[{setup:save.setup,plan:save.plan}]:[]));
   if(!unavailable){setSetup(save.setup);setPlan(save.plan);}

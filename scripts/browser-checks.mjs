@@ -395,6 +395,32 @@ try{
     }
   });
   await page.screenshot({path:join(tmpdir(),'itp-browser-check-mobile.png'),fullPage:true});
+  await check('uploaded generic elite encounters show effects and per-enemy resistance labels',async()=>{
+    const isolated=await browser.newContext();
+    try{
+      const custom={format:'imaginarium-theater-custom-season',version:1,
+        season:{id:'2099-01-01',season:99,startsAt:'2099-01-01T00:00:00Z',endsAt:'2099-02-01T00:00:00Z',elements:['Pyro','Hydro','Geo'],openingCharacters:[],specialGuests:[],bossStages:[],sourceUrl:''},
+        actDetails:{seasons:{99:{Visionary:{9:{requirements:'',notes:'',encounters:[{name:'Enemy lineup 3',battleType:'Elite Assault',enemyIds:['123'],enemies:'Wave 1: 1 Test Ruin Enemy.',resistances:'Test Ruin Enemy: Physical 70%.',requirements:'Clear: Defeat 3 Bounties.',notes:'',stageEffects:'Thrilling Duel regression effect.'}]}}}}},
+        enemies:{123:{name:'Test Ruin Enemy',iconUrl:'https://static.wikia.nocookie.net/gensin-impact/images/5/5b/Cryo_Slime_Icon.png',wikiUrl:'https://genshin-impact.fandom.com/wiki/Ruin_Guard'}}};
+      custom.actDetails.seasons[99].Visionary[9].encounters.push({name:'Normal choice',enemies:'',resistances:'',requirements:'',notes:''});
+      await isolated.addInitScript(data=>{
+        localStorage.setItem('itp-custom-season-v1',JSON.stringify(data));
+        localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Visionary',seasonId:99,customSeasonSelected:true,elements:['Pyro','Hydro','Geo'],opening:[],guests:[]}));
+      },custom);
+      const customPage=await isolated.newPage();
+      const customErrors=[];customPage.on('pageerror',error=>customErrors.push(error.message));
+      await customPage.goto(base,{waitUntil:'domcontentloaded'});
+      await customPage.locator('nav button').filter({hasText:'Act Details'}).click();
+      const card=customPage.locator('#act-details-act-9');
+      await card.waitFor();
+      for(const toggle of await card.getByRole('button',{name:/^Expand/}).all())await toggle.click();
+      await card.getByText('Thrilling Duel regression effect.',{exact:true}).waitFor();
+      assert.equal(await card.locator('.act-elite-badge').count(),1);
+      assert.match(await card.locator('.act-enemy-resistances').innerText(),/70%/);
+      assert.equal(await card.getByText('Resistance notes',{exact:true}).count(),0);
+      assert.deepEqual(customErrors,[]);
+    }finally{await isolated.close();}
+  });
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS no uncaught app errors');
   console.log('YouTube playback itself still requires a manual check in the target browser.');

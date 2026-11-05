@@ -237,6 +237,20 @@ Legacy browser drafts are sanitized on load as well. The shared hierarchy is:
 
 `seasons[seasonNumber][difficulty][actNumber]`
 
+Stored app data and custom-season packages may replace an identical complete act
+with `{"$ref":"Visionary/9"}` (for example, at `Lunar/9`). References resolve
+within the same season and act number; no partial overrides are supported.
+Share only fully identical records, including notes, levels, objectives, effects,
+and all encounter fields. A shared enemy lineup alone is insufficient.
+`expandActDetails` loads independent editable copies; `compactActDetails` removes
+exact duplicates on save/download. Existing expanded files remain supported.
+The bundled data is loaded through `src/publishedActDetails.ts`.
+
+After archiving, run `node scripts/compact-act-details.mjs <file> [<file> ...]`
+to compact explicit app/custom JSON files. This checks a lossless round trip.
+Keep research records and historical snapshots in their original expanded form;
+the archive command expands references before creating self-contained snapshots.
+
 - Season and act keys are strings. Difficulty names are exactly `Easy`,
   `Normal`, `Hard`, `Visionary`, and `Lunar`.
 - Act ranges: Easy 1–3; Normal 1–6; Hard 1–8; Visionary 1–10;
@@ -283,7 +297,10 @@ Put shared act objectives in `act.requirements`; encounter-specific objectives
 in `encounter.requirements`. Do not conflate a star target with the failure timer.
 Record sourced stage effects and mechanics in the research record below.
 Use the optional encounter fields `stageEffects` and `mechanics` for those
-details. In the research dataset only, use `status` for verification caveats and `sources` for an array of
+details. Set `battleType` to `Elite Assault` for elite encounters whose names
+do not contain that label, so stage effects and elite badges remain visible.
+Legacy names containing `Elite Assault` remain supported.
+In the research dataset only, use `status` for verification caveats and `sources` for an array of
 `{"label":"Source description","url":"https://..."}` links. These fields
 are retained in the repository, separate from personal notes. Keep current facts and historical
 references clearly labelled in their text. Leave `notes` for the user's additions.

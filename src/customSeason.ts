@@ -1,6 +1,7 @@
 import {isActDetailsDataForSeason,type ActDetailsData} from './actDetailsData.ts';
 import {parseSeason} from './theaterData.ts';
 import type {TheaterSeason} from './plannerTypes';
+import {expandActDetails} from './actDetailsStorage.ts';
 
 export type CustomEnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 export type CustomSeasonPackage={format:'imaginarium-theater-custom-season';version:1;season:TheaterSeason;actDetails:ActDetailsData;enemies:Record<string,CustomEnemyPreview>};
@@ -24,7 +25,8 @@ export function parseCustomSeasonPackage(value:unknown):CustomSeasonPackage {
   }
   const start=Date.parse(season.startsAt),end=Date.parse(season.endsAt);
   if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start)throw new Error('Custom season dates are invalid.');
-  if(!isActDetailsDataForSeason(value.actDetails,season.season))throw new Error('Custom season Act Details are invalid.');
+  const actDetails=expandActDetails(value.actDetails);
+  if(!isActDetailsDataForSeason(actDetails,season.season))throw new Error('Custom season Act Details are invalid.');
   if(!isRecord(value.enemies))throw new Error('Custom season enemy previews are invalid.');
   const enemies:Record<string,CustomEnemyPreview>={};
   for(const [id,enemy] of Object.entries(value.enemies)){
@@ -35,5 +37,5 @@ export function parseCustomSeasonPackage(value:unknown):CustomSeasonPackage {
     if(!allowedHost(enemy.wikiUrl,['genshin-impact.fandom.com']))throw new Error(`Custom enemy ${id} has an unsupported wiki URL.`);
     enemies[id]={name:enemy.name,iconUrl:enemy.iconUrl,wikiUrl:enemy.wikiUrl,...(baseResistances?{baseResistances}: {})};
   }
-  return {format:'imaginarium-theater-custom-season',version:1,season,actDetails:value.actDetails,enemies};
+  return {format:'imaginarium-theater-custom-season',version:1,season,actDetails,enemies};
 }

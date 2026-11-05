@@ -2,11 +2,13 @@ import {createHash} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
+import {expandActDetails} from '../src/actDetailsStorage.ts';
 
 const projectRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 
 export function actArchiveSnapshots(data,lineups={}){
   if(!data?.seasons||typeof data.seasons!=='object'||Array.isArray(data.seasons))throw new Error('Expected act details JSON with a seasons object.');
+  data=expandActDetails(data);
   return Object.entries(data.seasons).map(([season,modes])=>{
     if(!/^\d+$/.test(season)||!modes||typeof modes!=='object'||Array.isArray(modes))throw new Error('Invalid season in act details.');
     const lineup=[lineups.current,lineups.next].find(candidate=>candidate?.season===Number(season));

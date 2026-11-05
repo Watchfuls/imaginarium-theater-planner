@@ -1,9 +1,9 @@
 import {canonicalEnemyName} from './enemyIdentity';
 import React from 'react';
-import published from './data/theater-act-details.json';
+import published from './publishedActDetails';
 import catalog from './data/theater-enemies.json' with {type:'json'};
 import type {ActDetailsData,EncounterDetails} from './actDetailsData';
-import {encounterEnemyIds} from './actDetailsPresentation';
+import {isEliteAssault,encounterEnemyIds} from './actDetailsPresentation';
 import {KeyRecommendations} from './KeyRecommendations';
 
 const icons=import.meta.glob('./assets/enemies/*.png',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
@@ -66,7 +66,7 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
     <summary aria-label={`Choose enemies for Act ${act}${selected?`: ${selected.name}`:''}`} title={selected?.name??'Choose the enemies you plan to face'}>{selected?portraits(selected):<span>Choose Enemies</span>}<span className="planner-encounter-arrow" aria-hidden="true">▾</span></summary>
     <div className="planner-encounter-options" aria-label={`Act ${act} encounter choices`}>
       <button type="button" className="planner-encounter-option" aria-pressed={!selected} onClick={()=>select('')}>No Preference</button>
-      {choices.map((choice,index)=><button type="button" className="planner-encounter-option" key={choice.name} aria-pressed={choice.name===value} onClick={()=>select(choice.name)}><span className="planner-encounter-option-label">Choice {index+1}{/Elite Assault/i.test(choice.name)&&<span className="act-elite-badge">Elite Assault</span>}</span>{portraits(choice)}<span className="planner-encounter-description">{choice.name}</span><Recommendations choice={choice}/></button>)}
+      {choices.map((choice,index)=><button type="button" className="planner-encounter-option" key={choice.name} aria-pressed={choice.name===value} onClick={()=>select(choice.name)}><span className="planner-encounter-option-label">Choice {index+1}{isEliteAssault(choice)&&<span className="act-elite-badge">Elite Assault</span>}</span>{portraits(choice)}<span className="planner-encounter-description">{choice.name}</span><Recommendations choice={choice}/></button>)}
     </div>
   </details><Recommendations compact choice={stage??{}}/></div>;
 }

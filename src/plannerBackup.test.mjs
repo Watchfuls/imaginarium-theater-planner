@@ -4,6 +4,21 @@ import {createPlannerBackup,parsePlannerBackup,mergePlanHistory} from './planner
 
 const save=()=>({ownership:{Aino:{owned:true,level:95},Mona:{owned:false,level:90},Itto:{owned:false,level:80}},setup:{difficulty:'Hard',elements:['Hydro','Geo','Electro'],opening:['Aino'],guests:['Mona'],seasonId:29},plan:{roster:['Aino','Mona'],acts:{1:['Aino','','Mona','']},borrowed:'Mona',travelerElement:'None',encounterChoices:{'29-Hard-1':'choice-2'}},sort:'game'});
 
+test('backups preserve uploaded and private season identity in current and historical plans',()=>{
+  for(const selection of [{customSeasonSelected:true,privateSeasonSelected:false},{customSeasonSelected:false,privateSeasonSelected:true}]){
+    const original=save();
+    Object.assign(original.setup,selection);
+    original.history=[{setup:structuredClone(original.setup),plan:structuredClone(original.plan)}];
+    const restored=parsePlannerBackup(JSON.parse(JSON.stringify(createPlannerBackup(original))));
+    assert.deepEqual(restored.setup,original.setup);
+    assert.deepEqual(restored.history,original.history);
+  }
+  for(const selection of [{customSeasonSelected:'true'},{privateSeasonSelected:1},{customSeasonSelected:true,privateSeasonSelected:true}]){
+    const backup=createPlannerBackup(save());Object.assign(backup.setup,selection);
+    assert.throws(()=>parsePlannerBackup(backup));
+  }
+});
+
 test('compact backup preserves personal choices and omits default unowned characters and unrelated data',()=>{
   const original=save();
   original.setup.enemyDatabase='not player data';

@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {actArchiveSnapshots} from './archive-act-details.mjs';
+import {compactActDetails} from '../src/actDetailsStorage.ts';
+
+test('compact and expanded data produce the same self-contained archive',()=>{
+  const act={requirements:'',notes:'Preserve me',encounters:[]};
+  const data={seasons:{29:{Visionary:{9:act},Lunar:{9:structuredClone(act)}}}};
+  assert.deepEqual(actArchiveSnapshots(compactActDetails(data)),actArchiveSnapshots(data));
+});
 
 test('archives keep timings, mechanics, and personal notes under the original season/difficulty/act',()=>{
   const act={requirements:'Clear within 110 s',notes:'Bring a healer',encounters:[{name:'Boss',requirements:'Star within 75 s',mechanics:'Break its shield',notes:'Use my borrowed character'}]};

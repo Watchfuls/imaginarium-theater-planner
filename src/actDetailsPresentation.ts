@@ -1,5 +1,9 @@
 import type {ActDetailsData,EncounterDetails} from './actDetailsData';
 
+export function isEliteAssault(encounter:EncounterDetails):boolean {
+  return encounter.battleType==='Elite Assault'||/\bElite Assault\b/i.test(encounter.name);
+}
+
 export function encounterEnemyIds(encounter:EncounterDetails):string[] {
   if(encounter.enemyIds)return [...new Set(encounter.enemyIds)];
   return [...new Set((encounter.sources??[]).flatMap(source=>{
@@ -14,6 +18,7 @@ export function siteActDetails(data:ActDetailsData):ActDetailsData {
       mode,Object.fromEntries(Object.entries(acts).map(([act,record])=>[
         act,{...(record.level!==undefined?{level:record.level}:{}),...(record.keyRecommendations?{keyRecommendations:record.keyRecommendations}:{}),...(record.notableCharacters?{notableCharacters:record.notableCharacters}:{}),requirements:playerActRequirements(record.requirements),notes:record.notes,encounters:record.encounters.map(encounter=>({
           name:playerDetailText(encounter.name),enemyIds:encounterEnemyIds(encounter),enemies:playerEnemyNotes(encounter.enemies),
+          ...(encounter.battleType?{battleType:encounter.battleType}:{}),
           ...(encounter.keyRecommendations?{keyRecommendations:encounter.keyRecommendations}:{}),
           ...(encounter.recommendedElements?{recommendedElements:encounter.recommendedElements}:{}),
           ...(encounter.notableCharacters?{notableCharacters:encounter.notableCharacters}:{}),

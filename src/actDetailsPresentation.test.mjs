@@ -1,9 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import data from './data/theater-act-details.json' with {type:'json'};
+import data from './publishedActDetails.ts';
 import research from '../docs/act-details-research/2026-11-01.json' with {type:'json'};
 import catalog from './data/theater-enemies.json' with {type:'json'};
+import {isEliteAssault} from './actDetailsPresentation.ts';
+
+test('explicit battle types survive site projection and classify generic encounter names',()=>{
+  const encounter={name:'Enemy lineup 3',battleType:'Elite Assault',enemies:'',resistances:'',requirements:'',notes:'',stageEffects:'An elite stage effect.'};
+  const projected=siteActDetails({seasons:{99:{Visionary:{9:{requirements:'',notes:'',encounters:[encounter]}}}}});
+  const result=projected.seasons[99].Visionary[9].encounters[0];
+  assert.equal(isEliteAssault(result),true);
+  assert.equal(result.stageEffects,encounter.stageEffects);
+  assert.equal(isEliteAssault({...encounter,battleType:undefined}),false);
+  assert.equal(isEliteAssault({...encounter,battleType:undefined,name:'Elite Assault · Choice 3'}),true);
+});
+
+test('separate Ruin enemy resistance lines attach all values to their portraits',()=>{
+  const names=['Ruin Grader','Ruin Guard','Ruin Scout','Ruin Defender','Ruin Cruiser','Ruin Destroyer'];
+  const values=[70,70,50,50,30,30];
+  const text=names.map((name,index)=>`${name}: Physical ${values[index]}%.`).join('\n');
+  const parsed=enemyResistanceDetails(text,names);
+  assert.equal(parsed.notes,'');
+  const grouped=groupedResistances(parsed.byEnemy,names);
+  assert.equal(grouped.shared,'');
+  names.forEach((name,index)=>assert.equal(grouped.individual[name],`Physical ${values[index]}%`));
+});
 import {encounterEnemyIds,enemyResistanceDetails,groupedResistances,playerActRequirements,playerDetailText,playerEnemyNotes,resistanceExceptions,siteActDetails,splitChallengeRequirements} from './actDetailsPresentation.ts';
 
 test('countdown reductions and active enemy counts belong in details, not objectives',()=>{
