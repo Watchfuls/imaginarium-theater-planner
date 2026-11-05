@@ -310,7 +310,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .drag-help a{color:#cbb9f3}
 .act-heading{display:flex;align-items:center;gap:8px}
 .act-heading:has(.planner-encounter-picker){display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
-.planner-encounter-picker{position:relative;min-width:0;justify-self:center;max-width:260px}
+.planner-encounter-picker{position:relative;min-width:0;justify-self:center;align-self:center;max-width:260px}
 .planner-stage-preview{display:flex;align-items:center;justify-content:center;gap:8px;max-width:420px}
 .planner-choice-dropdown{position:relative;min-width:0;max-width:260px}
 .planner-stage-preview>.key-recommendations{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a;flex-shrink:0}
@@ -349,12 +349,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .act-bosses{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
 .act-boss{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border:1px solid #564678;border-radius:999px;background:#302744;color:#d9c9f8;font-size:10px;font-weight:600;line-height:1.2}
 .act-boss img{width:24px;height:24px;object-fit:contain;border-radius:50%;background:#151b2a}
-.planner-boss-preview{display:flex;align-items:center;justify-content:center;min-height:36px;max-width:360px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a}
+.planner-boss-preview{display:flex;align-items:center;align-content:center;justify-content:center;flex-wrap:wrap;width:fit-content;min-height:36px;max-width:100%;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a}
 .planner-boss-preview .act-bosses{justify-content:center}
 .planner-boss-preview .act-boss{padding:0;border:0;border-radius:0;background:transparent;color:#cbd2e2;font-size:11px;font-weight:400}
 .planner-boss-preview .act-boss img{width:28px;height:28px;border-radius:4px;background:#293147;flex-shrink:0}
-.planner-boss-preview:has(>.key-recommendations),.planner-lunar-preview:has(>.key-recommendations){padding:0;border:0;background:transparent;gap:8px}
-.planner-boss-preview:has(>.key-recommendations)>.act-bosses,.planner-lunar-preview:has(>.key-recommendations)>.planner-encounter-icons,.planner-boss-preview>.key-recommendations,.planner-lunar-preview>.key-recommendations{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a}
 .act-objective{display:inline-flex;align-items:center;padding:3px 7px;border:1px solid #564678;border-radius:999px;background:#302744;color:#d9c9f8;font-size:10px;font-weight:600;line-height:1.2}
 .lunar-act-group{margin-top:8px;padding-top:8px;border-top:1px solid #39435a}
 .drag-help{font-size:12px;margin:-6px 0 10px}
@@ -518,6 +516,7 @@ main>section>.sectionhead>div{min-width:0}
 .planner-fixed-recommendations{max-width:420px}
 .planner-fixed-recommendations:empty{display:none}
 .planner-fixed-recommendations .planner-option-recommendations,.planner-boss-preview .planner-option-recommendations{justify-content:center}
+.planner-boss-preview .planner-option-recommendations{align-items:center;padding-top:0}
 
 .planner-fixed-recommendations{display:flex;align-items:center;justify-content:center;gap:8px}
 .planner-recommendation-dropdown{position:relative;flex-shrink:0}
@@ -531,9 +530,10 @@ main>section>.sectionhead>div{min-width:0}
 .planner-character-recommendation>img{flex-shrink:0;border-radius:5px;background:#293147}
 .planner-character-recommendation p{margin:3px 0 0;color:#a2abc2;font-size:11px;line-height:1.5}
 
-/* Match the existing separate portrait and recommendation controls. */
-.planner-boss-preview:has(>.planner-recommendation-dropdown),.planner-lunar-preview:has(>.planner-recommendation-dropdown){padding:0;border:0;background:transparent;gap:8px}
-.planner-boss-preview:has(>.planner-recommendation-dropdown)>.act-bosses,.planner-lunar-preview:has(>.planner-recommendation-dropdown)>.planner-encounter-icons{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a}
+/* Keep boss portraits and all recommendation types in matching separate chips. */
+.planner-boss-preview:has(>.key-recommendations,>.planner-option-recommendations,>.planner-recommendation-dropdown),.planner-lunar-preview:has(>.key-recommendations,>.planner-option-recommendations,>.planner-recommendation-dropdown){padding:0;border:0;background:transparent;gap:8px}
+.planner-boss-preview:has(>.key-recommendations,>.planner-option-recommendations,>.planner-recommendation-dropdown)>.act-bosses,.planner-lunar-preview:has(>.key-recommendations,>.planner-option-recommendations,>.planner-recommendation-dropdown)>.planner-encounter-icons,.planner-boss-preview>.key-recommendations,.planner-lunar-preview>.key-recommendations,.planner-boss-preview>.planner-option-recommendations,.planner-lunar-preview>.planner-option-recommendations{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:3px 8px;border:1px solid #39435a;border-radius:7px;background:#151b2a}
+.planner-boss-preview>.planner-option-recommendations,.planner-lunar-preview>.planner-option-recommendations{padding-top:3px}
 .planner-recommendation-dropdown>summary{height:36px}
-.planner-recommendation-dropdown>summary .planner-option-recommendations{gap:0}
+.planner-recommendation-dropdown>summary .planner-option-recommendations{gap:6px}
 @media(max-width:700px){.planner-lunar-preview{height:auto;flex-wrap:wrap}}

@@ -1,6 +1,6 @@
 import previousMechanics from './data/theater-mechanics-history.json' with {type:'json'};
 export type DetailSource = {label:string;url:string};
-export type EncounterDetails = {name:string;enemies:string;resistances:string;requirements:string;notes:string;enemyIds?:string[];recommendedElements?:string[];keyRecommendations?:{label:string;element?:string;avoid?:boolean;icon?:'moon'}[];notableCharacters?:{name:string;reason:string;ability?:{name:string;icon:string}}[];bountyEnemyIds?:string[];mechanics?:string;stageEffects?:string;status?:string;sources?:DetailSource[];graphicSources?:string[];inference?:{confidence:'high'|'medium'|'low';basis:string}};
+export type EncounterDetails = {name:string;enemies:string;resistances:string;requirements:string;notes:string;enemyIds?:string[];recommendedElements?:string[];keyRecommendations?:{label:string;element?:string;avoid?:boolean;icon?:'moon'|'stellarGlimmer'}[];notableCharacters?:{name:string;reason:string;ability?:{name:string;icon:string}}[];bountyEnemyIds?:string[];mechanics?:string;stageEffects?:string;status?:string;sources?:DetailSource[];graphicSources?:string[];inference?:{confidence:'high'|'medium'|'low';basis:string}};
 export type ActDetailsRecord = {requirements:string;notes:string;encounters:EncounterDetails[];level?:number;keyRecommendations?:EncounterDetails['keyRecommendations'];notableCharacters?:EncounterDetails['notableCharacters']};
 export type ActDetailsData = {
   seasons:Record<string,Record<string,Record<string,ActDetailsRecord>>>;
