@@ -49,7 +49,7 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
   const stage=data.seasons[season]?.[difficulty]?.[act];
   const choices=stage?.encounters??[];
   const dropdown=React.useRef<HTMLDetailsElement>(null);
-  const lunarPreview=difficulty==='Lunar'&&act===11&&choices.length===1;
+  const lunarPreview=difficulty==='Lunar'&&[11,12].includes(act)&&choices.length===1;
   const enemyCatalog:Record<string,Enemy>={...enemies,...privateEnemies};
 
   const selected=choices.find(choice=>choice.name===value);
@@ -58,7 +58,7 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
     if(!stage)return null;
     return <div className="planner-encounter-picker planner-fixed-recommendations" aria-label={`Act ${act} recommendations`}><Recommendations compact choice={stage}/>{choices.map(choice=><Recommendations compact key={choice.name} choice={choice}/>)}</div>;
   }
-  if(lunarPreview)return <div className="planner-encounter-picker planner-lunar-preview" aria-label="Arcana 1 enemies">{portraits(choices[0])}<Recommendations compact choice={stage??{}}/><Recommendations compact choice={choices[0]}/></div>;
+  if(lunarPreview)return <div className="planner-encounter-picker planner-lunar-preview" aria-label={`Arcana ${act-10} enemies`}>{portraits(choices[0])}<Recommendations compact choice={stage??{}}/><Recommendations compact choice={choices[0]}/></div>;
   const select=(name:string)=>{onChange(name);if(dropdown.current){dropdown.current.open=false;dropdown.current.querySelector('summary')?.focus();}};
   return <div className="planner-encounter-picker planner-stage-preview"><details className="planner-choice-dropdown" ref={dropdown} onKeyDown={event=>{
     if(event.key==='Escape'&&dropdown.current){dropdown.current.open=false;dropdown.current.querySelector('summary')?.focus();event.stopPropagation();}

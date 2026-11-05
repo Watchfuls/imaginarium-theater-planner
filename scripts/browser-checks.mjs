@@ -407,9 +407,13 @@ try{
         {name:'Normal choice',enemies:'',resistances:'',requirements:'',notes:'',stageEffects:'Treacherous Thunder: After a delay, thunder strikes characters.'},
         {name:'Elite choice',battleType:'Elite Assault',enemies:'',resistances:'',requirements:'',notes:'',stageEffects:'Treacherous Thunder: After a delay, thunder strikes characters.\nDistinct elite effect '+act+'.'}
       ]};
+      custom.enemies['124']={...custom.enemies['123'],name:'Second Test Enemy'};
+      custom.actDetails.seasons[99].Lunar=Object.fromEntries([11,12].map(act=>[act,{requirements:'',notes:'',encounters:[{
+        name:`Arcana ${act-10}`,enemies:'',resistances:'',requirements:'',notes:'',enemyIds:act===11?['123']:['123','124'],keyRecommendations:[{label:'Healing'},{label:'Shielding'}]
+      }]}]));
       await isolated.addInitScript(data=>{
         localStorage.setItem('itp-custom-season-v1',JSON.stringify(data));
-        localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Visionary',seasonId:99,customSeasonSelected:true,elements:['Pyro','Hydro','Geo'],opening:[],guests:[]}));
+        if(!localStorage.getItem('itp-setup-v1'))localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Visionary',seasonId:99,customSeasonSelected:true,elements:['Pyro','Hydro','Geo'],opening:[],guests:[]}));
       },custom);
       const customPage=await isolated.newPage();
       const customErrors=[];customPage.on('pageerror',error=>customErrors.push(error.message));
@@ -427,6 +431,21 @@ try{
         assert.equal((await stage.innerText()).match(/Treacherous Thunder/g)?.length,1);
         assert.match(await stage.innerText(),/Thunder starts.*after/i);
         await stage.getByText(`Distinct elite effect ${act}.`,{exact:true}).waitFor();
+      }
+      await customPage.evaluate(async()=>{
+        const {CHARACTERS}=await import('/src/characters.ts');
+        localStorage.setItem('itp-ownership-v1',JSON.stringify(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:true,level:90}]))));
+        const setup=JSON.parse(localStorage.getItem('itp-setup-v1'));setup.difficulty='Lunar';
+        localStorage.setItem('itp-setup-v1',JSON.stringify(setup));
+      });
+      await customPage.reload({waitUntil:'domcontentloaded'});
+      await customPage.locator('nav button').filter({hasText:'Theater Planner'}).click();
+      for(const [arcana,count]of [[1,1],[2,2]]){
+        const preview=customPage.getByLabel(`Arcana ${arcana} enemies`,{exact:true});
+        await preview.waitFor();
+        assert.equal(await preview.locator('.planner-encounter-icons img').count(),count);
+        await preview.getByText('Healing',{exact:true}).waitFor();
+        await preview.getByText('Shielding',{exact:true}).waitFor();
       }
       assert.deepEqual(customErrors,[]);
     }finally{await isolated.close();}
