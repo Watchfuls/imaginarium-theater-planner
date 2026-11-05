@@ -56,7 +56,6 @@
 .key-recommendation{white-space:nowrap}
 .key-recommendation.is-avoid{background:#482b36;color:#ffc1c1;border:1px solid #945162}
 .key-recommendation-item{display:inline-flex;align-items:center;gap:6px}
-.key-recommendation-or{font-size:11px;color:#a2abc2}
 .planner-lunar-preview:has(.key-recommendations){gap:8px;height:auto;min-height:36px;max-width:420px;flex-wrap:wrap}
 .planner-boss-preview:has(.key-recommendations){gap:8px;flex-wrap:wrap}
 .act-mechanics-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.55fr);gap:20px;align-items:start}
