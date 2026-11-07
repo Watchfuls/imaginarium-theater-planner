@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CHARACTERS, sortCharacters } from './characters.ts';
+import { CHARACTERS, sortCharacters, plannerCharacterName } from './characters.ts';
+
+test('recommendation names resolve to the ownership roster without using level', () => {
+  const ownership = {Kokomi:{owned:true,level:10},Barbara:{owned:false,level:90}};
+  assert.equal(ownership[plannerCharacterName('Sangonomiya Kokomi')]?.owned, true);
+  assert.equal(ownership[plannerCharacterName('Barbara')]?.owned, false);
+  for (const name of ['Arataki Itto','Kaedehara Kazuha','Kamisato Ayaka','Kamisato Ayato','Kujou Sara','Shikanoin Heizou','Yumemizuki Mizuki']) {
+    assert.ok(CHARACTERS.some(character=>character.name===plannerCharacterName(name)), name);
+  }
+});
 
 test('fixed planner groups follow the lineup order shown in game', () => {
   for (const names of [

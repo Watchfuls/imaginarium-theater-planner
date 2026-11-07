@@ -4,6 +4,19 @@ export const ELEMENTS = ['Pyro','Hydro','Electro','Cryo','Dendro','Anemo','Geo']
 export type Element = typeof ELEMENTS[number];
 export type Character = {name:string;element:Element;rarity:4|5;releaseDate:string|null};
 export type CharacterSortOrder = 'name'|'game';
+const characterNameAliases:Record<string,string>={
+  'Arataki Itto':'Itto',
+  'Kaedehara Kazuha':'Kazuha',
+  'Kamisato Ayaka':'Ayaka',
+  'Kamisato Ayato':'Ayato',
+  'Kujou Sara':'Sara',
+  'Sangonomiya Kokomi':'Kokomi',
+  'Shikanoin Heizou':'Heizou',
+  'Yumemizuki Mizuki':'Mizuki'
+};
+export function plannerCharacterName(name:string):string {
+  return characterNameAliases[name]??name;
+}
 const GAME_ELEMENT_ORDER:Element[]=['Geo','Electro','Hydro','Cryo','Anemo','Dendro','Pyro'];
 const fourStarCharacters=new Set([
   'Aino','Alyosha','Amber','Barbara','Beidou','Bennett','Candace','Charlotte','Chevreuse','Chongyun','Collei','Dahlia','Diona','Dori','Faruzan','Fischl','Freminet','Ga Ming','Gorou','Heizou','Iansan','Ifa','Illuga','Jahoda','Kachina','Kaeya','Kaveh','Kirara','Kuki Shinobu','Lan Yan','Layla','Lisa','Lynette','Mika','Ningguang','Noelle','Ororon','Prune','Razor','Rosaria','Sara','Sayu','Sethos','Sucrose','Thoma','Valeriy','Xiangling','Xingqiu','Xinyan','Yanfei','Yaoyao','Yun Jin'
