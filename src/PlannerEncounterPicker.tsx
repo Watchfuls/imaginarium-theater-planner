@@ -77,8 +77,8 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
     const allIds=encounterEnemyIds(choice);
     const bountyIds=allIds.filter(id=>choice.bountyEnemyIds?.includes(id)&&enemyCatalog[id]);
     const images=(ids:string[])=>ids.map(id=>enemyCatalog[id]&&<img key={id} src={enemyCatalog[id].icon?icons[`./assets/enemies/${enemyCatalog[id].icon}`]:enemyCatalog[id].iconUrl} alt={enemyCatalog[id].name} title={enemyCatalog[id].name} width="28" height="28" draggable={false}/>);
-    if(selectedPreview&&bountyIds.length&&act!==9)return <ResponsiveBountyPortraits all={images(allIds)} bounties={images(bountyIds)}/>;
-    return <span className="planner-encounter-icons">{images(selectedPreview&&act===9&&bountyIds.length?bountyIds:allIds)}</span>;
+    if(selectedPreview&&bountyIds.length)return <ResponsiveBountyPortraits all={images(allIds)} bounties={images(bountyIds)}/>;
+    return <span className="planner-encounter-icons">{images(allIds)}</span>;
   };
   if(choices.length<2&&!lunarPreview){
     if(!stage)return null;

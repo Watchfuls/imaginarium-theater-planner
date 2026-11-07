@@ -488,8 +488,14 @@ try{
       const bountyChoice=bountyPicker.locator('.planner-encounter-option').filter({hasText:'Enemy lineup 3'});
       assert.equal(await bountyChoice.locator('.planner-encounter-icons img').count(),2);
       await bountyChoice.click();
-      assert.equal(await bountySummary.locator('img').count(),1);
-      assert.equal(await bountySummary.locator('img').getAttribute('alt'),'Test Ruin Enemy');
+      assert.equal(await bountySummary.locator('img:visible').count(),2);
+      await bountySummary.evaluate(element=>element.style.width='65px');
+      await bountySummary.locator('.bounty-only').waitFor();
+      assert.equal(await bountySummary.locator('img:visible').count(),1);
+      assert.equal(await bountySummary.locator('img:visible').getAttribute('alt'),'Test Ruin Enemy');
+      await bountySummary.evaluate(element=>element.style.width='150px');
+      await customPage.waitForFunction(()=>!document.querySelector('summary[aria-label^="Choose enemies for Act 9"] .bounty-only'));
+      assert.equal(await bountySummary.locator('img:visible').count(),2);
       await bountySummary.click();
       assert.equal(await bountyChoice.locator('.planner-encounter-icons img').count(),2);
       await bountyPicker.getByRole('button',{name:'Unmarked choice',exact:false}).click();
