@@ -25,6 +25,40 @@ try{
   async function check(label,run){await run();console.log(`PASS ${label}`);}
 
   await page.goto(base,{waitUntil:'domcontentloaded'});
+  await check('element and unallocated placeholders persist and prioritize matching characters',async()=>{
+    const testPage=await context.newPage();
+    try{
+      await testPage.goto(base);
+      await testPage.evaluate(async season=>{
+        const {CHARACTERS}=await import('/src/characters.ts');
+        localStorage.setItem('itp-ownership-v1',JSON.stringify(Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:true,level:90}]))));
+        localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Lunar',elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests,seasonId:season.season}));
+        localStorage.setItem('itp-plan-v1',JSON.stringify({roster:[],acts:{}}));
+      },lineup.current);
+      await testPage.reload();
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      const slot=testPage.getByRole('button',{name:'Act 1, slot 1',exact:true});
+      await slot.click();
+      const menu=testPage.locator('.act-picker-menu');
+      for(const element of lineup.current.elements)assert.equal(await menu.getByRole('option',{name:'Any '+element,exact:true}).count(),1);
+      assert.equal(await menu.getByRole('option').filter({hasText:/^Any /}).count(),3);
+      await menu.getByRole('option',{name:'Any '+lineup.current.elements[0],exact:true}).click();
+      await testPage.getByRole('button',{name:'Act 1, slot 1: Any '+lineup.current.elements[0],exact:true}).click();
+      assert.equal(await menu.locator('.act-picker-group-label').first().textContent(),lineup.current.elements[0]+' characters');
+      assert.ok(await menu.locator('.act-picker-option').count()>5);
+      await menu.getByRole('option',{name:'Unallocated Character',exact:true}).click();
+      await testPage.reload();
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      await testPage.getByRole('button',{name:'Act 1, slot 1: Unallocated Character',exact:true}).click();
+      assert.equal(await testPage.locator('.act-picker-menu .act-picker-group-label').filter({hasText:/characters$/}).count(),0);
+      await testPage.locator('.act-picker-menu').getByRole('option',{name:'Any '+lineup.current.elements[0],exact:true}).click();
+      await testPage.getByRole('button',{name:'Act 1, slot 2',exact:true}).click();
+      await testPage.locator('.act-picker-menu').getByRole('option',{name:'Any '+lineup.current.elements[0],exact:true}).click();
+      await testPage.getByRole('button',{name:'Copy team from Act 1',exact:true}).click();
+      await testPage.getByRole('button',{name:'Paste copied team into Act 2',exact:true}).click();
+      assert.equal(await testPage.getByRole('button',{name:'Act 2, slot 1: Any '+lineup.current.elements[0],exact:true}).count(),1);
+    }finally{await testPage.close();}
+  });
   await check('feedback opens on demand and returns focus when closed',async()=>{
     // Keep the UI check independent of Tally availability; never submit feedback.
     await page.route('https://tally.so/**',route=>route.fulfill(route.request().url().endsWith('/embed.js')

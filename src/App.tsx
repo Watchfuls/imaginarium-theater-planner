@@ -1,3 +1,4 @@
+import {isAssignmentPlaceholder} from './assignmentPlaceholders';
 import {compactActDetails,expandActDetails} from './actDetailsStorage';
 import {SiteHeader} from './SiteHeader';
 import {Feedback} from './Feedback';
@@ -285,9 +286,9 @@ const canAssignToAct=(name:string,act:number,slot:number,assignments=plan.acts)=
   return otherActs<2;
 };
 const assignToAct=(act:number,slot:number,name:string)=>setPlan(current=>{
-  if(name&&!canAssignToAct(name,act,slot,current.acts))return current;
+  if(name&&!isAssignmentPlaceholder(name)&&!canAssignToAct(name,act,slot,current.acts))return current;
   const assignments=[...(current.acts[act]??[])];
-  if(name)assignments.forEach((value,index)=>{if(index!==slot&&value===name)assignments[index]='';});
+  if(name&&!isAssignmentPlaceholder(name))assignments.forEach((value,index)=>{if(index!==slot&&value===name)assignments[index]='';});
   assignments[slot]=name;
   return {...current,acts:{...current.acts,[act]:assignments}};
 });
@@ -338,7 +339,7 @@ const swapActSlots=(sourceAct:number,sourceSlot:number,targetAct:number,targetSl
   targetNames[targetSlot]=sourceName;
   assignments[sourceAct]=sourceNames;
   assignments[targetAct]=targetNames;
-  for(const name of new Set([sourceName,targetName].filter(Boolean))){
+  for(const name of new Set([sourceName,targetName].filter(name=>name&&!isAssignmentPlaceholder(name)))){
     const assignedActs=Object.values(activeActs(assignments)).filter(names=>names.includes(name)).length;
     if(assignedActs>2||Object.values(activeActs(assignments)).some(names=>names.filter(value=>value===name).length>1))return current;
   }
@@ -438,10 +439,10 @@ const renderPlannerCharacter=(character:Character)=>{
 };
 const renderAct=(act:number,label:string)=>{
   const copyActive=copiedTeam?.act===act;
-  const hasTeam=(plan.acts[act]??[]).some(name=>chosen.includes(name));
+  const hasTeam=(plan.acts[act]??[]).some(name=>chosen.includes(name)||isAssignmentPlaceholder(name));
   const copyTeam=()=>{
     if(copyActive){setCopiedTeam(null);return;}
-    const team=Array.from({length:4},(_,slot)=>{const name=plan.acts[act]?.[slot]??'';return chosen.includes(name)?name:'';});
+    const team=Array.from({length:4},(_,slot)=>{const name=plan.acts[act]?.[slot]??'';return chosen.includes(name)||isAssignmentPlaceholder(name)?name:'';});
     if(team.some(Boolean))setCopiedTeam({act,team});
   };
   const pasteTeam=()=>{
@@ -491,7 +492,7 @@ const renderAct=(act:number,label:string)=>{
         }else setAssignmentNotice(null);
       }
       setDropTarget('');
-    }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} selected={chosen.includes(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} guests={new Set(selectedGuests)} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(activePlanActs).filter(names=>names.includes(name)).length>=2} onSelect={name=>name?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,'')} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
+    }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} placeholderElements={selectedElements} selected={chosen.includes(current)||isAssignmentPlaceholder(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} guests={new Set(selectedGuests)} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(activePlanActs).filter(names=>names.includes(name)).length>=2} onSelect={name=>name&&!isAssignmentPlaceholder(name)?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,name)} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
   })}</div></div>;
 };
 return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContinueToPlanner={canContinueToPlanner} setStep={setStep}/>
@@ -646,7 +647,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     </section>
     <section className="assignment-only">
       <h3>Act Assignments</h3>
-      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Each character can be assigned to at most two acts. Arcana Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10.</p>
+      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Use an Any element or Unallocated Character placeholder to reserve a slot without using stamina. Each character can be assigned to at most two acts. Arcana Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10.</p>
       <div className="act-group"><h4>Acts</h4><div className="acts">{setup.difficulty==='Lunar'
         ? <>{renderAct(1,'Act 1')}{renderAct(2,'Act 2')}{renderAct(3,'Act 3')}{renderAct(11,'Arcana 1')}{renderAct(4,'Act 4')}{renderAct(5,'Act 5')}{renderAct(6,'Act 6')}{renderAct(12,'Arcana 2')}{Array.from({length:4},(_,index)=>renderAct(index+7,`Act ${index+7}`))}</>
         : Array.from({length:requirement.acts},(_,index)=>renderAct(index+1,`Act ${index+1}`))}</div></div>
@@ -665,7 +666,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
             const acts=setup.difficulty==='Lunar'?[1,2,3,11,4,5,6,12,7,8,9,10]:Array.from({length:requirement.acts},(_,index)=>index+1);
             for(const act of acts){
               for(let slot=0;slot<4;slot++){
-                if(!chosen.includes(plan.acts[act]?.[slot]??'')&&canAssignToAct(character.name,act,slot)){
+                if(!chosen.includes(plan.acts[act]?.[slot]??'')&&!isAssignmentPlaceholder(plan.acts[act]?.[slot]??'')&&canAssignToAct(character.name,act,slot)){
                   dropCharacterIntoAct(character.name,act,slot);
                   return;
                 }

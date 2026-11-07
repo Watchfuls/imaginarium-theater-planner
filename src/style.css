@@ -537,3 +537,5 @@ main>section>.sectionhead>div{min-width:0}
 .planner-recommendation-dropdown>summary{height:36px}
 .planner-recommendation-dropdown>summary .planner-option-recommendations{gap:6px}
 @media(max-width:700px){.planner-lunar-preview{height:auto;flex-wrap:wrap}}
+
+.act-picker-divider{border-top:1px solid #465069;margin:7px 8px}

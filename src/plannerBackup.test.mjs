@@ -4,6 +4,12 @@ import {createPlannerBackup,parsePlannerBackup,mergePlanHistory} from './planner
 
 const save=()=>({ownership:{Aino:{owned:true,level:95},Mona:{owned:false,level:90},Itto:{owned:false,level:80}},setup:{difficulty:'Hard',elements:['Hydro','Geo','Electro'],opening:['Aino'],guests:['Mona'],seasonId:29},plan:{roster:['Aino','Mona'],acts:{1:['Aino','','Mona','']},borrowed:'Mona',travelerElement:'None',encounterChoices:{'29-Hard-1':'choice-2'}},sort:'game'});
 
+test('backups preserve repeated element and unallocated slot placeholders',()=>{
+  const original=save();
+  original.plan.acts={1:['placeholder:Electro','placeholder:Electro','placeholder:unallocated','Aino']};
+  assert.deepEqual(parsePlannerBackup(JSON.parse(JSON.stringify(createPlannerBackup(original)))).plan,original.plan);
+});
+
 test('backups preserve uploaded and private season identity in current and historical plans',()=>{
   for(const selection of [{customSeasonSelected:true,privateSeasonSelected:false},{customSeasonSelected:false,privateSeasonSelected:true}]){
     const original=save();
