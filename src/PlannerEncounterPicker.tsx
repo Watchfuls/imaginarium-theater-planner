@@ -16,12 +16,27 @@ function ResponsiveBountyPortraits({all,bounties}:{all:React.ReactNode;bounties:
   const full=React.useRef<HTMLSpanElement>(null);
   const [compact,setCompact]=React.useState(false);
   React.useLayoutEffect(()=>{
+    const summary=container.current?.closest('summary');
+    const dropdown=summary?.parentElement;
+    const preview=dropdown?.parentElement;
+    if(!summary||!dropdown||!preview)return;
     const measure=()=>{
-      if(container.current&&full.current)setCompact(full.current.scrollWidth>container.current.clientWidth+1);
+      if(!full.current)return;
+      const previewStyle=getComputedStyle(preview);
+      const summaryStyle=getComputedStyle(summary);
+      const siblings=Array.from(preview.children).filter(child=>child!==dropdown);
+      const siblingWidth=siblings.reduce((width,child)=>width+child.getBoundingClientRect().width,0);
+      const arrow=summary.querySelector('.planner-encounter-arrow');
+      const available=preview.clientWidth-siblingWidth-siblings.length*(parseFloat(previewStyle.columnGap)||0)
+        -parseFloat(summaryStyle.paddingLeft)-parseFloat(summaryStyle.paddingRight)
+        -parseFloat(summaryStyle.borderLeftWidth)-parseFloat(summaryStyle.borderRightWidth)
+        -(arrow?.getBoundingClientRect().width??0)-(parseFloat(summaryStyle.columnGap)||0);
+      setCompact(full.current.scrollWidth>available+1);
     };
     measure();
     const observer=new ResizeObserver(measure);
-    if(container.current)observer.observe(container.current);
+    observer.observe(preview);
+    for(const sibling of preview.children)if(sibling!==dropdown)observer.observe(sibling);
     if(full.current)observer.observe(full.current);
     return ()=>observer.disconnect();
   },[all]);

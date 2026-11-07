@@ -489,11 +489,11 @@ try{
       assert.equal(await bountyChoice.locator('.planner-encounter-icons img').count(),2);
       await bountyChoice.click();
       assert.equal(await bountySummary.locator('img:visible').count(),2);
-      await bountySummary.evaluate(element=>element.style.width='65px');
+      await bountySummary.evaluate(element=>element.parentElement.parentElement.style.maxWidth='65px');
       await bountySummary.locator('.bounty-only').waitFor();
       assert.equal(await bountySummary.locator('img:visible').count(),1);
       assert.equal(await bountySummary.locator('img:visible').getAttribute('alt'),'Test Ruin Enemy');
-      await bountySummary.evaluate(element=>element.style.width='150px');
+      await bountySummary.evaluate(element=>element.parentElement.parentElement.style.maxWidth='150px');
       await customPage.waitForFunction(()=>!document.querySelector('summary[aria-label^="Choose enemies for Act 9"] .bounty-only'));
       assert.equal(await bountySummary.locator('img:visible').count(),2);
       await bountySummary.click();
@@ -506,11 +506,12 @@ try{
       const overflowChoice=overflowPicker.getByRole('button',{name:/Overflow bounty choice/});
       assert.equal(await overflowChoice.locator('img').count(),7);
       await overflowChoice.click();
-      await overflowSummary.evaluate(element=>element.style.width='110px');
+      await overflowSummary.evaluate(element=>element.parentElement.parentElement.style.maxWidth='110px');
       await overflowSummary.locator('.bounty-only').waitFor();
       assert.equal(await overflowSummary.locator('img:visible').count(),2);
+      assert.ok((await overflowSummary.boundingBox()).width<100,'compact bounty summary fits its visible portraits');
       assert.equal(await overflowSummary.locator('.responsive-bounty-icons').evaluate(element=>getComputedStyle(element).overflowX),'hidden');
-      await overflowSummary.evaluate(element=>element.style.width='260px');
+      await overflowSummary.evaluate(element=>element.parentElement.parentElement.style.maxWidth='260px');
       await customPage.waitForFunction(()=>!document.querySelector('summary[aria-label^="Choose enemies for Act 4"] .bounty-only'));
       assert.equal(await overflowSummary.locator('img:visible').count(),7);
       await overflowSummary.click();
