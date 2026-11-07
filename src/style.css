@@ -325,6 +325,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .planner-encounter-icons{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:3px}
 .planner-encounter-icons img{width:28px;height:28px;object-fit:contain;border-radius:4px;background:#293147}
 .planner-encounter-arrow{color:#c7a4ff;flex-shrink:0}
+.planner-encounter-picker summary .planner-encounter-icons.responsive-bounty-icons{position:relative;overflow:hidden;flex-wrap:nowrap;justify-content:flex-start}
+.bounty-full-lineup,.bounty-target-lineup{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.bounty-only .bounty-full-lineup{visibility:hidden}
+.bounty-target-lineup{position:absolute;left:0;top:0}
 .planner-encounter-options{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);z-index:40;width:min(350px,calc(100vw - 60px));max-height:360px;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding:8px 10px 8px 8px;border:1px solid #53607c;border-radius:9px;background:#151b2a;box-shadow:0 8px 24px #0008}
 .planner-encounter-option{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;width:100%;min-width:0;max-width:100%;padding:8px;text-align:left;font-size:12px;overflow-wrap:anywhere}
 .planner-encounter-option[aria-pressed=true]{border-color:#b28ad4;background:#302744}

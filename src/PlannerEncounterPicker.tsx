@@ -11,6 +11,26 @@ type EnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Re
 type Enemy={name:string;icon?:string;iconUrl?:string;wikiUrl?:string};
 const enemies=catalog as Record<string,Enemy>;
 
+function ResponsiveBountyPortraits({all,bounties}:{all:React.ReactNode;bounties:React.ReactNode}){
+  const container=React.useRef<HTMLSpanElement>(null);
+  const full=React.useRef<HTMLSpanElement>(null);
+  const [compact,setCompact]=React.useState(false);
+  React.useLayoutEffect(()=>{
+    const measure=()=>{
+      if(container.current&&full.current)setCompact(full.current.scrollWidth>container.current.clientWidth+1);
+    };
+    measure();
+    const observer=new ResizeObserver(measure);
+    if(container.current)observer.observe(container.current);
+    if(full.current)observer.observe(full.current);
+    return ()=>observer.disconnect();
+  },[all]);
+  return <span ref={container} className={`planner-encounter-icons responsive-bounty-icons ${compact?'bounty-only':''}`}>
+    <span ref={full} className="bounty-full-lineup" aria-hidden={compact}>{all}</span>
+    {compact&&<span className="bounty-target-lineup">{bounties}</span>}
+  </span>;
+}
+
 export function LunarActOnePreview({season,act=11,data=published as ActDetailsData,privateEnemies={}}:{season:number;act?:11|12;data?:ActDetailsData;privateEnemies?:Record<string,EnemyPreview>}){
   const choices=data.seasons[season]?.Lunar?.[act]?.encounters??[];
   const ids=[...new Set(choices.flatMap(encounterEnemyIds))];
@@ -55,9 +75,10 @@ export function PlannerEncounterPicker({season,difficulty,act,value,onChange,dat
   const selected=choices.find(choice=>choice.name===value);
   const portraits=(choice:typeof choices[number],selectedPreview=false)=>{
     const allIds=encounterEnemyIds(choice);
-    const bountyIds=act===9&&selectedPreview?allIds.filter(id=>choice.bountyEnemyIds?.includes(id)&&enemyCatalog[id]):[];
-    const ids=bountyIds.length?bountyIds:allIds;
-    return <span className="planner-encounter-icons">{ids.map(id=>enemyCatalog[id]&&<img key={id} src={enemyCatalog[id].icon?icons[`./assets/enemies/${enemyCatalog[id].icon}`]:enemyCatalog[id].iconUrl} alt={enemyCatalog[id].name} title={enemyCatalog[id].name} width="28" height="28" draggable={false}/>)}</span>;
+    const bountyIds=allIds.filter(id=>choice.bountyEnemyIds?.includes(id)&&enemyCatalog[id]);
+    const images=(ids:string[])=>ids.map(id=>enemyCatalog[id]&&<img key={id} src={enemyCatalog[id].icon?icons[`./assets/enemies/${enemyCatalog[id].icon}`]:enemyCatalog[id].iconUrl} alt={enemyCatalog[id].name} title={enemyCatalog[id].name} width="28" height="28" draggable={false}/>);
+    if(selectedPreview&&bountyIds.length&&act!==9)return <ResponsiveBountyPortraits all={images(allIds)} bounties={images(bountyIds)}/>;
+    return <span className="planner-encounter-icons">{images(selectedPreview&&act===9&&bountyIds.length?bountyIds:allIds)}</span>;
   };
   if(choices.length<2&&!lunarPreview){
     if(!stage)return null;

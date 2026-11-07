@@ -448,6 +448,11 @@ try{
         name:`Arcana ${act-10}`,enemies:'',resistances:'',requirements:'',notes:'',enemyIds:act===11?['123']:['123','124'],keyRecommendations:[{label:'Healing'},{label:'Shielding'}]
       }]}]));
       custom.actDetails.seasons[99].Lunar[9]=structuredClone(custom.actDetails.seasons[99].Visionary[9]);
+      for(let id=125;id<=129;id++)custom.enemies[id]={...custom.enemies['123'],name:`Overflow Enemy ${id}`};
+      custom.actDetails.seasons[99].Lunar[4]={requirements:'',notes:'',encounters:[
+        {name:'Overflow bounty choice',enemyIds:['123','124','125','126','127','128','129'],bountyEnemyIds:['123','124'],enemies:'',resistances:'',requirements:'',notes:''},
+        {name:'Other choice',enemies:'',resistances:'',requirements:'',notes:''}
+      ]};
       await isolated.addInitScript(data=>{
         localStorage.setItem('itp-custom-season-v1',JSON.stringify(data));
         if(!localStorage.getItem('itp-setup-v1'))localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Visionary',seasonId:99,customSeasonSelected:true,elements:['Pyro','Hydro','Geo'],opening:[],guests:[]}));
@@ -489,6 +494,22 @@ try{
       assert.equal(await bountyChoice.locator('.planner-encounter-icons img').count(),2);
       await bountyPicker.getByRole('button',{name:'Unmarked choice',exact:false}).click();
       assert.equal(await bountySummary.locator('img').count(),2);
+      const overflowPicker=customPage.locator('.planner-choice-dropdown').filter({has:customPage.locator('summary[aria-label^="Choose enemies for Act 4"]')});
+      const overflowSummary=overflowPicker.locator(':scope > summary');
+      await overflowSummary.click();
+      const overflowChoice=overflowPicker.getByRole('button',{name:/Overflow bounty choice/});
+      assert.equal(await overflowChoice.locator('img').count(),7);
+      await overflowChoice.click();
+      await overflowSummary.evaluate(element=>element.style.width='110px');
+      await overflowSummary.locator('.bounty-only').waitFor();
+      assert.equal(await overflowSummary.locator('img:visible').count(),2);
+      assert.equal(await overflowSummary.locator('.responsive-bounty-icons').evaluate(element=>getComputedStyle(element).overflowX),'hidden');
+      await overflowSummary.evaluate(element=>element.style.width='260px');
+      await customPage.waitForFunction(()=>!document.querySelector('summary[aria-label^="Choose enemies for Act 4"] .bounty-only'));
+      assert.equal(await overflowSummary.locator('img:visible').count(),7);
+      await overflowSummary.click();
+      assert.equal(await overflowChoice.locator('img').count(),7);
+      await overflowSummary.click();
       for(const [arcana,count]of [[1,1],[2,2]]){
         const preview=customPage.getByLabel(`Arcana ${arcana} enemies`,{exact:true});
         await preview.waitFor();
