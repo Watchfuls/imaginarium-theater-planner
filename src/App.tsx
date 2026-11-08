@@ -728,21 +728,28 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     <section className="assignment-only">
       <h3>Act Assignments</h3>
       <details className="recruitment-settings">
-      <summary>Recruitment settings</summary>
-      <label className="recruitment-setting"><input type="checkbox" aria-label="Automated recruitment positioning" aria-describedby="automated-recruitment-help" checked={!!plan.automatedRecruitment} onChange={event=>{
+      <summary>Recruitment settings <span className="recruitment-mode">{plan.automatedRecruitment?'Automated':plan.recruitedOnly?'Recruitment check':'None'}</span></summary>
+      <div role="radiogroup" aria-label="Recruitment mode">
+      <label className="recruitment-setting"><input type="radio" name="recruitment-mode" aria-label="None" aria-describedby="no-recruitment-help" checked={!plan.automatedRecruitment&&!plan.recruitedOnly} onChange={()=>{
+        setPlan(current=>({...current,automatedRecruitment:false,recruitedOnly:false}));
+        setPendingRecruitment(null);setPendingTeamRecruitment(null);setPendingSlotRecruitment(null);
+      }}/><span><strong>None</strong><small id="no-recruitment-help">Set recruitment manually and assign characters freely.</small></span></label>
+      <label className="recruitment-setting"><input type="radio" name="recruitment-mode" aria-label="Automated recruitment positioning" aria-describedby="automated-recruitment-help" checked={!!plan.automatedRecruitment} onChange={event=>{
         const automatedRecruitment=event.target.checked;
         if(automatedRecruitment&&!window.confirm('Enable automated recruitment positioning? This will wipe all your previous recruitment settings and recruit each character just before their first assigned act. Characters without an assigned act will not be recruited. Your act assignments and blessings will be kept.'))return;
-        setPlan(current=>positionRecruitmentAutomatically({...current,automatedRecruitment},selectedOpening,orderFor(current)));
+        setPlan(current=>positionRecruitmentAutomatically({...current,automatedRecruitment,recruitedOnly:false},selectedOpening,orderFor(current)));
         setPendingRecruitment(null);setPendingTeamRecruitment(null);setPendingSlotRecruitment(null);
         setOpenCharacterPicker('');
-      }}/><span><strong>Automated recruitment positioning</strong><small id="automated-recruitment-help">Recruit each character just before their first act. Blessings stay editable.</small></span></label>
-      <label className="recruitment-setting"><input type="checkbox" aria-label="Only assign recruited characters" aria-describedby="recruited-only-help" disabled={!!plan.automatedRecruitment} checked={!!plan.recruitedOnly} onChange={event=>{
+      }}/><span><strong>Automated recruitment positioning</strong><small id="automated-recruitment-help">Automatically recruits characters just before the first act that needs them. Recruitment updates as you change teams; blessings stay editable.</small></span></label>
+      <label className="recruitment-setting"><input type="radio" name="recruitment-mode" aria-label="Recruitment check" aria-describedby="recruited-only-help" checked={!plan.automatedRecruitment&&!!plan.recruitedOnly} onChange={event=>{
         const enabled=event.target.checked;
-        if(enabled&&!plan.automatedRecruitment&&!window.confirm('Enable recruited-only assignments? This will clear all assigned characters except opening characters already assigned in Acts 1 and 2. Your selected cast, recruitment plans, and blessing levels will be kept.'))return;
-        setPlan(current=>({...current,recruitedOnly:enabled,...(enabled&&!current.automatedRecruitment?{acts:Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(name=>(Number(act)===1||Number(act)===2)&&openingNames.has(name)?name:'')]))}:{})}));
+        if(enabled&&!window.confirm('Enable recruitment check? This will clear all assigned characters except opening characters already assigned in Acts 1 and 2. Your selected cast, recruitment plans, and blessing levels will be kept.'))return;
+        setPlan(current=>({...current,automatedRecruitment:false,recruitedOnly:enabled,...(enabled?{acts:Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(name=>(Number(act)===1||Number(act)===2)&&openingNames.has(name)?name:'')]))}:{})}));
+        setPendingRecruitment(null);setPendingTeamRecruitment(null);setPendingSlotRecruitment(null);
         setCopiedTeam(null);
         setOpenCharacterPicker('');
-      }}/><span><strong>Only assign recruited characters</strong><small id="recruited-only-help">{plan.automatedRecruitment?'Handled automatically while automated positioning is on.':'Ask to recruit characters before assigning them to an earlier act.'}</small></span></label>
+      }}/><span><strong>Recruitment check</strong><small id="recruited-only-help">You can’t assign characters to acts before they’re recruited. You’ll be prompted to recruit them first.</small></span></label>
+      </div>
       </details>
       <p className="drag-help">Click or drag to assign · Drag slots to swap · × or right-click to clear · 2 stages per character{setup.difficulty==='Lunar'&&<><br/>Arcana unlock after Acts 3 &amp; 6. Finish both before Act 10.</>}</p>
       <div className="act-group"><h4>Acts</h4><div className="acts">{setup.difficulty==='Lunar'

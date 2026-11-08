@@ -7,6 +7,7 @@ test('automated recruitment follows first use, removes unused recruits, and keep
   const blessings=[{name:'Electro-Hydro',levels:2}];
   const plan={automatedRecruitment:true,recruitedOnly:true,roster:['Candace','Mona'],acts:{8:['Candace','Zhongli','placeholder:Hydro'],10:['Candace','Mona']},preparations:{1:{recruits:['Candace','Barbara'],blessings},9:{recruits:['Mona'],blessings:[]}}};
   const next=positionRecruitmentAutomatically(plan,['Zhongli'],defaultStageOrder);
+  assert.equal(next.recruitedOnly,false);
   assert.deepEqual(next.preparations[1],{recruits:[],blessings});
   assert.deepEqual(next.preparations[8].recruits,['Candace']);
   assert.deepEqual(next.preparations[9].recruits,[]);

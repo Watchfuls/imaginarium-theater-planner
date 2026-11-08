@@ -586,7 +586,8 @@ main>section>.sectionhead>div{min-width:0}
 .recruitment-portraits{display:flex;flex-shrink:0}
 .recruitment-portraits .character-icon+ .character-icon{margin-left:-15px}
 .recruitment-settings{min-width:0;margin:0 0 18px;padding:0 14px;border:1px solid #30384d;border-radius:10px;background:#1b2233}
-.recruitment-settings summary{padding:10px 0;color:#aab6d1;font-size:12px;font-weight:600;cursor:pointer}
+.recruitment-settings summary{padding:10px 0;color:#e9ecf6;font-size:13px;font-weight:600;cursor:pointer}
+.recruitment-mode{display:inline-block;margin-left:8px;padding:2px 7px;border-radius:5px;background:#30384d;color:#cbb9f3;font-size:11px;font-weight:500}
 .recruitment-settings[open]{padding-bottom:8px}
 .recruitment-setting{display:flex;align-items:flex-start;gap:10px;padding:10px 0;cursor:pointer}
 .recruitment-setting+.recruitment-setting{border-top:1px solid #30384d}
@@ -594,8 +595,8 @@ main>section>.sectionhead>div{min-width:0}
 .recruitment-setting span{min-width:0;display:grid;gap:4px}
 .recruitment-setting strong{font-size:13px;font-weight:600;color:#e9ecf6;line-height:1.4}
 .recruitment-setting small{font-size:12px;color:#aab6d1;line-height:1.5}
-.recruitment-setting:has(input:disabled){cursor:default}
-.recruitment-setting:has(input:disabled) strong{color:#aab6d1}
+.recruitment-setting input{accent-color:#a88be9}
+.recruitment-setting:has(input:checked) strong{color:#d5bcff}
 .blessing-element-icons{display:flex}
 .blessing-element-icons .element{font-size:0;padding:2px;background:transparent}
 @media(max-width:1000px){.preparation-compact{grid-template-columns:minmax(0,1fr)}.blessing-pair{flex-direction:column}}

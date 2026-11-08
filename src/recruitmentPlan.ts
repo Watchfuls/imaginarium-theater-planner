@@ -4,6 +4,7 @@ import {isAssignmentPlaceholder} from './assignmentPlaceholders.ts';
 
 export function positionRecruitmentAutomatically(plan:Plan,opening:string[],order:number[]):Plan{
   if(!plan.automatedRecruitment)return plan;
+  if(plan.recruitedOnly)plan={...plan,recruitedOnly:false};
   const seen=new Set(opening);
   const recruits=new Map<number,string[]>();
   for(const stage of order){

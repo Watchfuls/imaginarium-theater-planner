@@ -76,18 +76,20 @@ try{
       assert.deepEqual(moved.preparations[6].recruits,[recruits[0]]);
       assert.deepEqual(moved.preparations[7].recruits,recruits.slice(1));
       const beforeAutomation=await saved();
-      assert.equal(await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).isVisible(),false);
+      assert.equal(await testPage.getByRole('radio',{name:'Automated recruitment positioning',exact:true}).isVisible(),false);
       await testPage.locator('.recruitment-settings summary').click();
       testPage.once('dialog',async dialog=>{
         assert.ok(dialog.message().includes('wipe all your previous recruitment settings'));
         await dialog.dismiss();
       });
-      await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).click();
+      await testPage.getByRole('radio',{name:'Automated recruitment positioning',exact:true}).click();
       assert.deepEqual(await saved(),beforeAutomation);
-      assert.equal(await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).isChecked(),false);
+      assert.equal(await testPage.getByRole('radio',{name:'Automated recruitment positioning',exact:true}).isChecked(),false);
       testPage.once('dialog',dialog=>dialog.accept());
-      await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).check();
+      await testPage.getByRole('radio',{name:'Automated recruitment positioning',exact:true}).check();
       assert.equal((await saved()).automatedRecruitment,true);
+      assert.equal((await saved()).recruitedOnly,false);
+      assert.equal(await testPage.getByRole('radio',{name:'Recruitment check',exact:true}).isChecked(),false);
       const preparation=testPage.locator('.stage-group[data-stage="6"] .act-preparation');
       await preparation.locator('summary').click();
       assert.equal(await preparation.getByRole('button',{name:'Recruit characters before Act 6',exact:true}).isDisabled(),true);
@@ -102,8 +104,20 @@ try{
       assert.deepEqual(automated.preparations[6].recruits,[]);
       assert.deepEqual(automated.preparations[6].blessings,blessed.preparations[6].blessings);
       assert.deepEqual(automated.acts[9],before.acts[9]);
-      await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).uncheck();
+      await testPage.getByRole('radio',{name:'None',exact:true}).check();
       assert.equal(await preparation.getByRole('button',{name:'Recruit characters before Act 6',exact:true}).isEnabled(),true);
+      assert.equal((await saved()).automatedRecruitment,false);
+      assert.equal((await saved()).recruitedOnly,false);
+      testPage.once('dialog',dialog=>dialog.accept());
+      await testPage.getByRole('radio',{name:'Automated recruitment positioning',exact:true}).check();
+      const beforeCheck=await saved();
+      testPage.once('dialog',dialog=>dialog.dismiss());
+      await testPage.getByRole('radio',{name:'Recruitment check',exact:true}).click();
+      assert.deepEqual(await saved(),beforeCheck);
+      testPage.once('dialog',dialog=>dialog.accept());
+      await testPage.getByRole('radio',{name:'Recruitment check',exact:true}).check();
+      assert.equal((await saved()).automatedRecruitment,false);
+      assert.equal((await saved()).recruitedOnly,true);
     }finally{await isolated.close();}
   });
   await check('Arcana planning follows movable stages, respects unlocks, and clears moved teams and plans',async()=>{
@@ -199,11 +213,11 @@ try{
         await dialog.dismiss();
       });
       await testPage.locator('.recruitment-settings summary').click();
-      await testPage.getByLabel('Only assign recruited characters',{exact:true}).click();
-      assert.equal(await testPage.getByLabel('Only assign recruited characters',{exact:true}).isChecked(),false);
+      await testPage.getByLabel('Recruitment check',{exact:true}).click();
+      assert.equal(await testPage.getByLabel('Recruitment check',{exact:true}).isChecked(),false);
       assert.equal(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[1][0]),recruit);
       testPage.once('dialog',dialog=>dialog.accept());
-      await testPage.getByLabel('Only assign recruited characters',{exact:true}).check();
+      await testPage.getByLabel('Recruitment check',{exact:true}).check();
       assert.deepEqual(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts),{
         1:['',lineup.current.openingCharacters[0]],2:[lineup.current.openingCharacters[1],''],3:['',''],
       });
@@ -244,7 +258,7 @@ try{
       await testPage.locator('nav button').filter({hasText:'Planner'}).click();
       assert.ok((await testPage.locator('.act-preparation').nth(0).textContent()).includes(recruit));
       assert.ok((await testPage.locator('.act-preparation').nth(1).textContent()).includes('Electro-Hydro Lv. 2'));
-      assert.equal(await testPage.getByLabel('Only assign recruited characters',{exact:true}).isChecked(),true);
+      assert.equal(await testPage.getByLabel('Recruitment check',{exact:true}).isChecked(),true);
       assert.equal(await testPage.locator('.act-preparation[open]').count(),0);
     }finally{await preparationContext.close();}
   });
