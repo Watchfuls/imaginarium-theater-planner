@@ -1,7 +1,7 @@
 import {isAssignmentPlaceholder} from './assignmentPlaceholders';
 import {ActPreparation} from './ActPreparation';
 import {ArcanaPosition} from './ArcanaPosition';
-import {clearUnrecruitedAssignments} from './recruitmentPlan';
+import {positionRecruitmentAutomatically,advanceRecruitmentForMove,clearUnrecruitedAssignments} from './recruitmentPlan';
 import {defaultStageOrder,validStageOrder,validUnlockedArcana,moveArcana,moveArcanaPlan,stageLabel} from './stageOrder';
 import {RecruitConfirmation} from './RecruitConfirmation';
 import {validPreparations,recruitedBy} from './actPreparationData';
@@ -39,7 +39,7 @@ const ActDetails=React.lazy(()=>import('./ActDetails').then(module=>({default:mo
 const isRecord=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const isStringArray=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==='string');
 const validSetup=(value:unknown)=>isRecord(value)&&typeof value.difficulty==='string'&&Object.hasOwn(difficulties,value.difficulty)&&isStringArray(value.elements)&&isStringArray(value.opening)&&isStringArray(value.guests)&&(value.customSeasonSelected===undefined||typeof value.customSeasonSelected==='boolean')&&(value.privateSeasonSelected===undefined||typeof value.privateSeasonSelected==='boolean');
-const validPlan=(value:unknown)=>isRecord(value)&&isStringArray(value.roster)&&isRecord(value.acts)&&Object.values(value.acts).every(isStringArray)&&(value.preparations===undefined||validPreparations(value.preparations))&&(value.recruitedOnly===undefined||typeof value.recruitedOnly==='boolean')&&(value.stageOrder===undefined||validStageOrder(value.stageOrder))&&(value.unlockedArcana===undefined||validUnlockedArcana(value.unlockedArcana));
+const validPlan=(value:unknown)=>isRecord(value)&&isStringArray(value.roster)&&isRecord(value.acts)&&Object.values(value.acts).every(isStringArray)&&(value.preparations===undefined||validPreparations(value.preparations))&&(value.automatedRecruitment===undefined||typeof value.automatedRecruitment==='boolean')&&(value.recruitedOnly===undefined||typeof value.recruitedOnly==='boolean')&&(value.stageOrder===undefined||validStageOrder(value.stageOrder))&&(value.unlockedArcana===undefined||validUnlockedArcana(value.unlockedArcana));
 type PrivateEnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 type PrivateTheaterPreview={season:TheaterSeason;enemies:Record<string,PrivateEnemyPreview>};
 const customSeasonStorageKey='itp-custom-season-v1';
@@ -101,6 +101,8 @@ const [teamDropTarget,setTeamDropTarget]=useState<number|null>(null);
 const assignmentNoticeId=useRef(0);
 const [openCharacterPicker,setOpenCharacterPicker]=useState('');
 const [pendingRecruitment,setPendingRecruitment]=useState<{name:string;act:number;slot:number}|null>(null);
+const [pendingTeamRecruitment,setPendingTeamRecruitment]=useState<{names:string[];act:number;team:string[]}|null>(null);
+const [pendingSlotRecruitment,setPendingSlotRecruitment]=useState<{names:string[];sourceAct:number;sourceSlot:number;targetAct:number;targetSlot:number}|null>(null);
 const [search,setSearch]=useState('');const [ownedOnly,setOwnedOnly]=useState(false);
 const [ownedElements,setOwnedElements]=useState<Element[]>([]);
 const [ownedRarities,setOwnedRarities]=useState<(4|5)[]>([]);
@@ -290,7 +292,7 @@ const toggleRoster=(name:string)=>setPlan(current=>{
   const count=new Set([...selectedOpening,...roster,...(currentBorrowed?[currentBorrowed]:[])]).size;
   return count>=requirement.cap?current:{...current,roster:[...roster,name]};
 });
-const recruitmentAllows=(name:string,act:number,current=plan)=>!current.recruitedOnly||!name||isAssignmentPlaceholder(name)||recruitedBy(current.preparations,act,selectedOpening,orderFor(current)).has(name);
+const recruitmentAllows=(name:string,act:number,current=plan)=>current.automatedRecruitment||!current.recruitedOnly||!name||isAssignmentPlaceholder(name)||recruitedBy(current.preparations,act,selectedOpening,orderFor(current)).has(name);
 const teamsRecruited=(assignments:Plan['acts'],current=plan)=>Object.entries(activeActs(assignments)).every(([act,team])=>team.every(name=>recruitmentAllows(name,Number(act),current)));
 const canAssignToAct=(name:string,act:number,slot:number,assignments=plan.acts,allowRecruitment=false)=>{
   if(!allowRecruitment&&!recruitmentAllows(name,act))return false;
@@ -363,6 +365,7 @@ const selectCharacterForAct=(name:string,act:number,slot:number)=>{
   else dropCharacterIntoAct(name,act,slot);
 };
 const swapActSlots=(sourceAct:number,sourceSlot:number,targetAct:number,targetSlot:number)=>setPlan(current=>{
+  const original=current;
   if(sourceAct===targetAct&&sourceSlot===targetSlot)return current;
   const assignments=Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,[...names]])) as Record<number,string[]>;
   const sourceNames=[...(assignments[sourceAct]??[])];
@@ -373,13 +376,25 @@ const swapActSlots=(sourceAct:number,sourceSlot:number,targetAct:number,targetSl
   targetNames[targetSlot]=sourceName;
   assignments[sourceAct]=sourceNames;
   assignments[targetAct]=targetNames;
-  if(!sourceNames.every(name=>recruitmentAllows(name,sourceAct,current))||!targetNames.every(name=>recruitmentAllows(name,targetAct,current)))return current;
+  current=advanceRecruitmentForMove(current,sourceName,targetAct,selectedOpening,orderFor(current));
+  current=advanceRecruitmentForMove(current,targetName,sourceAct,selectedOpening,orderFor(current));
+  if(!sourceNames.every(name=>recruitmentAllows(name,sourceAct,current))||!targetNames.every(name=>recruitmentAllows(name,targetAct,current)))return original;
   for(const name of new Set([sourceName,targetName].filter(name=>name&&!isAssignmentPlaceholder(name)))){
     const assignedActs=Object.values(activeActs(assignments)).filter(names=>names.includes(name)).length;
-    if(assignedActs>2||Object.values(activeActs(assignments)).some(names=>names.filter(value=>value===name).length>1))return current;
+    if(assignedActs>2||Object.values(activeActs(assignments)).some(names=>names.filter(value=>value===name).length>1))return original;
   }
   return {...current,acts:assignments};
 });
+const requestSlotSwap=(sourceAct:number,sourceSlot:number,targetAct:number,targetSlot:number)=>{
+  const sourceName=plan.acts[sourceAct]?.[sourceSlot]??'';
+  const targetName=plan.acts[targetAct]?.[targetSlot]??'';
+  const names=[...new Set([
+    ...(!recruitmentAllows(sourceName,targetAct)?[sourceName]:[]),
+    ...(!recruitmentAllows(targetName,sourceAct)?[targetName]:[]),
+  ])];
+  if(names.length)setPendingSlotRecruitment({names,sourceAct,sourceSlot,targetAct,targetSlot});
+  else swapActSlots(sourceAct,sourceSlot,targetAct,targetSlot);
+};
 const toggleElement=(element:Element)=>updateCustomSetup(current=>{
   const elements=toggleArray(current.elements.filter((value):value is Element=>ELEMENTS.includes(value)),element,3) as Element[];
   if(elements.length!==3)return {...current,elements,opening:[],guests:[]};
@@ -491,10 +506,11 @@ const renderAct=(act:number,label:string)=>{
   };
   const pasteTeam=()=>{
     if(!copiedTeam)return;
-    if(!copiedTeam.team.every(name=>recruitmentAllows(name,act))){setAssignmentNotice({message:'Recruit these characters before this act first.',id:++assignmentNoticeId.current});return;}
     const error=teamPasteError(copiedTeam.team,act,activePlanActs,chosen);
     if(error){setCopiedTeam(null);setAssignmentNotice({message:error,id:++assignmentNoticeId.current});return;}
     setAssignmentNotice(null);
+    const names=copiedTeam.team.filter(name=>!recruitmentAllows(name,act));
+    if(names.length){setPendingTeamRecruitment({names,act,team:[...copiedTeam.team]});return;}
     setPlan(current=>teamPasteError(copiedTeam.team,act,activeActs(current.acts),chosen)?current:{...current,acts:{...current.acts,[act]:[...copiedTeam.team]}});
     setCopiedTeam(null);
   };
@@ -508,7 +524,7 @@ const renderAct=(act:number,label:string)=>{
   }} onDragLeave={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setArcanaDropTarget(value=>value===act?null:value);}} onDropCapture={event=>{
     if(!event.dataTransfer.types.includes('application/x-itp-arcana'))return;
     event.preventDefault();event.stopPropagation();moveArcanaStage(Number(event.dataTransfer.getData('application/x-itp-arcana')),act);setDraggingArcana(null);setArcanaDropTarget(null);
-  }}><ActPreparation act={act} label={label} order={stageOrder} value={plan.preparations?.[act]} characters={plannerCharacters.filter(character=>chosen.includes(character.name))} elements={selectedElements} preparations={plan.preparations} opening={selectedOpening} previousRecruits={[...recruitedBy(plan.preparations,act,[],stageOrder,false)]} onChange={value=>setPlan(current=>{
+  }}><ActPreparation automatedRecruitment={!!plan.automatedRecruitment} act={act} label={label} order={stageOrder} value={plan.preparations?.[act]} characters={plannerCharacters.filter(character=>chosen.includes(character.name))} elements={selectedElements} preparations={plan.preparations} opening={selectedOpening} previousRecruits={[...recruitedBy(plan.preparations,act,[],stageOrder,false)]} onChange={value=>setPlan(current=>{
     const preparations={...current.preparations};
     if(value.recruits.length||value.blessings.length)preparations[act]=value;
     else delete preparations[act];
@@ -542,7 +558,7 @@ const renderAct=(act:number,label:string)=>{
       const source=event.dataTransfer.getData('application/x-itp-act-slot');
       if(source){
         const [sourceAct,sourceSlot]=source.split(':').map(Number);
-        if(Number.isInteger(sourceAct)&&Number.isInteger(sourceSlot))swapActSlots(sourceAct,sourceSlot,act,slot);
+        if(Number.isInteger(sourceAct)&&Number.isInteger(sourceSlot))requestSlotSwap(sourceAct,sourceSlot,act,slot);
       }else{
         const name=event.dataTransfer.getData('text/plain');
         if(name){
@@ -711,13 +727,23 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     </section>
     <section className="assignment-only">
       <h3>Act Assignments</h3>
-      <label className="recruited-only-toggle"><input type="checkbox" checked={!!plan.recruitedOnly} onChange={event=>{
+      <details className="recruitment-settings">
+      <summary>Recruitment settings</summary>
+      <label className="recruitment-setting"><input type="checkbox" aria-label="Automated recruitment positioning" aria-describedby="automated-recruitment-help" checked={!!plan.automatedRecruitment} onChange={event=>{
+        const automatedRecruitment=event.target.checked;
+        if(automatedRecruitment&&!window.confirm('Enable automated recruitment positioning? This will wipe all your previous recruitment settings and recruit each character just before their first assigned act. Characters without an assigned act will not be recruited. Your act assignments and blessings will be kept.'))return;
+        setPlan(current=>positionRecruitmentAutomatically({...current,automatedRecruitment},selectedOpening,orderFor(current)));
+        setPendingRecruitment(null);setPendingTeamRecruitment(null);setPendingSlotRecruitment(null);
+        setOpenCharacterPicker('');
+      }}/><span><strong>Automated recruitment positioning</strong><small id="automated-recruitment-help">Recruit each character just before their first act. Blessings stay editable.</small></span></label>
+      <label className="recruitment-setting"><input type="checkbox" aria-label="Only assign recruited characters" aria-describedby="recruited-only-help" disabled={!!plan.automatedRecruitment} checked={!!plan.recruitedOnly} onChange={event=>{
         const enabled=event.target.checked;
-        if(enabled&&!window.confirm('Enable recruited-only assignments? This will clear all assigned characters except opening characters already assigned in Acts 1 and 2. Your selected cast, recruitment plans, and blessing levels will be kept.'))return;
-        setPlan(current=>({...current,recruitedOnly:enabled,...(enabled?{acts:Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(name=>(Number(act)===1||Number(act)===2)&&openingNames.has(name)?name:'')]))}:{})}));
+        if(enabled&&!plan.automatedRecruitment&&!window.confirm('Enable recruited-only assignments? This will clear all assigned characters except opening characters already assigned in Acts 1 and 2. Your selected cast, recruitment plans, and blessing levels will be kept.'))return;
+        setPlan(current=>({...current,recruitedOnly:enabled,...(enabled&&!current.automatedRecruitment?{acts:Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(name=>(Number(act)===1||Number(act)===2)&&openingNames.has(name)?name:'')]))}:{})}));
         setCopiedTeam(null);
         setOpenCharacterPicker('');
-      }}/> Only assign recruited characters</label>
+      }}/><span><strong>Only assign recruited characters</strong><small id="recruited-only-help">{plan.automatedRecruitment?'Handled automatically while automated positioning is on.':'Ask to recruit characters before assigning them to an earlier act.'}</small></span></label>
+      </details>
       <p className="drag-help">Click or drag to assign · Drag slots to swap · × or right-click to clear · 2 stages per character{setup.difficulty==='Lunar'&&<><br/>Arcana unlock after Acts 3 &amp; 6. Finish both before Act 10.</>}</p>
       <div className="act-group"><h4>Acts</h4><div className="acts">{setup.difficulty==='Lunar'
         ? stageOrder.map(act=>renderAct(act,stageLabel(act)))
@@ -754,6 +780,23 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   <div className="bottom"><button onClick={()=>setStep(2)}>← Challenge Setup</button><button onClick={()=>{setPlan({roster:[],acts:{},borrowed:''});setCopiedTeam(null);}}>Reset Plan</button></div>
 </section>}
 {pendingRecruitment&&<RecruitConfirmation name={pendingRecruitment.name} onAnswer={yes=>{if(yes)dropCharacterIntoAct(pendingRecruitment.name,pendingRecruitment.act,pendingRecruitment.slot,true);setPendingRecruitment(null);}}/>}
+{pendingSlotRecruitment&&<RecruitConfirmation name={pendingSlotRecruitment.names.join(', ')} onAnswer={yes=>{
+  if(yes){const {sourceAct,sourceSlot,targetAct,targetSlot}=pendingSlotRecruitment;swapActSlots(sourceAct,sourceSlot,targetAct,targetSlot);}
+  setPendingSlotRecruitment(null);
+}}/>}
+{pendingTeamRecruitment&&<RecruitConfirmation name={pendingTeamRecruitment.names.join(', ')} onAnswer={yes=>{
+  if(yes){
+    const {team,act}=pendingTeamRecruitment;
+    setPlan(current=>{
+      if(teamPasteError(team,act,activeActs(current.acts),castForPlan(current)))return current;
+      const next=team.reduce((next,name)=>advanceRecruitmentForMove(next,name,act,selectedOpening,orderFor(next)),current);
+      if(!team.every(name=>recruitmentAllows(name,act,next)))return current;
+      return {...next,acts:{...next.acts,[act]:[...team]}};
+    });
+    setCopiedTeam(null);
+  }
+  setPendingTeamRecruitment(null);
+}}/>}
 {assignmentNotice&&<div key={assignmentNotice.id} className="assignment-notice" role="status">{assignmentNotice.message}</div>}
 <footer><span>Unofficial fan-made planning tool. {storageUnavailable?<span role="status">Browser saving is unavailable. Changes will last only until this page closes.</span>:'All settings are saved in this browser.'} <a href="./privacy.html">Privacy policy</a></span><Feedback/></footer></main>
 }

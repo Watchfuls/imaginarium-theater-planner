@@ -35,7 +35,7 @@ export function BorrowedCharacterPicker({characters,selected,onSelect,open,onOpe
     </div>}
   </div>;
 }
-export function ActAssignmentPicker({recruitment,act,label=`Act ${act}`,slot,placeholderElements,characters,chosenNames,selected,borrowed,opening,guests,canSelect,needsRecruitment=()=>false,isExhausted,onSelect,open,onOpenChange}:{label?:string;recruitment?:string[];act:number;slot:number;placeholderElements:Element[];characters:Character[];chosenNames:Set<string>;selected:string;borrowed:string;opening:Set<string>;guests:Set<string>;needsRecruitment?:(name:string)=>boolean;canSelect:(name:string)=>boolean;isExhausted:(name:string)=>boolean;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void}){
+export function ActAssignmentPicker({disabled=false,recruitment,act,label=`Act ${act}`,slot,placeholderElements,characters,chosenNames,selected,borrowed,opening,guests,canSelect,needsRecruitment=()=>false,isExhausted,onSelect,open,onOpenChange}:{disabled?:boolean;label?:string;recruitment?:string[];act:number;slot:number;placeholderElements:Element[];characters:Character[];chosenNames:Set<string>;selected:string;borrowed:string;opening:Set<string>;guests:Set<string>;needsRecruitment?:(name:string)=>boolean;canSelect:(name:string)=>boolean;isExhausted:(name:string)=>boolean;onSelect:(name:string)=>void;open:boolean;onOpenChange:(open:boolean)=>void}){
   const selectedElement=placeholderElement(selected);
   const placeholderLabel=assignmentPlaceholderLabel(selected);
   const characterLabel=(name:string)=>name===borrowed?'Supporting':opening.has(name)?'Opening':guests.has(name)?'Guest':'';
@@ -56,11 +56,13 @@ export function ActAssignmentPicker({recruitment,act,label=`Act ${act}`,slot,pla
     &&character.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
   );
   const availableCharacters=matchingCharacters.filter(character=>canSelect(character.name)&&!needsRecruitment(character.name));
+  if(recruitment)availableCharacters.sort((a,b)=>Number(recruitment.includes(b.name))-Number(recruitment.includes(a.name)));
   const elementCharacters=selectedElement?characters.filter(character=>character.element===selectedElement&&character.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())):[];
   const unrecruitedCharacters=[...new Map([...matchingCharacters,...elementCharacters].filter(character=>canSelect(character.name)&&needsRecruitment(character.name)).map(character=>[character.name,character])).values()];
   const unavailableCharacters=matchingCharacters.filter(character=>!canSelect(character.name)&&!isExhausted(character.name));
   const exhaustedCharacters=matchingCharacters.filter(character=>!canSelect(character.name)&&isExhausted(character.name));
   return <div className="act-picker" ref={container} onKeyDown={event=>{
+    if(disabled)return;
     const trigger=container.current?.querySelector<HTMLButtonElement>('.act-picker-trigger');
     if(event.key==='Escape'&&open){event.preventDefault();event.stopPropagation();onOpenChange(false);trigger?.focus();return;}
     if(event.key!=='ArrowDown'&&event.key!=='ArrowUp')return;
@@ -73,11 +75,11 @@ export function ActAssignmentPicker({recruitment,act,label=`Act ${act}`,slot,pla
     options[next].focus();
     options[next].scrollIntoView({block:'nearest'});
   }}>
-    <button className="act-picker-trigger" type="button" aria-label={recruitment?`Recruit characters before ${label}`:`${label}, slot ${slot+1}${selectedCharacter?`: ${selectedCharacter.name}`:placeholderLabel?`: ${placeholderLabel}`:''}`} title={selectedCharacter?.name??placeholderLabel} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>onOpenChange(!open)}>
+    <button disabled={disabled} className="act-picker-trigger" type="button" aria-label={recruitment?`Recruit characters before ${label}`:`${label}, slot ${slot+1}${selectedCharacter?`: ${selectedCharacter.name}`:placeholderLabel?`: ${placeholderLabel}`:''}`} title={selectedCharacter?.name??placeholderLabel} aria-haspopup="listbox" aria-expanded={open} draggable={Boolean(selected)} onDragStart={event=>{if(!selected)return;event.dataTransfer.setData('application/x-itp-act-slot',`${act}:${slot}`);event.dataTransfer.effectAllowed='move';}} onClick={()=>onOpenChange(!open)}>
       {recruitment?<><span className="recruitment-portraits">{recruitment.slice(0,3).map(name=><CharacterIcon key={name} name={name}/>)}</span><span className="act-picker-name">{recruitment.length?recruitment.join(', '):'+ Join the Principal Cast'}</span></>:selectedCharacter?<><CharacterIcon name={selectedCharacter.name}/><span className="act-picker-identity"><span className="act-picker-name">{selectedCharacter.name}</span>{characterLabel(selectedCharacter.name)&&<small>{characterLabel(selectedCharacter.name)}</small>}</span><ElementBadge element={selectedCharacter.element}/></>:placeholderLabel?<><span className="act-picker-name">{placeholderLabel}</span>{selectedElement&&<ElementBadge element={selectedElement}/>}</>:<span className="act-empty-label"><span>+ Slot </span>{slot+1}</span>}
       <span className="borrowed-chevron" aria-hidden="true">▾</span>
     </button>
-    {open&&<div className="act-picker-menu">
+    {open&&!disabled&&<div className="act-picker-menu">
       <input autoFocus className="act-picker-search" type="search" aria-label={`Search characters for ${label}, slot ${slot+1}`} placeholder="Search characters…" value={query} onChange={event=>setQuery(event.target.value)}/>
       <div className="act-picker-options" role="listbox" aria-label={`${label}, slot ${slot+1} characters`}>
       <div className="act-picker-options-content">

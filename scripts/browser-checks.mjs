@@ -25,6 +25,87 @@ try{
   async function check(label,run){await run();console.log(`PASS ${label}`);}
 
   await page.goto(base,{waitUntil:'domcontentloaded'});
+  await check('earlier team pastes and slot drags confirm recruitment, support cancellation, and preserve blessings',async()=>{
+    const isolated=await browser.newContext();
+    try{
+      const characters=await page.evaluate(async()=>{const {CHARACTERS}=await import('/src/characters.ts');return CHARACTERS;});
+      const recruits=characters.filter(c=>lineup.current.elements.includes(c.element)&&!lineup.current.openingCharacters.includes(c.name)&&!c.name.includes('Traveler')).slice(0,3).map(c=>c.name);
+      await isolated.addInitScript(({characters,season,recruits})=>{
+        Date.now=()=>Date.parse(season.startsAt)+1000;
+        localStorage.setItem('itp-ownership-v1',JSON.stringify(Object.fromEntries(characters.map(c=>[c.name,{owned:true,level:90}]))));
+        localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Lunar',elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests,seasonId:season.season}));
+        localStorage.setItem('itp-plan-v1',JSON.stringify({roster:recruits,recruitedOnly:true,acts:{9:[...recruits,season.openingCharacters[0]]},preparations:{9:{recruits,blessings:[{name:'Electro-Hydro',levels:2}]}}}));
+      },{characters,season:lineup.current,recruits});
+      const testPage=await isolated.newPage();
+      await testPage.goto(base,{waitUntil:'domcontentloaded'});
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      const saved=()=>testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')));
+      const before=await saved();
+      await testPage.getByRole('button',{name:'Copy team from Act 9',exact:true}).click();
+      await testPage.getByRole('button',{name:'Paste copied team into Act 7',exact:true}).click();
+      const dialog=testPage.getByRole('dialog',{name:`Recruit ${recruits.join(', ')}?`,exact:true});
+      await dialog.getByRole('button',{name:'No',exact:true}).click();
+      assert.deepEqual(await saved(),before);
+      await testPage.getByRole('button',{name:'Copy team from Act 9',exact:true}).click();
+      await testPage.getByRole('button',{name:'Paste copied team into Act 7',exact:true}).click();
+      await dialog.getByRole('button',{name:'Yes',exact:true}).click();
+      await testPage.waitForFunction(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[7]?.length===4);
+      const after=await saved();
+      assert.deepEqual(after.acts[7],before.acts[9]);
+      assert.deepEqual(after.acts[9],before.acts[9]);
+      assert.deepEqual(after.preparations[7].recruits,recruits);
+      assert.deepEqual(after.preparations[9],{recruits:[],blessings:before.preparations[9].blessings});
+      const source=testPage.getByRole('button',{name:new RegExp(`^Act 7, slot 1:`)});
+      const destination=testPage.getByRole('button',{name:'Act 6, slot 1',exact:true});
+      const dragSlot=async()=>{
+        const dataTransfer=await testPage.evaluateHandle(()=>new DataTransfer());
+        await source.dispatchEvent('dragstart',{dataTransfer});
+        await destination.dispatchEvent('drop',{dataTransfer});
+        await dataTransfer.dispose();
+      };
+      await dragSlot();
+      const moveDialog=testPage.getByRole('dialog',{name:`Recruit ${recruits[0]}?`,exact:true});
+      await moveDialog.getByRole('button',{name:'No',exact:true}).click();
+      assert.deepEqual(await saved(),after);
+      await dragSlot();
+      await moveDialog.getByRole('button',{name:'Yes',exact:true}).click();
+      await testPage.waitForFunction(name=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[6]?.[0]===name,recruits[0]);
+      const moved=await saved();
+      assert.equal(moved.acts[7][0],'');
+      assert.deepEqual(moved.acts[9],before.acts[9]);
+      assert.deepEqual(moved.preparations[6].recruits,[recruits[0]]);
+      assert.deepEqual(moved.preparations[7].recruits,recruits.slice(1));
+      const beforeAutomation=await saved();
+      assert.equal(await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).isVisible(),false);
+      await testPage.locator('.recruitment-settings summary').click();
+      testPage.once('dialog',async dialog=>{
+        assert.ok(dialog.message().includes('wipe all your previous recruitment settings'));
+        await dialog.dismiss();
+      });
+      await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).click();
+      assert.deepEqual(await saved(),beforeAutomation);
+      assert.equal(await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).isChecked(),false);
+      testPage.once('dialog',dialog=>dialog.accept());
+      await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).check();
+      assert.equal((await saved()).automatedRecruitment,true);
+      const preparation=testPage.locator('.stage-group[data-stage="6"] .act-preparation');
+      await preparation.locator('summary').click();
+      assert.equal(await preparation.getByRole('button',{name:'Recruit characters before Act 6',exact:true}).isDisabled(),true);
+      const increase=preparation.getByRole('button',{name:/^Increase /}).first();
+      assert.equal(await increase.isEnabled(),true);
+      await increase.click();
+      const blessed=await saved();
+      assert.ok(blessed.preparations[6].blessings.length);
+      await testPage.getByRole('button',{name:'Clear Act 6, slot 1',exact:true}).click();
+      await testPage.waitForFunction(name=>JSON.parse(localStorage.getItem('itp-plan-v1')).preparations[9].recruits.includes(name),recruits[0]);
+      const automated=await saved();
+      assert.deepEqual(automated.preparations[6].recruits,[]);
+      assert.deepEqual(automated.preparations[6].blessings,blessed.preparations[6].blessings);
+      assert.deepEqual(automated.acts[9],before.acts[9]);
+      await testPage.getByRole('checkbox',{name:'Automated recruitment positioning',exact:true}).uncheck();
+      assert.equal(await preparation.getByRole('button',{name:'Recruit characters before Act 6',exact:true}).isEnabled(),true);
+    }finally{await isolated.close();}
+  });
   await check('Arcana planning follows movable stages, respects unlocks, and clears moved teams and plans',async()=>{
     const isolated=await browser.newContext();
     try{
@@ -117,6 +198,7 @@ try{
         assert.match(dialog.message(),/clear all assigned characters except opening characters/);
         await dialog.dismiss();
       });
+      await testPage.locator('.recruitment-settings summary').click();
       await testPage.getByLabel('Only assign recruited characters',{exact:true}).click();
       assert.equal(await testPage.getByLabel('Only assign recruited characters',{exact:true}).isChecked(),false);
       assert.equal(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[1][0]),recruit);

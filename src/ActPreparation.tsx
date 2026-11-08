@@ -10,8 +10,8 @@ const reactionIcon=(pair:string)=>{
   return reaction?Object.entries(icons).find(([path])=>path.endsWith(`_${reaction.icon}.png`)||path.endsWith(`_${reaction.icon}.webp`))?.[1]:undefined;
 };
 
-export function ActPreparation({act,label,order,value,characters,previousRecruits,opening,elements,preparations,onChange}:{
-  act:number;label:string;order:number[];value?:Preparation;characters:Character[];previousRecruits:string[];opening:string[];elements:Element[];preparations?:Record<number,Preparation>;onChange:(value:Preparation)=>void;
+export function ActPreparation({automatedRecruitment=false,act,label,order,value,characters,previousRecruits,opening,elements,preparations,onChange}:{
+  automatedRecruitment?:boolean;act:number;label:string;order:number[];value?:Preparation;characters:Character[];previousRecruits:string[];opening:string[];elements:Element[];preparations?:Record<number,Preparation>;onChange:(value:Preparation)=>void;
 }){
   const [open,setOpen]=useState(false);
   const plan=value??{recruits:[],blessings:[]};
@@ -25,7 +25,7 @@ export function ActPreparation({act,label,order,value,characters,previousRecruit
       {plannedPairs.map(pair=><span className="preparation-summary-item" key={pair}>{reactionIcon(pair)&&<img src={reactionIcon(pair)} alt=""/>}{pair} Lv. {blessingLevel(preparations,act,pair,order)}</span>)}
     </span>}</summary>
     <div className="preparation-compact">
-      <ActAssignmentPicker recruitment={plan.recruits} label={label} act={act} slot={0} characters={available} chosenNames={new Set(available.map(character=>character.name))} placeholderElements={[]} selected="" borrowed="" opening={new Set()} guests={new Set()} canSelect={()=>true} isExhausted={()=>false} open={open} onOpenChange={setOpen} onSelect={name=>onChange({...plan,recruits:!name?[]:plan.recruits.includes(name)?plan.recruits.filter(recruit=>recruit!==name):[...plan.recruits,name]})}/>
+      <ActAssignmentPicker disabled={automatedRecruitment} recruitment={plan.recruits} label={label} act={act} slot={0} characters={available} chosenNames={new Set(available.map(character=>character.name))} placeholderElements={[]} selected="" borrowed="" opening={new Set()} guests={new Set()} canSelect={()=>true} isExhausted={()=>false} open={open} onOpenChange={setOpen} onSelect={name=>onChange({...plan,recruits:!name?[]:plan.recruits.includes(name)?plan.recruits.filter(recruit=>recruit!==name):[...plan.recruits,name]})}/>
       <div className="preparation-counters">{pairs.map(pair=>{
         const previous=blessingLevel(preparations,act,pair,order,false);
         const level=blessingLevel(preparations,act,pair,order);

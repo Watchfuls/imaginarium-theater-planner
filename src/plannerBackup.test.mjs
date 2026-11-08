@@ -5,6 +5,15 @@ import {defaultStageOrder,moveArcana} from './stageOrder.ts';
 
 const save=()=>({ownership:{Aino:{owned:true,level:95},Mona:{owned:false,level:90},Itto:{owned:false,level:80}},setup:{difficulty:'Hard',elements:['Hydro','Geo','Electro'],opening:['Aino'],guests:['Mona'],seasonId:29},plan:{roster:['Aino','Mona'],acts:{1:['Aino','','Mona','']},borrowed:'Mona',travelerElement:'None',encounterChoices:{'29-Hard-1':'choice-2'}},sort:'game'});
 
+test('automated recruitment preference survives backups and rejects invalid values',()=>{
+  for(const enabled of [true,false]){
+    const original=save();original.plan.automatedRecruitment=enabled;
+    assert.equal(parsePlannerBackup(createPlannerBackup(original)).plan.automatedRecruitment,enabled);
+  }
+  const backup=createPlannerBackup(save());backup.plan.automatedRecruitment='yes';
+  assert.throws(()=>parsePlannerBackup(backup));
+});
+
 test('Arcana positions, locks and preparations round-trip and reject invalid orders',()=>{
   const original=save();
   original.setup.difficulty='Lunar';

@@ -585,7 +585,17 @@ main>section>.sectionhead>div{min-width:0}
 .blessing-stepper output{min-width:16px;text-align:center;font-variant-numeric:tabular-nums}
 .recruitment-portraits{display:flex;flex-shrink:0}
 .recruitment-portraits .character-icon+ .character-icon{margin-left:-15px}
-.recruited-only-toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:#aab6d1;margin-bottom:8px}
+.recruitment-settings{min-width:0;margin:0 0 18px;padding:0 14px;border:1px solid #30384d;border-radius:10px;background:#1b2233}
+.recruitment-settings summary{padding:10px 0;color:#aab6d1;font-size:12px;font-weight:600;cursor:pointer}
+.recruitment-settings[open]{padding-bottom:8px}
+.recruitment-setting{display:flex;align-items:flex-start;gap:10px;padding:10px 0;cursor:pointer}
+.recruitment-setting+.recruitment-setting{border-top:1px solid #30384d}
+.recruitment-setting input{flex:none;width:16px;height:16px;margin:1px 0 0}
+.recruitment-setting span{min-width:0;display:grid;gap:4px}
+.recruitment-setting strong{font-size:13px;font-weight:600;color:#e9ecf6;line-height:1.4}
+.recruitment-setting small{font-size:12px;color:#aab6d1;line-height:1.5}
+.recruitment-setting:has(input:disabled){cursor:default}
+.recruitment-setting:has(input:disabled) strong{color:#aab6d1}
 .blessing-element-icons{display:flex}
 .blessing-element-icons .element{font-size:0;padding:2px;background:transparent}
 @media(max-width:1000px){.preparation-compact{grid-template-columns:minmax(0,1fr)}.blessing-pair{flex-direction:column}}
