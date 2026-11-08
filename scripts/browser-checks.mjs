@@ -35,7 +35,7 @@ try{
         if(sessionStorage.getItem('arcana-test-seeded'))return;
         localStorage.setItem('itp-ownership-v1',JSON.stringify(Object.fromEntries(characters.map(c=>[c.name,{owned:true,level:90}]))));
         localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Lunar',elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests,seasonId:season.season}));
-        localStorage.setItem('itp-plan-v1',JSON.stringify({roster:recruits,recruitedOnly:true,acts:{3:[season.openingCharacters[0]],11:[recruits[0]],12:[season.openingCharacters[1]]},preparations:{11:{recruits:[recruits[0]],blessings:[{name:'Electro-Hydro',levels:2}]},12:{recruits:[],blessings:[{name:'Electro-Hydro',levels:1}]}}}));
+        localStorage.setItem('itp-plan-v1',JSON.stringify({roster:recruits,recruitedOnly:true,acts:{3:[season.openingCharacters[0]],6:[recruits[0],season.openingCharacters[0]],11:[recruits[0]],12:[season.openingCharacters[1]]},preparations:{11:{recruits:[recruits[0]],blessings:[{name:'Electro-Hydro',levels:2}]},12:{recruits:[],blessings:[{name:'Electro-Hydro',levels:1}]}}}));
         sessionStorage.setItem('arcana-test-seeded','1');
       },{characters,season:lineup.current,recruits});
       const testPage=await isolated.newPage();
@@ -59,7 +59,7 @@ try{
       assert.equal((await plan()).stageOrder,undefined);
       assert.deepEqual((await plan()).acts[11],[recruits[0]]);
       await stage(11).scrollIntoViewIfNeeded();
-      const handle=testPage.getByRole('button',{name:'Lock Arcana 1 position',exact:true});
+      const handle=stage(11).locator('.act-heading-content strong');
       await handle.hover();
       const source=await handle.boundingBox();
       await testPage.mouse.down();
@@ -71,6 +71,7 @@ try{
       assert.deepEqual((await plan()).stageOrder,[1,2,3,4,5,6,12,7,11,8,9,10]);
       assert.deepEqual((await plan()).acts[11],[]);
       assert.equal((await plan()).preparations[11],undefined);
+      assert.deepEqual((await plan()).acts[6],['',lineup.current.openingCharacters[0]],'deleted Arcana recruitment also clears dependent Act 6 assignments');
       assert.deepEqual((await plan()).preparations[12].recruits,[recruits[1]]);
       assert.deepEqual(await testPage.locator('.stage-group').evaluateAll(nodes=>nodes.map(node=>Number(node.dataset.stage))),(await plan()).stageOrder);
       await testPage.getByRole('button',{name:'Unlock Arcana 2 position',exact:true}).click();

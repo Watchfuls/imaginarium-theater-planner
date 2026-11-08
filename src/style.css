@@ -557,7 +557,10 @@ main>section>.sectionhead>div{min-width:0}
 .arcana-lock svg{width:15px;height:15px}
 .arcana-lock.unlocked{color:#c7a4ff;cursor:grab}
 .arcana-lock.unlocked:active{cursor:grabbing}
-.arcana-position select{font-size:10px;padding:3px;max-width:115px}
+.arcana-position select{font-size:12px;padding:5px 7px;max-width:150px}
+.arcana-move-label{display:flex;align-items:center;gap:6px;color:#a2abc2;font-size:11px}
+.arcana-draggable{cursor:grab}
+.arcana-draggable:active{cursor:grabbing}
 .recruit-dialog{padding:20px;border:1px solid #39435a;border-radius:12px;background:#151b2a;color:#e9ecf6;max-width:calc(100% - 32px)}
 .recruit-dialog::backdrop{background:#0009}
 .recruit-dialog p{margin:0 0 16px;color:inherit}
