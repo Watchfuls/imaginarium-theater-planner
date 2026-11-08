@@ -3,7 +3,8 @@ import type {TravelerElement} from './travelerSelection';
 
 export type Ownership = Record<string,{owned:boolean;level:number}>;
 export type Setup = {difficulty:string;elements:Element[];opening:string[];guests:string[];seasonId?:number;customSeasonSelected?:boolean;privateSeasonSelected?:boolean};
-export type Plan = {encounterChoices?:Record<string,string>;roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
+export type Preparation = {recruits:string[];blessings:{name:string;levels:number}[]};
+export type Plan = {stageOrder?:number[];unlockedArcana?:number[];recruitedOnly?:boolean;preparations?:Record<number,Preparation>;encounterChoices?:Record<string,string>;roster:string[];acts:Record<number,string[]>;borrowed?:string;travelerElement?:TravelerElement};
 export type TheaterBoss = {name:string;iconUrl:string|null};
 export type BossCatalogEntry = TheaterBoss & {type:'Boss'|'Local Legend'};
 export type TheaterBossStage = {act:number;bosses:TheaterBoss[]};

@@ -1,4 +1,6 @@
 import type {Ownership,Plan,Setup} from './plannerTypes';
+import {validStageOrder,validUnlockedArcana} from './stageOrder.ts';
+import {validPreparations,copyPreparations} from './actPreparationData.ts';
 import {ELEMENTS} from './characters.ts';
 import {difficulties,LEVEL_OPTIONS} from './plannerConfig.ts';
 
@@ -17,7 +19,7 @@ export function createPlannerBackup(save:PlannerSave):Backup {
       .filter(([,value])=>value.owned||value.level!==90)
       .map(([name,value])=>[name,{owned:value.owned,level:value.level}])),
     setup:{difficulty:save.setup.difficulty,elements:save.setup.elements,opening:save.setup.opening,guests:save.setup.guests,...(save.setup.seasonId===undefined?{}:{seasonId:save.setup.seasonId}),...(save.setup.customSeasonSelected===undefined?{}:{customSeasonSelected:save.setup.customSeasonSelected}),...(save.setup.privateSeasonSelected===undefined?{}:{privateSeasonSelected:save.setup.privateSeasonSelected})},
-    plan:{roster:save.plan.roster,acts:Object.fromEntries(Object.entries(save.plan.acts).map(([act,team])=>[act,Array.from(team,name=>name??'')])),...(save.plan.borrowed?{borrowed:save.plan.borrowed}:{}),...(save.plan.travelerElement?{travelerElement:save.plan.travelerElement}:{}),...(Object.keys(save.plan.encounterChoices??{}).length?{encounterChoices:save.plan.encounterChoices}:{})},
+    plan:{...(save.plan.stageOrder?{stageOrder:[...save.plan.stageOrder]}:{}),...(save.plan.unlockedArcana?{unlockedArcana:[...save.plan.unlockedArcana]}:{}),...(save.plan.recruitedOnly===undefined?{}:{recruitedOnly:save.plan.recruitedOnly}),...(Object.keys(save.plan.preparations??{}).length?{preparations:copyPreparations(save.plan.preparations!)}:{}),roster:save.plan.roster,acts:Object.fromEntries(Object.entries(save.plan.acts).map(([act,team])=>[act,Array.from(team,name=>name??'')])),...(save.plan.borrowed?{borrowed:save.plan.borrowed}:{}),...(save.plan.travelerElement?{travelerElement:save.plan.travelerElement}:{}),...(Object.keys(save.plan.encounterChoices??{}).length?{encounterChoices:save.plan.encounterChoices}:{})},
     ...(save.sort==='name'?{}:{sort:save.sort}),
     ...(save.history?.length?{history:save.history.map(entry=>{const saved=createPlannerBackup({...entry,ownership:{},sort:'name'});return {setup:saved.setup,plan:saved.plan};})}:{}),
   };
@@ -40,6 +42,10 @@ export function parsePlannerBackup(value:unknown):PlannerSave {
     ||(setup.customSeasonSelected&&setup.privateSeasonSelected)
     ||((setup.customSeasonSelected||setup.privateSeasonSelected)&&setup.seasonId===undefined))return fail();
   if(!strings(plan.roster)||!record(plan.acts)||!Object.entries(plan.acts).every(([act,team])=>/^(?:[1-9]|1[0-2])$/.test(act)&&strings(team)&&team.length<=4)
+    ||(plan.stageOrder!==undefined&&!validStageOrder(plan.stageOrder))
+    ||(plan.unlockedArcana!==undefined&&!validUnlockedArcana(plan.unlockedArcana))
+    ||(plan.recruitedOnly!==undefined&&typeof plan.recruitedOnly!=='boolean')
+    ||(plan.preparations!==undefined&&!validPreparations(plan.preparations))
     ||(plan.borrowed!==undefined&&typeof plan.borrowed!=='string')
     ||(plan.travelerElement!==undefined&&plan.travelerElement!=='None'&&!ELEMENTS.includes(plan.travelerElement as typeof ELEMENTS[number]))
     ||(plan.encounterChoices!==undefined&&(!record(plan.encounterChoices)||!Object.values(plan.encounterChoices).every(choice=>typeof choice==='string')))

@@ -25,6 +25,146 @@ try{
   async function check(label,run){await run();console.log(`PASS ${label}`);}
 
   await page.goto(base,{waitUntil:'domcontentloaded'});
+  await check('Arcana planning follows movable stages, respects unlocks, and clears moved teams and plans',async()=>{
+    const isolated=await browser.newContext();
+    try{
+      const characters=await page.evaluate(async()=>{const {CHARACTERS}=await import('/src/characters.ts');return CHARACTERS;});
+      const recruits=characters.filter(c=>lineup.current.elements.includes(c.element)&&!lineup.current.openingCharacters.includes(c.name)&&!c.name.includes('Traveler')).slice(0,2).map(c=>c.name);
+      await isolated.addInitScript(({characters,season,recruits})=>{
+        Date.now=()=>Date.parse(season.startsAt)+1000;
+        if(sessionStorage.getItem('arcana-test-seeded'))return;
+        localStorage.setItem('itp-ownership-v1',JSON.stringify(Object.fromEntries(characters.map(c=>[c.name,{owned:true,level:90}]))));
+        localStorage.setItem('itp-setup-v1',JSON.stringify({difficulty:'Lunar',elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests,seasonId:season.season}));
+        localStorage.setItem('itp-plan-v1',JSON.stringify({roster:recruits,recruitedOnly:true,acts:{3:[season.openingCharacters[0]],11:[recruits[0]],12:[season.openingCharacters[1]]},preparations:{11:{recruits:[recruits[0]],blessings:[{name:'Electro-Hydro',levels:2}]},12:{recruits:[],blessings:[{name:'Electro-Hydro',levels:1}]}}}));
+        sessionStorage.setItem('arcana-test-seeded','1');
+      },{characters,season:lineup.current,recruits});
+      const testPage=await isolated.newPage();
+      await testPage.goto(base,{waitUntil:'domcontentloaded'});
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      const stage=id=>testPage.locator(`.stage-group[data-stage="${id}"]`);
+      const plan=()=>testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')));
+      assert.ok((await stage(11).locator('.act-preparation summary').textContent()).startsWith('Before Arcana 1'));
+      await stage(12).getByRole('button',{name:'Arcana 2, slot 2',exact:true}).click();
+      await stage(12).getByRole('option').filter({has:testPage.locator('.act-picker-name').filter({hasText:recruits[1]})}).click();
+      await testPage.getByRole('dialog',{name:`Recruit ${recruits[1]}?`,exact:true}).getByRole('button',{name:'Yes',exact:true}).click();
+      assert.deepEqual((await plan()).preparations[12].recruits,[recruits[1]]);
+      assert.equal((await plan()).preparations[7],undefined);
+      await stage(12).locator('.act-preparation summary').click();
+      assert.equal(await stage(12).getByLabel('Electro-Hydro level before Arcana 2',{exact:true}).textContent(),'3');
+      assert.equal(await testPage.getByRole('button',{name:'Unlock Arcana 1 position',exact:true}).getAttribute('draggable'),'false');
+      await testPage.getByRole('button',{name:'Unlock Arcana 1 position',exact:true}).click();
+      assert.equal(await testPage.getByLabel('Move Arcana 1 before',{exact:true}).locator('option[value="3"]').count(),0);
+      const invalidDrop=await testPage.evaluateHandle(()=>{const data=new DataTransfer();data.setData('application/x-itp-arcana','11');return data;});
+      await stage(3).dispatchEvent('drop',{dataTransfer:invalidDrop});
+      assert.equal((await plan()).stageOrder,undefined);
+      assert.deepEqual((await plan()).acts[11],[recruits[0]]);
+      await stage(11).scrollIntoViewIfNeeded();
+      const handle=testPage.getByRole('button',{name:'Lock Arcana 1 position',exact:true});
+      await handle.hover();
+      const source=await handle.boundingBox();
+      await testPage.mouse.down();
+      await testPage.mouse.move(source.x+source.width/2+12,source.y+source.height/2,{steps:4});
+      await stage(8).scrollIntoViewIfNeeded();
+      const destination=await stage(8).locator('.act-preparation summary').boundingBox();
+      await testPage.mouse.move(destination.x+destination.width/2,destination.y+destination.height/2,{steps:8});
+      await testPage.mouse.up();
+      assert.deepEqual((await plan()).stageOrder,[1,2,3,4,5,6,12,7,11,8,9,10]);
+      assert.deepEqual((await plan()).acts[11],[]);
+      assert.equal((await plan()).preparations[11],undefined);
+      assert.deepEqual((await plan()).preparations[12].recruits,[recruits[1]]);
+      assert.deepEqual(await testPage.locator('.stage-group').evaluateAll(nodes=>nodes.map(node=>Number(node.dataset.stage))),(await plan()).stageOrder);
+      await testPage.getByRole('button',{name:'Unlock Arcana 2 position',exact:true}).click();
+      assert.equal(await testPage.getByLabel('Move Arcana 2 before',{exact:true}).locator('option[value="6"]').count(),0);
+      await testPage.getByLabel('Move Arcana 2 before',{exact:true}).selectOption('10');
+      assert.deepEqual((await plan()).acts[12],[]);
+      assert.equal((await plan()).preparations[12],undefined);
+      await testPage.getByRole('button',{name:'Lock Arcana 1 position',exact:true}).click();
+      await testPage.reload();
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      assert.deepEqual(await testPage.locator('.stage-group').evaluateAll(nodes=>nodes.map(node=>Number(node.dataset.stage))),[1,2,3,4,5,6,7,11,8,9,12,10]);
+      assert.equal(await testPage.getByRole('button',{name:'Unlock Arcana 1 position',exact:true}).getAttribute('draggable'),'false');
+      for(const width of [320,768,1440]){
+        await testPage.setViewportSize({width,height:900});
+        assert.ok(await testPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`unlocked Arcana controls overflow at ${width}`);
+      }
+    }finally{await isolated.close();}
+  });
+  await check('collapsed preparation notes save recruits and blessing upgrades before acts',async()=>{
+    const preparationContext=await browser.newContext();
+    await preparationContext.addInitScript(time=>{Date.now=()=>time;},Date.parse(lineup.current.startsAt)+1000);
+    const testPage=await preparationContext.newPage();
+    try{
+      await testPage.goto(base);
+      await testPage.locator('footer').waitFor();
+      const seed=await testPage.evaluate(async season=>{
+        const {CHARACTERS}=await import('/src/characters.ts');
+        const recruit=CHARACTERS.find(c=>season.elements.includes(c.element)&&!season.openingCharacters.includes(c.name)&&!c.name.startsWith('Traveler')).name;
+        return {recruit,ownership:Object.fromEntries(CHARACTERS.map(c=>[c.name,{owned:true,level:90}])),setup:{difficulty:'Hard',elements:season.elements,opening:season.openingCharacters,guests:season.specialGuests,seasonId:season.season},plan:{roster:[recruit],acts:{1:[recruit,season.openingCharacters[0]],2:[season.openingCharacters[1],recruit],3:[season.openingCharacters[2],recruit]}}};
+      },lineup.current);
+      const {recruit}=seed;
+      await testPage.addInitScript(seed=>{
+        if(sessionStorage.getItem('preparation-test-seeded'))return;
+        for(const key of ['ownership','setup','plan'])localStorage.setItem(`itp-${key}-v1`,JSON.stringify(seed[key]));
+        sessionStorage.setItem('preparation-test-seeded','1');
+      },seed);
+      await testPage.reload();
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      const first=testPage.locator('.act-preparation').nth(0);
+      assert.equal(await first.getAttribute('open'),null);
+      assert.equal(await first.locator('summary').textContent(),'Before Act 1');
+      testPage.once('dialog',async dialog=>{
+        assert.match(dialog.message(),/clear all assigned characters except opening characters/);
+        await dialog.dismiss();
+      });
+      await testPage.getByLabel('Only assign recruited characters',{exact:true}).click();
+      assert.equal(await testPage.getByLabel('Only assign recruited characters',{exact:true}).isChecked(),false);
+      assert.equal(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[1][0]),recruit);
+      testPage.once('dialog',dialog=>dialog.accept());
+      await testPage.getByLabel('Only assign recruited characters',{exact:true}).check();
+      assert.deepEqual(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts),{
+        1:['',lineup.current.openingCharacters[0]],2:[lineup.current.openingCharacters[1],''],3:['',''],
+      });
+      await testPage.getByRole('button',{name:'Act 1, slot 1',exact:true}).click();
+      assert.equal(await testPage.locator('.act-picker-menu .act-picker-group-label').getByText('Not yet recruited',{exact:true}).count(),1);
+      assert.equal(await testPage.locator('.act-picker-menu .not-recruited').filter({has:testPage.locator('.act-picker-name').filter({hasText:recruit})}).count(),1);
+      await testPage.locator('.act-picker-menu').getByRole('option').filter({has:testPage.locator('.act-picker-name').filter({hasText:recruit})}).click();
+      const question=testPage.getByRole('dialog',{name:`Recruit ${recruit}?`,exact:true});
+      await question.getByRole('button',{name:'No',exact:true}).click();
+      assert.equal(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[1][0]),'');
+      const targetSlot=testPage.getByRole('button',{name:'Act 1, slot 1',exact:true});
+      const unallocated=testPage.locator('.unallocated-character').filter({hasText:recruit});
+      await unallocated.dragTo(targetSlot);
+      await question.getByRole('button',{name:'No',exact:true}).click();
+      assert.equal(await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')).acts[1][0]),'');
+      await testPage.locator('.chosen-card').filter({has:testPage.locator('strong').filter({hasText:recruit})}).dragTo(targetSlot);
+      await question.getByRole('button',{name:'Yes',exact:true}).click();
+      const recruitedPlan=await testPage.evaluate(()=>JSON.parse(localStorage.getItem('itp-plan-v1')));
+      assert.equal(recruitedPlan.acts[1][0],recruit);
+      assert.deepEqual(recruitedPlan.preparations[1].recruits,[recruit]);
+      await first.locator('summary').click();
+      assert.equal(await first.locator('.blessing-counter').count(),3);
+      const pair='Electro-Hydro';
+      await first.getByRole('button',{name:`Increase ${pair} before Act 1`,exact:true}).click();
+      const second=testPage.locator('.act-preparation').nth(1);
+      await second.locator('summary').click();
+      assert.equal(await second.getByLabel(`${pair} level before Act 2`,{exact:true}).textContent(),'1');
+      assert.equal(await second.getByRole('button',{name:`Decrease ${pair} before Act 2`,exact:true}).isDisabled(),true);
+      await second.getByRole('button',{name:`Increase ${pair} before Act 2`,exact:true}).click();
+      await second.getByRole('button',{name:`Decrease ${pair} before Act 2`,exact:true}).click();
+      assert.equal(await second.getByLabel(`${pair} level before Act 2`,{exact:true}).textContent(),'1');
+      await second.getByRole('button',{name:`Increase ${pair} before Act 2`,exact:true}).click();
+      await second.locator('.blessing-pair>img').first().evaluate(img=>img.decode());
+      await second.getByRole('button',{name:'Recruit characters before Act 2',exact:true}).click();
+      assert.equal(await second.getByRole('option').filter({has:testPage.locator('.act-picker-name').filter({hasText:recruit})}).count(),0);
+      await testPage.keyboard.press('Escape');
+      await testPage.reload();
+      await testPage.locator('nav button').filter({hasText:'Planner'}).click();
+      assert.ok((await testPage.locator('.act-preparation').nth(0).textContent()).includes(recruit));
+      assert.ok((await testPage.locator('.act-preparation').nth(1).textContent()).includes('Electro-Hydro Lv. 2'));
+      assert.equal(await testPage.getByLabel('Only assign recruited characters',{exact:true}).isChecked(),true);
+      assert.equal(await testPage.locator('.act-preparation[open]').count(),0);
+    }finally{await preparationContext.close();}
+  });
   await check('element and unallocated placeholders persist and prioritize matching characters',async()=>{
     const testPage=await context.newPage();
     try{
@@ -359,7 +499,7 @@ try{
     await check(`mobile layout: ${label}`,async()=>{
       await page.setViewportSize({width:390,height:844});await nav(label).click();
       if(label==='Theater Planner'){
-        const selected=page.locator('.act-picker-trigger').filter({has:page.locator('.act-picker-name')}).first();
+        const selected=page.locator('.act .act-picker-trigger').filter({has:page.locator('.act-picker-name')}).first();
         assert.equal(await selected.locator(':scope > .element').isVisible(),false,'compact slots hide the element badge');
         assert.equal(await selected.locator('.character-icon').isVisible(),true,'compact slots retain character portraits');
         assert.match(await selected.getAttribute('aria-label'),/: .+/,'portrait-only slots expose the character name to assistive technology');
@@ -397,7 +537,7 @@ try{
         return [...element.children].every(child=>child.getBoundingClientRect().right<=right-6);
       }),`unallocated rows need space before the scrollbar at ${width}`);
       for(const index of [0,1]){
-        await page.locator('.act-picker-trigger').nth(index).click();
+        await page.locator('.act .act-picker-trigger').nth(index).click();
         const menu=await page.locator('.act-picker-menu').boundingBox();
         assert.ok(menu.x>=0&&menu.x+menu.width<=width,`slot menu leaves viewport at ${width}`);
         assert.ok(await page.locator('.act-picker-options').evaluate(element=>{

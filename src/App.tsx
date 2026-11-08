@@ -1,4 +1,9 @@
 import {isAssignmentPlaceholder} from './assignmentPlaceholders';
+import {ActPreparation} from './ActPreparation';
+import {ArcanaPosition} from './ArcanaPosition';
+import {defaultStageOrder,validStageOrder,validUnlockedArcana,moveArcana,moveArcanaPlan,stageLabel} from './stageOrder';
+import {RecruitConfirmation} from './RecruitConfirmation';
+import {validPreparations,recruitedBy} from './actPreparationData';
 import {compactActDetails,expandActDetails} from './actDetailsStorage';
 import {SiteHeader} from './SiteHeader';
 import {Feedback} from './Feedback';
@@ -33,7 +38,7 @@ const ActDetails=React.lazy(()=>import('./ActDetails').then(module=>({default:mo
 const isRecord=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const isStringArray=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==='string');
 const validSetup=(value:unknown)=>isRecord(value)&&typeof value.difficulty==='string'&&Object.hasOwn(difficulties,value.difficulty)&&isStringArray(value.elements)&&isStringArray(value.opening)&&isStringArray(value.guests)&&(value.customSeasonSelected===undefined||typeof value.customSeasonSelected==='boolean')&&(value.privateSeasonSelected===undefined||typeof value.privateSeasonSelected==='boolean');
-const validPlan=(value:unknown)=>isRecord(value)&&isStringArray(value.roster)&&isRecord(value.acts)&&Object.values(value.acts).every(isStringArray);
+const validPlan=(value:unknown)=>isRecord(value)&&isStringArray(value.roster)&&isRecord(value.acts)&&Object.values(value.acts).every(isStringArray)&&(value.preparations===undefined||validPreparations(value.preparations))&&(value.recruitedOnly===undefined||typeof value.recruitedOnly==='boolean')&&(value.stageOrder===undefined||validStageOrder(value.stageOrder))&&(value.unlockedArcana===undefined||validUnlockedArcana(value.unlockedArcana));
 type PrivateEnemyPreview={name:string;iconUrl:string;wikiUrl:string;baseResistances?:Record<string,number>};
 type PrivateTheaterPreview={season:TheaterSeason;enemies:Record<string,PrivateEnemyPreview>};
 const customSeasonStorageKey='itp-custom-season-v1';
@@ -87,11 +92,14 @@ const [customSeasonDirty,setCustomSeasonDirty]=useState(false);
 const [plan,setPlan]=useState<Plan>(()=>stored('itp-plan-v1',{roster:[],acts:{},borrowed:''},validPlan));
 const [planHistory,setPlanHistory]=useState<HistoricalPlan[]>(()=>stored('itp-plan-history-v1',[],Array.isArray));
 const [dropTarget,setDropTarget]=useState('');
+const [draggingArcana,setDraggingArcana]=useState<number|null>(null);
+const [arcanaDropTarget,setArcanaDropTarget]=useState<number|null>(null);
 const [assignmentNotice,setAssignmentNotice]=useState<{message:string;id:number}|null>(null);
 const [copiedTeam,setCopiedTeam]=useState<{act:number;team:string[]}|null>(null);
 const [teamDropTarget,setTeamDropTarget]=useState<number|null>(null);
 const assignmentNoticeId=useRef(0);
 const [openCharacterPicker,setOpenCharacterPicker]=useState('');
+const [pendingRecruitment,setPendingRecruitment]=useState<{name:string;act:number;slot:number}|null>(null);
 const [search,setSearch]=useState('');const [ownedOnly,setOwnedOnly]=useState(false);
 const [ownedElements,setOwnedElements]=useState<Element[]>([]);
 const [ownedRarities,setOwnedRarities]=useState<(4|5)[]>([]);
@@ -215,6 +223,8 @@ const selectedOpening=setup.opening.filter(name=>openingOptions.some(c=>c.name==
 const selectedGuests=setup.guests.filter(name=>guestOptions.some(c=>c.name===name)&&(!isTraveler(name)||name===selectedTraveler));
 const unavailableTravelers=selectedTraveler?CHARACTERS.filter(character=>isTraveler(character.name)&&character.name!==selectedTraveler).map(character=>character.name):[];
 const requirement=difficulties[setup.difficulty]??difficulties.Hard;
+const orderFor=(current:Plan)=>setup.difficulty==='Lunar'?(current.stageOrder??defaultStageOrder):Array.from({length:requirement.acts},(_,index)=>index+1);
+const stageOrder=orderFor(plan);
 const activeActs=(acts:Record<number,string[]>)=>activeAssignments(acts,requirement.acts,requirement.lunarActs);
 const activePlanActs=activeActs(plan.acts);
 const eligibleOwned=CHARACTERS.filter(c=>ownership[c.name]?.owned&&(ownership[c.name]?.level??90)>=requirement.minimumLevel&&(selectedElements.includes(c.element)||selectedGuests.includes(c.name)));
@@ -276,7 +286,10 @@ const toggleRoster=(name:string)=>setPlan(current=>{
   const count=new Set([...selectedOpening,...roster,...(currentBorrowed?[currentBorrowed]:[])]).size;
   return count>=requirement.cap?current:{...current,roster:[...roster,name]};
 });
-const canAssignToAct=(name:string,act:number,slot:number,assignments=plan.acts)=>{
+const recruitmentAllows=(name:string,act:number,current=plan)=>!current.recruitedOnly||!name||isAssignmentPlaceholder(name)||recruitedBy(current.preparations,act,selectedOpening,orderFor(current)).has(name);
+const teamsRecruited=(assignments:Plan['acts'],current=plan)=>Object.entries(activeActs(assignments)).every(([act,team])=>team.every(name=>recruitmentAllows(name,Number(act),current)));
+const canAssignToAct=(name:string,act:number,slot:number,assignments=plan.acts,allowRecruitment=false)=>{
+  if(!allowRecruitment&&!recruitmentAllows(name,act))return false;
   const alreadyChosen=chosen.includes(name);
   const canJoinRoster=rosterCandidateNames.has(name)
     &&chosen.length<requirement.cap
@@ -303,7 +316,17 @@ const setBorrowedCharacter=(name:string)=>setPlan(current=>{
     :current.acts;
   return {...current,borrowed:name,roster:current.roster.filter(value=>value!==name),acts};
 });
-const dropCharacterIntoAct=(name:string,act:number,slot:number)=>setPlan(current=>{
+const dropCharacterIntoAct=(name:string,act:number,slot:number,recruit=false)=>setPlan(current=>{
+  if(recruit){
+    if(!canAssignToAct(name,act,slot,current.acts,true))return current;
+    const stage=act;
+    const later=new Set(orderFor(current).slice(orderFor(current).indexOf(stage)+1));
+    const preparations=Object.fromEntries(Object.entries(current.preparations??{}).map(([before,entry])=>[before,later.has(Number(before))?{...entry,recruits:entry.recruits.filter(value=>value!==name)}:entry]));
+    const entry=preparations[stage]??{recruits:[],blessings:[]};
+    preparations[stage]={...entry,recruits:[...new Set([...entry.recruits,name])]};
+    current={...current,preparations};
+  }
+  if(!recruitmentAllows(name,act,current))return current;
   const currentCast=new Set(castForPlan(current));
   const roster=current.roster.filter(value=>currentCast.has(value)&&rosterCandidateNames.has(value)&&value!==(current.borrowed??''));
   const currentBorrowed=typeof current.borrowed==='string'&&borrowedOptions.some(character=>character.name===current.borrowed)?current.borrowed:'';
@@ -329,6 +352,12 @@ const dropCharacterIntoAct=(name:string,act:number,slot:number)=>setPlan(current
   assignments[slot]=name;
   return {...current,roster,acts:{...current.acts,[act]:assignments}};
 });
+const selectCharacterForAct=(name:string,act:number,slot:number)=>{
+  if(!name||isAssignmentPlaceholder(name)){assignToAct(act,slot,name);return;}
+  if(!canAssignToAct(name,act,slot,plan.acts,true))return;
+  if(!recruitmentAllows(name,act))setPendingRecruitment({name,act,slot});
+  else dropCharacterIntoAct(name,act,slot);
+};
 const swapActSlots=(sourceAct:number,sourceSlot:number,targetAct:number,targetSlot:number)=>setPlan(current=>{
   if(sourceAct===targetAct&&sourceSlot===targetSlot)return current;
   const assignments=Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,[...names]])) as Record<number,string[]>;
@@ -340,6 +369,7 @@ const swapActSlots=(sourceAct:number,sourceSlot:number,targetAct:number,targetSl
   targetNames[targetSlot]=sourceName;
   assignments[sourceAct]=sourceNames;
   assignments[targetAct]=targetNames;
+  if(!sourceNames.every(name=>recruitmentAllows(name,sourceAct,current))||!targetNames.every(name=>recruitmentAllows(name,targetAct,current)))return current;
   for(const name of new Set([sourceName,targetName].filter(name=>name&&!isAssignmentPlaceholder(name)))){
     const assignedActs=Object.values(activeActs(assignments)).filter(names=>names.includes(name)).length;
     if(assignedActs>2||Object.values(activeActs(assignments)).some(names=>names.filter(value=>value===name).length>1))return current;
@@ -439,6 +469,11 @@ const renderPlannerCharacter=(character:Character)=>{
   const disabled=!canChoose||full||travelerConflict;
   return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' supporting':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top">{isChosen&&<span className="chosen-number" aria-label={`Chosen character ${chosenNumber}`} title={`Chosen character ${chosenNumber}`}>{chosenNumber}</span>}<CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Supporting':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
 };
+const moveArcanaStage=(stage:number,before:number)=>{
+  if(setup.difficulty!=='Lunar')return;
+  setPlan(current=>moveArcanaPlan(current,stage,before));
+  setCopiedTeam(null);setOpenCharacterPicker('');
+};
 const renderAct=(act:number,label:string)=>{
   const copyActive=copiedTeam?.act===act;
   const hasTeam=(plan.acts[act]??[]).some(name=>chosen.includes(name)||isAssignmentPlaceholder(name));
@@ -449,6 +484,7 @@ const renderAct=(act:number,label:string)=>{
   };
   const pasteTeam=()=>{
     if(!copiedTeam)return;
+    if(!copiedTeam.team.every(name=>recruitmentAllows(name,act))){setAssignmentNotice({message:'Recruit these characters before this act first.',id:++assignmentNoticeId.current});return;}
     const error=teamPasteError(copiedTeam.team,act,activePlanActs,chosen);
     if(error){setCopiedTeam(null);setAssignmentNotice({message:error,id:++assignmentNoticeId.current});return;}
     setAssignmentNotice(null);
@@ -458,7 +494,19 @@ const renderAct=(act:number,label:string)=>{
   const bosses=selectedSeason?bossesForAct(selectedSeason.season,setup.difficulty,act):[];
   const objective=bosses.length?'Boss':stageObjectives[setup.difficulty]?.[act];
   const encounterKey=`${selectedSeason?.season}-${setup.difficulty}-${act}`;
-  return <div className={`act ${teamDropTarget===act?'team-drop-target':''}`} key={act} onDragOverCapture={event=>{
+  return <div className={`stage-group ${arcanaDropTarget===act?'arcana-drop-target':''}`} key={act} data-stage={act} onDragOverCapture={event=>{
+    if(!event.dataTransfer.types.includes('application/x-itp-arcana'))return;
+    event.stopPropagation();
+    if(draggingArcana!==null&&moveArcana(stageOrder,draggingArcana,act)!==stageOrder){event.preventDefault();event.dataTransfer.dropEffect='move';setArcanaDropTarget(act);}else setArcanaDropTarget(null);
+  }} onDragLeave={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setArcanaDropTarget(value=>value===act?null:value);}} onDropCapture={event=>{
+    if(!event.dataTransfer.types.includes('application/x-itp-arcana'))return;
+    event.preventDefault();event.stopPropagation();moveArcanaStage(Number(event.dataTransfer.getData('application/x-itp-arcana')),act);setDraggingArcana(null);setArcanaDropTarget(null);
+  }}><ActPreparation act={act} label={label} order={stageOrder} value={plan.preparations?.[act]} characters={plannerCharacters.filter(character=>chosen.includes(character.name))} elements={selectedElements} preparations={plan.preparations} opening={selectedOpening} previousRecruits={[...recruitedBy(plan.preparations,act,[],stageOrder,false)]} onChange={value=>setPlan(current=>{
+    const preparations={...current.preparations};
+    if(value.recruits.length||value.blessings.length)preparations[act]=value;
+    else delete preparations[act];
+    return {...current,preparations};
+  })}/><div className={`act ${teamDropTarget===act?'team-drop-target':''}`} onDragOverCapture={event=>{
     if(!event.dataTransfer.types.includes('application/x-itp-team'))return;
     event.preventDefault();event.stopPropagation();event.dataTransfer.dropEffect='move';setTeamDropTarget(act);
   }} onDragLeave={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setTeamDropTarget(value=>value===act?null:value);}} onDropCapture={event=>{
@@ -468,9 +516,9 @@ const renderAct=(act:number,label:string)=>{
     const source=Number(raw);
     const activeActs=new Set(Array.from({length:requirement.acts},(_,index)=>index+1));
     if(setup.difficulty==='Lunar'){activeActs.add(11);activeActs.add(12);}
-    if(raw&&Number.isInteger(source)&&activeActs.has(source))setPlan(current=>({...current,acts:swapTeams(current.acts,source,act)}));
+    if(raw&&Number.isInteger(source)&&activeActs.has(source))setPlan(current=>{const acts=swapTeams(current.acts,source,act);return teamsRecruited(acts,current)?{...current,acts}:current;});
     setTeamDropTarget(null);setCopiedTeam(null);
-  }}><div className="act-heading"><div className="act-heading-content"><strong>{selectedSeason&&(seasonStatus(selectedSeason,seasonTime)==='Current'||selectedPrivatePreview||selectedCustomSeason)?<a className="act-details-link" href={`#act-details-act-${act}`} title={`View ${label} details`} onClick={event=>{event.preventDefault();setActDetailsTarget({act,season:selectedSeason.season});setStep(4);}}>{label}</a>:label}</strong>{objective&&<span className="act-objective">{objective==='Monolith Defense'?'Monolith':objective==='Defeat Bounties'?'Bounties':objective}</span>}</div>{bosses.length>0&&<div className="planner-encounter-picker planner-boss-preview"><span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>}<span>{boss.name==='Gluttonous Yumkasaur Mountain King'?'Mountain King':boss.name==='Veteran Arithmetic Enhancer Mek'?'Plunge Mek':boss.name.replace(/^Lord of the Hidden Depths:\s*/,'')}</span></a>)}</span>{selectedSeason&&<React.Suspense fallback={null}><PlannerKeyRecommendations ownership={ownership} season={selectedSeason.season} difficulty={setup.difficulty} act={act} bossNames={bosses.map(boss=>boss.name)} data={activeActDetails??undefined} privateEnemies={activeEnemyPreviews}/></React.Suspense>}</div>}{!bosses.length&&selectedSeason&&<React.Suspense fallback={null}><PlannerEncounterPicker ownership={ownership} season={selectedSeason.season} difficulty={setup.difficulty} act={act} value={plan.encounterChoices?.[encounterKey]} data={activeActDetails??undefined} privateEnemies={activeEnemyPreviews} onChange={value=>setPlan(current=>({...current,encounterChoices:{...current.encounterChoices,[encounterKey]:value}}))}/></React.Suspense>}<div className="act-team-tools">
+  }}><div className="act-heading"><div className="act-heading-content"><strong>{selectedSeason&&(seasonStatus(selectedSeason,seasonTime)==='Current'||selectedPrivatePreview||selectedCustomSeason)?<a className="act-details-link" href={`#act-details-act-${act}`} title={`View ${label} details`} onClick={event=>{event.preventDefault();setActDetailsTarget({act,season:selectedSeason.season});setStep(4);}}>{label}</a>:label}</strong>{act>10&&<ArcanaPosition stage={act} order={stageOrder} unlocked={!!plan.unlockedArcana?.includes(act)} onToggle={()=>setPlan(current=>({...current,unlockedArcana:current.unlockedArcana?.includes(act)?current.unlockedArcana.filter(stage=>stage!==act):[...(current.unlockedArcana??[]),act]}))} onMove={before=>moveArcanaStage(act,before)} onDragStart={event=>{if(!plan.unlockedArcana?.includes(act)){event.preventDefault();return;}event.dataTransfer.setData('application/x-itp-arcana',String(act));event.dataTransfer.effectAllowed='move';setDraggingArcana(act);setOpenCharacterPicker('');}} onDragEnd={()=>{setDraggingArcana(null);setArcanaDropTarget(null);}}/>}{objective&&<span className="act-objective">{objective==='Monolith Defense'?'Monolith':objective==='Defeat Bounties'?'Bounties':objective}</span>}</div>{bosses.length>0&&<div className="planner-encounter-picker planner-boss-preview"><span className="act-bosses">{bosses.map(boss=><a className="act-boss" key={boss.name} href={enemyWikiUrl(boss.name)} target="_blank" rel="noreferrer" title={`View ${boss.name} on Fandom`}>{boss.iconUrl&&<img src={bossPortrait(boss.name,boss.iconUrl)} alt="" loading="lazy"/>}<span>{boss.name==='Gluttonous Yumkasaur Mountain King'?'Mountain King':boss.name==='Veteran Arithmetic Enhancer Mek'?'Plunge Mek':boss.name.replace(/^Lord of the Hidden Depths:\s*/,'')}</span></a>)}</span>{selectedSeason&&<React.Suspense fallback={null}><PlannerKeyRecommendations ownership={ownership} season={selectedSeason.season} difficulty={setup.difficulty} act={act} bossNames={bosses.map(boss=>boss.name)} data={activeActDetails??undefined} privateEnemies={activeEnemyPreviews}/></React.Suspense>}</div>}{!bosses.length&&selectedSeason&&<React.Suspense fallback={null}><PlannerEncounterPicker ownership={ownership} season={selectedSeason.season} difficulty={setup.difficulty} act={act} value={plan.encounterChoices?.[encounterKey]} data={activeActDetails??undefined} privateEnemies={activeEnemyPreviews} onChange={value=>setPlan(current=>({...current,encounterChoices:{...current.encounterChoices,[encounterKey]:value}}))}/></React.Suspense>}<div className="act-team-tools">
     <button type="button" className={`team-icon paste-team ${copiedTeam?'':'clipboard-empty'}`} disabled={!copiedTeam} aria-label={`Paste copied team into ${label}`} title={`Paste copied team into ${label} (replaces this team)`} onClick={pasteTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M8 13h8M8 17h6"/></svg></button>
     <button type="button" className={`team-icon copy-team ${copyActive?'copied':''} ${hasTeam?'':'clipboard-empty'}`} aria-pressed={copyActive} disabled={!hasTeam} aria-label={copyActive?`Clear copied team from ${label}`:`Copy team from ${label}`} title={copyActive?'Team copied — click again to clear':`Copy team from ${label}`} onClick={copyTeam}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg></button>
     <button type="button" className={`team-icon clear-team ${hasTeam?'':'clipboard-empty'}`} disabled={!hasTeam} aria-label={`Clear whole team from ${label}`} title="Clear whole team" onClick={()=>{setPlan(current=>({...current,acts:{...current.acts,[act]:[]}}));setCopiedTeam(null);setAssignmentNotice(null);}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
@@ -490,12 +538,12 @@ const renderAct=(act:number,label:string)=>{
           const alreadyInAct=(plan.acts[act]??[]).includes(name);
           const assignedActs=Object.values(activePlanActs).filter(names=>names.includes(name)).length;
           if(assignedActs>=2&&!alreadyInAct)setAssignmentNotice({message:`${name} is exhausted: already assigned to two acts.`,id:++assignmentNoticeId.current});
-          else{setAssignmentNotice(null);dropCharacterIntoAct(name,act,slot);}
+          else{setAssignmentNotice(null);selectCharacterForAct(name,act,slot);}
         }else setAssignmentNotice(null);
       }
       setDropTarget('');
-    }}><ActAssignmentPicker act={act} slot={slot} characters={plannerCharacters} chosenNames={new Set(chosen)} placeholderElements={selectedElements} selected={chosen.includes(current)||isAssignmentPlaceholder(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} guests={new Set(selectedGuests)} canSelect={name=>canAssignToAct(name,act,slot)} isExhausted={name=>Object.values(activePlanActs).filter(names=>names.includes(name)).length>=2} onSelect={name=>name&&!isAssignmentPlaceholder(name)?dropCharacterIntoAct(name,act,slot):assignToAct(act,slot,name)} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
-  })}</div></div>;
+    }}><ActAssignmentPicker act={act} slot={slot} label={label} characters={plannerCharacters} chosenNames={new Set(chosen)} placeholderElements={selectedElements} selected={chosen.includes(current)||isAssignmentPlaceholder(current)?current:''} borrowed={borrowedCharacter} opening={openingNames} guests={new Set(selectedGuests)} needsRecruitment={name=>!recruitmentAllows(name,act)} canSelect={name=>canAssignToAct(name,act,slot,plan.acts,true)} isExhausted={name=>Object.values(activePlanActs).filter(names=>names.includes(name)).length>=2} onSelect={name=>selectCharacterForAct(name,act,slot)} open={openCharacterPicker===target} onOpenChange={open=>setOpenCharacterPicker(open?target:'')}/></div>;
+  })}</div></div></div>;
 };
 return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContinueToPlanner={canContinueToPlanner} setStep={setStep}/>
 <BackupControls save={{ownership,setup,plan,sort:plannerCharacterOrder,history:planHistory}} onRestore={save=>{
@@ -652,9 +700,16 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     </section>
     <section className="assignment-only">
       <h3>Act Assignments</h3>
-      <p className="drag-help">Drag any eligible character directly into a slot to select and assign them, or drag between slots to swap. Right-click a slot or use × to clear it. Use an Any element or Unallocated Character placeholder to reserve a slot without using stamina. Each character can be assigned to at most two acts. Arcana Challenges unlock after Acts 3 and 6 and can be completed any time before Act 10.</p>
+      <label className="recruited-only-toggle"><input type="checkbox" checked={!!plan.recruitedOnly} onChange={event=>{
+        const enabled=event.target.checked;
+        if(enabled&&!window.confirm('Enable recruited-only assignments? This will clear all assigned characters except opening characters already assigned in Acts 1 and 2. Your selected cast, recruitment plans, and blessing levels will be kept.'))return;
+        setPlan(current=>({...current,recruitedOnly:enabled,...(enabled?{acts:Object.fromEntries(Object.entries(current.acts).map(([act,names])=>[act,names.map(name=>(Number(act)===1||Number(act)===2)&&openingNames.has(name)?name:'')]))}:{})}));
+        setCopiedTeam(null);
+        setOpenCharacterPicker('');
+      }}/> Only assign recruited characters</label>
+      <p className="drag-help">Click or drag to assign · Drag slots to swap · × or right-click to clear · 2 stages per character{setup.difficulty==='Lunar'&&<><br/>Arcana unlock after Acts 3 &amp; 6. Finish both before Act 10.</>}</p>
       <div className="act-group"><h4>Acts</h4><div className="acts">{setup.difficulty==='Lunar'
-        ? <>{renderAct(1,'Act 1')}{renderAct(2,'Act 2')}{renderAct(3,'Act 3')}{renderAct(11,'Arcana 1')}{renderAct(4,'Act 4')}{renderAct(5,'Act 5')}{renderAct(6,'Act 6')}{renderAct(12,'Arcana 2')}{Array.from({length:4},(_,index)=>renderAct(index+7,`Act ${index+7}`))}</>
+        ? stageOrder.map(act=>renderAct(act,stageLabel(act)))
         : Array.from({length:requirement.acts},(_,index)=>renderAct(index+1,`Act ${index+1}`))}</div></div>
     </section>
     <aside className="unallocated-panel" aria-labelledby="unallocated-heading">
@@ -668,11 +723,11 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
           draggable onDragStart={event=>{event.dataTransfer.setData('text/plain',character.name);event.dataTransfer.effectAllowed='copy';}}
           onDragEnd={()=>setDropTarget('')}
           onClick={()=>{
-            const acts=setup.difficulty==='Lunar'?[1,2,3,11,4,5,6,12,7,8,9,10]:Array.from({length:requirement.acts},(_,index)=>index+1);
+            const acts=stageOrder;
             for(const act of acts){
               for(let slot=0;slot<4;slot++){
-                if(!chosen.includes(plan.acts[act]?.[slot]??'')&&!isAssignmentPlaceholder(plan.acts[act]?.[slot]??'')&&canAssignToAct(character.name,act,slot)){
-                  dropCharacterIntoAct(character.name,act,slot);
+                if(!chosen.includes(plan.acts[act]?.[slot]??'')&&!isAssignmentPlaceholder(plan.acts[act]?.[slot]??'')&&canAssignToAct(character.name,act,slot,plan.acts,true)){
+                  selectCharacterForAct(character.name,act,slot);
                   return;
                 }
               }
@@ -687,6 +742,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
   </div>
   <div className="bottom"><button onClick={()=>setStep(2)}>← Challenge Setup</button><button onClick={()=>{setPlan({roster:[],acts:{},borrowed:''});setCopiedTeam(null);}}>Reset Plan</button></div>
 </section>}
+{pendingRecruitment&&<RecruitConfirmation name={pendingRecruitment.name} onAnswer={yes=>{if(yes)dropCharacterIntoAct(pendingRecruitment.name,pendingRecruitment.act,pendingRecruitment.slot,true);setPendingRecruitment(null);}}/>}
 {assignmentNotice&&<div key={assignmentNotice.id} className="assignment-notice" role="status">{assignmentNotice.message}</div>}
 <footer><span>Unofficial fan-made planning tool. {storageUnavailable?<span role="status">Browser saving is unavailable. Changes will last only until this page closes.</span>:'All settings are saved in this browser.'} <a href="./privacy.html">Privacy policy</a></span><Feedback/></footer></main>
 }
