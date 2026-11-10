@@ -106,7 +106,7 @@
     {
       "name": "Ancient Ironquill",
       "type": "Local Legend",
-      "iconUrl": null
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/ee/Ancient_Ironquill_Icon.png/revision/latest?cb=20261110095205"
     },
     {
       "name": "Anemo Hypostasis",
@@ -206,7 +206,7 @@
     {
       "name": "Elder Blighttree",
       "type": "Local Legend",
-      "iconUrl": null
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/21/Elder_Blighttree_Icon.png/revision/latest?cb=20261110095101"
     },
     {
       "name": "Electro Hypostasis",
@@ -432,6 +432,11 @@
       "name": "Rocky Avildsen",
       "type": "Local Legend",
       "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/34/Rocky_Avildsen_Icon.png/revision/latest?cb=20231212191752"
+    },
+    {
+      "name": "Rowdy Beast Host",
+      "type": "Local Legend",
+      "iconUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b3/Rowdy_Beast_Host_Icon.png/revision/latest?cb=20261110094942"
     },
     {
       "name": "Ruin Serpent",
