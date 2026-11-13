@@ -486,7 +486,7 @@ const renderPlannerCharacter=(character:Character)=>{
   const remainingUses=Math.max(0,2-usedActs);
   const exhausted=usedActs>=2;
   const disabled=!canChoose||full||travelerConflict;
-  return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' supporting':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top">{isChosen&&<span className="chosen-number" aria-label={`Chosen character ${chosenNumber}`} title={`Chosen character ${chosenNumber}`}>{chosenNumber}</span>}<CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Supporting':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 uses remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
+  return <div className={`character chosen-card ${isChosen?'owned':''} ${disabled?'unavailable':''} ${forced?'required-character':''} ${exhausted?'exhausted-character':''}`} key={name} role="checkbox" aria-checked={isChosen} aria-disabled={disabled||forced||borrowed} tabIndex={disabled||forced||borrowed?-1:0} aria-label={`${name}${borrowed?' supporting':forced?' opening character':exhausted?' exhausted':isChosen?' selected':' eligible to choose'}`} onClick={()=>{if(!disabled&&!forced&&!borrowed)toggleRoster(name);}} onKeyDown={e=>{if(!disabled&&!forced&&!borrowed&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleRoster(name);}}} draggable={!disabled} onDragStart={e=>{if(disabled){e.preventDefault();return;}e.dataTransfer.setData('text/plain',name);e.dataTransfer.effectAllowed='copy';}} onDragEnd={()=>setDropTarget('')}><div className="character-top">{isChosen&&<span className="chosen-number" aria-label={`Chosen character ${chosenNumber}`} title={`Chosen character ${chosenNumber}`}>{chosenNumber}</span>}<CharacterIcon name={name}/><ElementBadge element={character.element}/><strong>{name}</strong><span className="chosen-tag">{borrowed?'Supporting':forced?'Opening · Required':exhausted?'Exhausted':isChosen?'Selected':'Available'}</span><span className="vigor-hearts" role="img" aria-label={`${remainingUses} of 2 Vigor remaining`}>{[0,1].map(index=><span key={index} className={index<remainingUses?'heart-remaining':'heart-used'}>♥</span>)}</span></div></div>;
 };
 const moveArcanaStage=(stage:number,before:number)=>{
   if(setup.difficulty!=='Lunar')return;
@@ -758,12 +758,12 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
     </section>
     <aside className="unallocated-panel" aria-labelledby="unallocated-heading">
       <h3 id="unallocated-heading">Unallocated <span>({unallocatedCharacters.length})</span></h3>
-      <p>Chosen characters with stamina remaining. Drag into an act, or click to fill the first empty slot.</p>
+      <p>Chosen characters with Vigor remaining. Drag into an act, or click to fill the first empty slot.</p>
       <div className="unallocated-list">
         {unallocatedCharacters.map(character=>{
-          const remainingStamina=Math.max(0,2-Object.values(activePlanActs).filter(names=>names.includes(character.name)).length);
+          const remainingVigor=Math.max(0,2-Object.values(activePlanActs).filter(names=>names.includes(character.name)).length);
           return <button type="button" className="act-picker-trigger unallocated-character" key={character.name}
-          aria-label={`Assign ${character.name} to the first empty act slot, ${remainingStamina} of 2 stamina remaining`}
+          aria-label={`Assign ${character.name} to the first empty act slot, ${remainingVigor} of 2 Vigor remaining`}
           draggable onDragStart={event=>{event.dataTransfer.setData('text/plain',character.name);event.dataTransfer.effectAllowed='copy';}}
           onDragEnd={()=>setDropTarget('')}
           onClick={()=>{
@@ -778,9 +778,9 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
             }
             setAssignmentNotice({message:'All act slots are filled. Drag a character onto a slot to replace its assignment.',id:++assignmentNoticeId.current});
           }}>
-          <CharacterIcon name={character.name}/><span className="act-picker-name">{character.name}</span><span className="vigor-hearts" role="img" aria-label={`${remainingStamina} of 2 stamina remaining`} title={`${remainingStamina} of 2 stamina remaining`}>{[0,1].map(index=><span key={index} className={index<remainingStamina?'heart-remaining':'heart-used'}>♥</span>)}</span>
+          <CharacterIcon name={character.name}/><span className="act-picker-name">{character.name}</span><span className="vigor-hearts" role="img" aria-label={`${remainingVigor} of 2 Vigor remaining`} title={`${remainingVigor} of 2 Vigor remaining`}>{[0,1].map(index=><span key={index} className={index<remainingVigor?'heart-remaining':'heart-used'}>♥</span>)}</span>
         </button>;})}
-        {unallocatedCharacters.length===0&&<p className="unallocated-empty">{chosen.length?'Every chosen character has used all their stamina.':'Select characters to build your cast.'}</p>}
+        {unallocatedCharacters.length===0&&<p className="unallocated-empty">{chosen.length?'Every chosen character has used all their Vigor.':'Select characters to build your cast.'}</p>}
       </div>
     </aside>
   </div>
