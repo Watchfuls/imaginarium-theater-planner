@@ -600,3 +600,39 @@ main>section>.sectionhead>div{min-width:0}
 .blessing-element-icons{display:flex}
 .blessing-element-icons .element{font-size:0;padding:2px;background:transparent}
 @media(max-width:1000px){.preparation-compact{grid-template-columns:minmax(0,1fr)}.blessing-pair{flex-direction:column}}
+
+/* Storybook theater: artwork stays at the edges of the working surfaces. */
+:root{background:#11121e;color:#eeeaf5;--theater-gold:#d3bd8c}
+body{background:radial-gradient(ellipse at 90% 0,#30244066,transparent 650px),#11121e}
+.app-header{position:relative;isolation:isolate;overflow:hidden;border:1px solid #ac94644d;border-radius:4px 30px 4px 4px;background:#1b1b30;margin-bottom:16px}
+.app-header::before{content:"";position:absolute;inset:0 0 0 auto;width:min(100%,620px);z-index:-1;background:linear-gradient(#17192730,#17192730),url('./assets/theater/storybook.png') right center/cover no-repeat;mask-image:linear-gradient(90deg,transparent,#000 55%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 55%)}
+.app-header::after{content:"";position:absolute;inset:9px;border:1px solid #d3bd8c30;border-radius:2px 22px 2px 2px;pointer-events:none}
+.app-header header{min-height:206px;margin:0;padding:28px 32px;align-items:flex-start}
+.theater-heading{display:flex;align-items:center;gap:20px;min-width:0}
+.theater-emblem{width:82px;height:92px;object-fit:contain;filter:sepia(.25);flex:none}
+.theater-heading-copy{max-width:560px}
+.app-header h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(28px,2.8vw,42px);line-height:1.13;color:#f4e7ce;max-width:440px;text-wrap:balance;margin:10px 0}
+.app-header .eyebrow{color:var(--theater-gold);font-size:10px;letter-spacing:1.8px;line-height:1.8;margin:0}
+.app-header .theater-heading-copy>p:last-child{font-size:13px;line-height:1.6;color:#c4bfd1;margin-bottom:0}
+.app-header .header-right{position:relative;z-index:1;padding:8px 10px;background:#171927c9;border-radius:3px;border:1px solid #d3bd8c30}
+.app-navigation.is-sticky{background:transparent;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid #bca37150;padding:9px 0 12px;margin-bottom:22px}
+.app-navigation nav button{position:relative;display:flex;align-items:center;gap:10px;min-height:57px;border-radius:3px;background:#1d1d30;border-color:#51475e;color:#c8c1d3;padding:8px 13px}
+.nav-theater-icon{width:34px;height:34px;object-fit:contain;flex:none;opacity:.72}
+.app-navigation .stepnum{position:absolute;top:4px;left:5px;background:none;padding:0;margin:0;font-size:9px;color:#cbb98f}
+.app-navigation nav button.active{background:#383047;border-color:#cbb98f;color:#f6e7c9;box-shadow:inset 0 -2px #cbb98f}
+.app-navigation nav button.active .nav-theater-icon{opacity:1}
+.app-navigation nav button:disabled{opacity:.45;cursor:not-allowed}
+.app-navigation nav button:hover:not(:disabled){border-color:#d3bd8c;background:#302a40}
+main>section{border-radius:4px;border-color:#69577680;background:#191b2a;box-shadow:inset 0 3px #b8a07533}
+main>section h2{font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:500;color:#e9d8b6}
+.character{border-radius:4px;background:#202335}
+.character.owned{border-color:#a38aa9}
+.primary{background:#685170;border-color:#ba9bc0;color:#fff4df}
+button:focus-visible{outline:2px solid #e5cf9f;outline-offset:3px}
+@media(max-width:1000px){.app-header header{padding:24px;min-height:210px}.theater-emblem{width:60px}.theater-heading{gap:14px}.app-header .header-right{font-size:11px}.app-navigation nav button{gap:6px;font-size:12px}}
+@media(max-width:700px){.app-header header{padding:24px 20px;gap:18px;min-height:245px}.app-header::before{background:linear-gradient(90deg,#171927f5,#171927b8),url('./assets/theater/storybook.png') right center/auto 100% no-repeat}.theater-heading{align-items:flex-start;gap:12px}.theater-emblem{width:42px;height:58px;margin-top:19px}.app-header h1{font-size:30px}.app-header .eyebrow{font-size:9px;letter-spacing:1px}.app-header .header-right{margin-left:54px;padding:0;background:none;border:0}.app-navigation.is-sticky nav button{gap:5px;padding:8px 2px;min-height:68px;font-size:10px}.nav-theater-icon{width:29px;height:29px}.app-navigation.is-sticky .stepnum{padding:0;font-size:8px}.app-navigation.is-sticky{padding-top:6px}main>section h2{font-size:24px}}
+.app-header header{display:flex;justify-content:space-between}
+.app-header header>.theater-heading{display:flex}
+.app-header header>.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0}
+.app-header header .related-sites{justify-self:auto;font-size:12px}
+@media(max-width:700px){.app-header header{flex-direction:column}.app-header header>.header-right{align-items:flex-start;gap:8px}.app-header header .related-sites{font-size:11px}}
