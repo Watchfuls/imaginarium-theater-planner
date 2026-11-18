@@ -1,0 +1,235 @@
+/* Shared palette keeps every planner surface in the selected mode. */
+:root{color-scheme:dark;
+--ink-e9ecf6:#e9ecf6;
+--ink-0d111c:#0d111c;
+--ink-a2abc2:#a2abc2;
+--ink-bca5f4:#bca5f4;
+--ink-20283a:#20283a;
+--ink-39435a:#39435a;
+--ink-9c83db:#9c83db;
+--ink-6750a4:#6750a4;
+--ink-a78be5:#a78be5;
+--ink-30384d:#30384d;
+--ink-151b2a:#151b2a;
+--ink-1b2233:#1b2233;
+--ink-8066bd:#8066bd;
+--ink-35405a:#35405a;
+--ink-ff9a85:#ff9a85;
+--ink-8ec9ff:#8ec9ff;
+--ink-d5acff:#d5acff;
+--ink-a6e9f0:#a6e9f0;
+--ink-a8d886:#a8d886;
+--ink-84e4cc:#84e4cc;
+--ink-f2cb81:#f2cb81;
+--ink-a88be9:#a88be9;
+--ink-c7a4ff:#c7a4ff;
+--ink-d9c9f8:#d9c9f8;
+--ink-53607c:#53607c;
+--ink-bac3d6:#bac3d6;
+--ink-d7c7ef:#d7c7ef;
+--ink-cce9e6:#cce9e6;
+--ink-ae79ef:#ae79ef;
+--ink-eef0f5:#eef0f5;
+--ink-c1c6d0:#c1c6d0;
+--ink-f0f1f5:#f0f1f5;
+--ink-f1f3f7:#f1f3f7;
+--ink-f4dfac:#f4dfac;
+--ink-e1e3ed:#e1e3ed;
+--ink-e8b56b:#e8b56b;
+--ink-c895a1:#c895a1;
+--ink-c0c5f7:#c0c5f7;
+--ink-66718b:#66718b;
+--ink-482b36:#482b36;
+--ink-ffc1c1:#ffc1c1;
+--ink-945162:#945162;
+--ink-293147:#293147;
+--ink-cbd2e2:#cbd2e2;
+--ink-b28ad4:#b28ad4;
+--ink-e0bfff:#e0bfff;
+--ink-d5ad60:#d5ad60;
+--ink-252333:#252333;
+--ink-cbb9f3:#cbb9f3;
+--ink-ffd18b:#ffd18b;
+--ink-e0d2ff:#e0d2ff;
+--ink-8993aa:#8993aa;
+--ink-59647c:#59647c;
+--ink-302744:#302744;
+--ink-564678:#564678;
+--ink-a3e635:#a3e635;
+--ink-bef264:#bef264;
+--ink-203309:#203309;
+--ink-596174:#596174;
+--ink-f18aab:#f18aab;
+--ink-76515b:#76515b;
+--ink-38242c:#38242c;
+--ink-f1b3ba:#f1b3ba;
+--ink-ffadb8:#ffadb8;
+--ink-f3cf80:#f3cf80;
+--ink-8ce0b4:#8ce0b4;
+--ink-92515d:#92515d;
+--ink-342d20:#342d20;
+--ink-8c7544:#8c7544;
+--ink-20372c:#20372c;
+--ink-437e5f:#437e5f;
+--ink-cbb7f5:#cbb7f5;
+--ink-e4d7ff:#e4d7ff;
+--ink-cbb5ff:#cbb5ff;
+--ink-8793ad:#8793ad;
+--ink-465069:#465069;
+--ink-aab6d1:#aab6d1;
+--ink-202739:#202739;
+--ink-252e42:#252e42;
+--ink-eef3ff:#eef3ff;
+--ink-ac94ed:#ac94ed;
+--ink-d4c4fa:#d4c4fa;
+--ink-d5bcff:#d5bcff;
+--ink-11121e:#11121e;
+--ink-eeeaf5:#eeeaf5;
+--ink-d3bd8c:#d3bd8c;
+--ink-1b1b30:#1b1b30;
+--ink-f4e7ce:#f4e7ce;
+--ink-c4bfd1:#c4bfd1;
+--ink-1d1d30:#1d1d30;
+--ink-51475e:#51475e;
+--ink-c8c1d3:#c8c1d3;
+--ink-cbb98f:#cbb98f;
+--ink-383047:#383047;
+--ink-f6e7c9:#f6e7c9;
+--ink-302a40:#302a40;
+--ink-191b2a:#191b2a;
+--ink-e9d8b6:#e9d8b6;
+--ink-202335:#202335;
+--ink-a38aa9:#a38aa9;
+--ink-685170:#685170;
+--ink-ba9bc0:#ba9bc0;
+--ink-fff4df:#fff4df;
+--ink-e5cf9f:#e5cf9f;
+}
+:root[data-theme="light"]{color-scheme:light;
+--ink-e9ecf6:hsl(226 12% 22%);
+--ink-0d111c:hsl(40 28% 94%);
+--ink-a2abc2:hsl(223 33% 28%);
+--ink-bca5f4:hsl(257 45% 25%);
+--ink-20283a:hsl(40 28% 90%);
+--ink-39435a:hsl(32 15% 56%);
+--ink-9c83db:hsl(257 47% 28%);
+--ink-6750a4:hsl(32 15% 46%);
+--ink-a78be5:hsl(259 48% 27%);
+--ink-30384d:hsl(40 28% 87%);
+--ink-151b2a:hsl(40 28% 92%);
+--ink-1b2233:hsl(40 28% 91%);
+--ink-8066bd:hsl(258 47% 30%);
+--ink-35405a:hsl(32 15% 57%);
+--ink-ff9a85:hsl(10 56% 26%);
+--ink-8ec9ff:hsl(209 54% 26%);
+--ink-d5acff:hsl(270 46% 25%);
+--ink-a6e9f0:hsl(186 44% 25%);
+--ink-a8d886:hsl(95 46% 28%);
+--ink-84e4cc:hsl(165 49% 27%);
+--ink-f2cb81:hsl(39 54% 27%);
+--ink-a88be9:hsl(259 49% 27%);
+--ink-c7a4ff:hsl(263 48% 25%);
+--ink-d9c9f8:hsl(260 37% 24%);
+--ink-53607c:hsl(32 15% 50%);
+--ink-bac3d6:hsl(221 12% 26%);
+--ink-d7c7ef:hsl(264 35% 24%);
+--ink-cce9e6:hsl(174 12% 24%);
+--ink-ae79ef:hsl(267 55% 27%);
+--ink-eef0f5:hsl(223 12% 22%);
+--ink-c1c6d0:hsl(220 12% 26%);
+--ink-f0f1f5:hsl(228 12% 22%);
+--ink-f1f3f7:hsl(220 12% 22%);
+--ink-f4dfac:hsl(43 43% 25%);
+--ink-e1e3ed:hsl(230 12% 23%);
+--ink-e8b56b:hsl(36 57% 28%);
+--ink-c895a1:hsl(346 38% 28%);
+--ink-c0c5f7:hsl(235 39% 24%);
+--ink-66718b:hsl(32 15% 46%);
+--ink-482b36:hsl(40 28% 88%);
+--ink-ffc1c1:hsl(0 41% 24%);
+--ink-945162:hsl(32 15% 47%);
+--ink-293147:hsl(40 28% 88%);
+--ink-cbd2e2:hsl(222 12% 24%);
+--ink-b28ad4:hsl(272 44% 28%);
+--ink-e0bfff:hsl(271 41% 24%);
+--ink-d5ad60:hsl(39 55% 30%);
+--ink-252333:hsl(40 28% 90%);
+--ink-cbb9f3:hsl(259 40% 25%);
+--ink-ffd18b:hsl(36 55% 26%);
+--ink-e0d2ff:hsl(259 36% 23%);
+--ink-8993aa:hsl(222 33% 30%);
+--ink-59647c:hsl(32 15% 49%);
+--ink-302744:hsl(40 28% 89%);
+--ink-564678:hsl(32 15% 52%);
+--ink-a3e635:hsl(83 65% 31%);
+--ink-bef264:hsl(82 61% 28%);
+--ink-203309:hsl(40 28% 93%);
+--ink-596174:hsl(32 15% 50%);
+--ink-f18aab:hsl(341 51% 27%);
+--ink-76515b:hsl(32 15% 51%);
+--ink-38242c:hsl(40 28% 90%);
+--ink-f1b3ba:hsl(353 41% 25%);
+--ink-ffadb8:hsl(352 46% 25%);
+--ink-f3cf80:hsl(41 54% 27%);
+--ink-8ce0b4:hsl(149 46% 27%);
+--ink-92515d:hsl(32 15% 48%);
+--ink-342d20:hsl(40 28% 91%);
+--ink-8c7544:hsl(32 15% 50%);
+--ink-20372c:hsl(40 28% 90%);
+--ink-437e5f:hsl(32 15% 51%);
+--ink-cbb7f5:hsl(259 41% 25%);
+--ink-e4d7ff:hsl(260 35% 23%);
+--ink-cbb5ff:hsl(258 44% 24%);
+--ink-8793ad:hsl(221 35% 30%);
+--ink-465069:hsl(32 15% 53%);
+--ink-aab6d1:hsl(222 35% 27%);
+--ink-202739:hsl(40 28% 90%);
+--ink-252e42:hsl(40 28% 89%);
+--ink-eef3ff:hsl(222 12% 22%);
+--ink-ac94ed:hsl(256 48% 26%);
+--ink-d4c4fa:hsl(258 39% 24%);
+--ink-d5bcff:hsl(262 42% 24%);
+--ink-11121e:hsl(40 28% 94%);
+--ink-eeeaf5:hsl(262 12% 22%);
+--ink-d3bd8c:hsl(41 43% 28%);
+--ink-1b1b30:hsl(40 28% 91%);
+--ink-f4e7ce:hsl(39 35% 24%);
+--ink-c4bfd1:hsl(257 12% 26%);
+--ink-1d1d30:hsl(40 28% 91%);
+--ink-51475e:hsl(32 15% 54%);
+--ink-c8c1d3:hsl(263 12% 26%);
+--ink-cbb98f:hsl(42 40% 28%);
+--ink-383047:hsl(40 28% 88%);
+--ink-f6e7c9:hsl(40 36% 24%);
+--ink-302a40:hsl(40 28% 89%);
+--ink-191b2a:hsl(40 28% 92%);
+--ink-e9d8b6:hsl(40 38% 25%);
+--ink-202335:hsl(40 28% 91%);
+--ink-a38aa9:hsl(288 33% 30%);
+--ink-685170:hsl(32 15% 51%);
+--ink-ba9bc0:hsl(290 34% 28%);
+--ink-fff4df:hsl(39 33% 22%);
+--ink-e5cf9f:hsl(41 43% 26%);
+--theater-gold:#785a2f;
+}
+.theme-toggle{display:inline-flex;align-items:center;gap:8px;font-size:12px;padding:7px 12px;border-radius:3px;border-color:var(--theater-gold)}
+.theme-toggle svg{width:16px;height:16px}
+:root[data-theme="light"] body{background:radial-gradient(ellipse at 85% 0,#ddd0ec88,transparent 650px),#eee9df}
+:root[data-theme="light"] .app-header{background:#f5efe4}
+:root[data-theme="light"] .app-header::before{opacity:.25}
+:root[data-theme="light"] .app-header::after{border-color:#a58b5c55}
+:root[data-theme="light"] .app-header .header-right{background:#f5efe4e8;border-color:#a58b5c55}
+:root[data-theme="light"] .app-header h1{color:#443849}
+:root[data-theme="light"] .app-navigation nav button.active{background:#e2d8eb;color:#473450;border-color:#80658e;box-shadow:inset 0 -2px #80658e}
+:root[data-theme="light"] .primary,:root[data-theme="light"] .chips button.selected{background:#675078;color:#fff}
+:root[data-theme="light"] .toolbar input:not([type=checkbox]){color:#393443}
+:root[data-theme="light"] .mechanics-reaction{background:none!important;-webkit-text-fill-color:currentColor}
+:root[data-theme="light"] .mechanics-reaction.reaction-lunar,:root[data-theme="light"] .mechanics-reaction.reaction-stellar,:root[data-theme="light"] .mechanics-reaction.reaction-stellarglimmer{color:#63517d}
+:root[data-theme="light"] .app-header .theater-emblem{filter:drop-shadow(0 1px 2px #6b5276)}
+main>section{position:relative}
+main>section> .sectionhead h2,main>section>h2{letter-spacing:.2px}
+:where(button,a,input,select,textarea):focus-visible{outline:2px solid var(--theater-gold);outline-offset:3px}
+@media(prefers-reduced-motion:no-preference){.theme-toggle{transition:background .15s,border-color .15s}}
+:root[data-theme="light"] .theme-toggle{background:#f5efe4;color:#44364f;border-color:#92784e}
+:root[data-theme="light"] .element{background:#e2dbcf}
+@media(max-width:700px){:root[data-theme="light"] .app-header::before{background:linear-gradient(90deg,#f5efe4ee,#f5efe488),url('./assets/theater/storybook.png') right center/auto 100% no-repeat;opacity:.6}}
