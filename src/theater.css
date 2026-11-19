@@ -1,0 +1,21 @@
+/* Retained details from the Theater styling study. */
+@font-face{font-family:Athiti;src:url('./assets/fonts/Athiti-Medium.ttf') format('truetype');font-weight:400 700;font-display:swap}
+:root{font-family:Athiti,'Trebuchet MS','Segoe UI',sans-serif}
+.eligibility{font-family:Inter,system-ui,'Segoe UI',sans-serif}
+body{
+  background-color:var(--ink-11121e);
+  background-image:linear-gradient(135deg,#6e6a9b09 25%,transparent 25%,transparent 75%,#6e6a9b09 75%),linear-gradient(45deg,#6e6a9b09 25%,transparent 25%,transparent 75%,#6e6a9b09 75%);
+  background-size:96px 96px;
+  background-attachment:fixed;
+}
+:root[data-theme='light'] body{
+  background-color:#eee9df;
+  background-image:linear-gradient(135deg,#6e6a9b0a 25%,transparent 25%,transparent 75%,#6e6a9b0a 75%),linear-gradient(45deg,#6e6a9b0a 25%,transparent 25%,transparent 75%,#6e6a9b0a 75%);
+  background-size:96px 96px;
+}
+.characters-heading{display:flex;align-items:center;gap:12px}
+.characters-heading::before{
+  content:'';display:block;flex:none;width:22px;height:22px;
+  background:var(--theater-gold);
+  clip-path:polygon(50% 0,62% 36%,100% 50%,62% 64%,50% 100%,38% 64%,0 50%,38% 36%);
+}

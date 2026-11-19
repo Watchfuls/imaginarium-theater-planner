@@ -585,7 +585,7 @@ return <main><SiteHeader stickyHeaderRef={stickyHeaderRef} step={step} canContin
 {step===5&&<VideoGuide/>}
 {step===1&&<section>
   <div className="sectionhead">
-    <div><h2>Your Characters</h2><p>{count} owned · {CHARACTERS.length} in starter database</p></div>
+    <div><h2 className="characters-heading">Your Characters</h2><p>{count} owned · {CHARACTERS.length} in starter database</p></div>
     <div className="actions">
       <button type="button" onClick={()=>importFileInput.current?.click()}>Import GOOD JSON</button>
       <input ref={importFileInput} type="file" accept=".json,application/json" hidden aria-label="Import a GOOD character export" onChange={event=>{const file=event.target.files?.[0];if(file)void importOwnership(file);}}/>
